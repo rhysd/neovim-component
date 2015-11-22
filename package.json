@@ -1,0 +1,25 @@
+{
+  "name": "neovim-component",
+  "version": "0.0.0",
+  "description": "Polymer component for Neovim frontend",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "neovim",
+    "polymer",
+    "editor"
+  ],
+  "author": "rhysd",
+  "license": "MIT",
+  "dependencies": {
+    "promised-neovim-client": "^0.1.11"
+  },
+  "devDependencies": {
+    "browserify": "^12.0.1",
+    "electron-prebuilt": "^0.35.1",
+    "tsd": "^0.6.5",
+    "typescript": "^1.6.2"
+  }
+}
