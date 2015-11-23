@@ -15,6 +15,6 @@ app.on('ready', function() {
         app.quit();
     });
 
-    win.loadUrl(index_html);
+    win.loadURL(index_html);
     win.openDevTools({detach: true});
 });

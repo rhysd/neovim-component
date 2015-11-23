@@ -1,0 +1,72 @@
+// Note:
+// Use renderer's node.js integration to avoid using ipc for large data transfer
+import cp = require('child_process');
+const child_process: typeof cp = global.require('child_process');
+import NvimClient = require('promised-neovim-client');
+const attach = (global.require('promised-neovim-client') as typeof NvimClient).attach;
+
+// Note:
+// TypeScript doesn't allow recursive definition
+export type RPCValue =
+        NvimClient.Buffer |
+        NvimClient.Window |
+        NvimClient.Tabpage |
+        number |
+        boolean |
+        string |
+        any[] |
+        {[key:string]: any};
+
+export default class NeovimProcess {
+    neovim_process: cp.ChildProcess;
+    client: NvimClient.Nvim;
+    started: boolean;
+
+    constructor(public command: string, public argv: string[]) {
+        this.started = false;
+        this.argv.push('--embed');
+    }
+
+    attach(lines: number, columns: number) {
+        this.neovim_process = child_process.spawn(this.command, this.argv, {stdio: ['pipe', 'pipe', process.stderr]});
+        this.client = null;
+        attach(this.neovim_process.stdin, this.neovim_process.stdout)
+            .then(nvim => {
+                this.client = nvim;
+                nvim.on('request', this.onRequested.bind(this));
+                nvim.on('notification', this.onNotified.bind(this));
+                nvim.on('disconnect', this.onDisconnected.bind(this));
+                nvim.uiAttach(columns, lines, true);
+                this.started = true;
+                console.log(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
+            }).catch(err => console.log(err));
+    }
+
+    onRequested(method: string, args: RPCValue[], response: RPCValue) {
+        console.log('requested: ', method, args, response);
+    }
+
+    onNotified(method: string, args: RPCValue[]) {
+        if (method === 'redraw') {
+            // TODO: dispatch actions
+            console.log('notified: ', method, args);
+        } else {
+            console.log('unknown method', method, args);
+        }
+    }
+
+    onDisconnected() {
+        console.log('disconnected: ' + this.neovim_process.pid);
+        // TODO:
+        // Uncomment below line to close window on quit.
+        // I don't do yet for debug.
+        // global.require('remote').getCurrentWindow().close();
+        this.started = false;
+    }
+
+    finalize() {
+        this.client.uiDetach();
+        this.client.quit();
+        this.started = false;
+    }
+}

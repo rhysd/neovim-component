@@ -13,6 +13,9 @@
     },
     "webcomponents.js/webcomponents.js.d.ts": {
       "commit": "fa04c80f4a889613b96cb4f283848c61a9f64233"
+    },
+    "es6-promise/es6-promise.d.ts": {
+      "commit": "fa04c80f4a889613b96cb4f283848c61a9f64233"
     }
   }
 }
