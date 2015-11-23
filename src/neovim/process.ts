@@ -4,7 +4,7 @@ import cp = require('child_process');
 const child_process: typeof cp = global.require('child_process');
 import NvimClient = require('promised-neovim-client');
 const attach = (global.require('promised-neovim-client') as typeof NvimClient).attach;
-import {redraw} from './actions';
+import Action = require('./actions');
 import Dispatcher from './dispatcher';
 
 // Note:
@@ -50,7 +50,7 @@ export default class NeovimProcess {
 
     onNotified(method: string, args: RPCValue[]) {
         if (method === 'redraw') {
-            Dispatcher.dispatch(redraw(args as RPCValue[][]));
+            redraw(args as RPCValue[][]);
         } else {
             console.log('unknown method', method, args);
         }
@@ -71,3 +71,55 @@ export default class NeovimProcess {
         this.started = false;
     }
 }
+
+function redraw(events: RPCValue[][]) {
+    for (const e of events) {
+        const name = e[0] as string;
+        const args = e[1] as RPCValue[];
+        switch(name) {
+            case 'put':
+                e.shift();
+                if (e.length === 0) {
+                    continue;
+                }
+                Dispatcher.dispatch(Action.putText(e as string[][]));
+                break;
+            case 'cursor_goto':
+                Dispatcher.dispatch(Action.cursor(args[0] as number, args[1] as number));
+                break;
+            case 'highlight_set':
+                Dispatcher.dispatch(Action.highlight());
+                break;
+            case 'clear':
+                Dispatcher.dispatch(Action.clearAll());
+                break;
+            case 'eol_clear':
+                Dispatcher.dispatch(Action.clearEndOfLine());
+                break;
+            case 'resize':
+                Dispatcher.dispatch(Action.resize(args[1] as number, args[0] as number));
+                break;
+            case 'update_fg':
+                Dispatcher.dispatch(Action.updateForeground(args[0] as number));
+                break;
+            case 'update_bg':
+                Dispatcher.dispatch(Action.updateBackground(args[0] as number));
+                break;
+            case 'mode_change':
+                Dispatcher.dispatch(Action.changeMode(args[0] as string));
+                break;
+            case 'busy_start':
+                Dispatcher.dispatch(Action.startBusy());
+                break;
+            case 'busy_stop':
+                Dispatcher.dispatch(Action.stopBusy());
+                break;
+            default:
+                console.log('Unhandled event: ' + name, args);
+                break;
+        }
+    }
+}
+
+
+
