@@ -9,6 +9,7 @@
     "sourceMap": true
   },
   "files": [
+    "neovim/screen.ts",
     "neovim/process.ts",
     "index.ts",
     "lib.d.ts"

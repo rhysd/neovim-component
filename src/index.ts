@@ -21,15 +21,20 @@ Polymer({
         neovim: Object,
     },
 
-    ready: () => {
+    ready: function() {
         const canvas = document.querySelector('.neovim-screen') as HTMLCanvasElement;
         console.log(canvas);
-        this.neovim = new Neovim(
+        this.app = new Neovim(
                 this.width,
                 this.height,
                 this.fontSize,
                 this.nvimCmd,
                 this.argv,
-                canvas);
-    }
+                canvas
+            );
+    },
+
+    attached: function() {
+        this.app.start();
+    },
 });
