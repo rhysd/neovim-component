@@ -1,10 +1,14 @@
-import {EventEmitter} from 'events';
-import NeovimProcess from './neovim/process';
-import NeovimScreen from './neovim/screen';
+import Process from './neovim/process';
+import Screen from './neovim/screen';
+import Store, {NeovimStore as StoreType} from './neovim/store';
+import Dispatcher from './neovim/dispatcher';
+import {ActionType} from './neovim/actions';
 
-export default class Neovim extends EventEmitter {
-    process: NeovimProcess;
-    screen: NeovimScreen;
+export default class Neovim {
+    process: Process;
+    screen: Screen;
+    store: StoreType;
+    dispatcher: Flux.Dispatcher<ActionType>;
 
     constructor(
             width: number,
@@ -14,9 +18,10 @@ export default class Neovim extends EventEmitter {
             argv: string[],
             canvas: HTMLCanvasElement
         ) {
-        super();
-        this.process = new NeovimProcess(command, argv);
-        this.screen = new NeovimScreen(canvas, width, height, font_size);
+        this.store = Store;
+        this.dispatcher = Dispatcher;
+        this.screen = new Screen(canvas, width, height, font_size);
+        this.process = new Process(command, argv);
     }
 
     start() {

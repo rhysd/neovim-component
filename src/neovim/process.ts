@@ -4,6 +4,8 @@ import cp = require('child_process');
 const child_process: typeof cp = global.require('child_process');
 import NvimClient = require('promised-neovim-client');
 const attach = (global.require('promised-neovim-client') as typeof NvimClient).attach;
+import {redraw} from './actions';
+import Dispatcher from './dispatcher';
 
 // Note:
 // TypeScript doesn't allow recursive definition
@@ -48,8 +50,7 @@ export default class NeovimProcess {
 
     onNotified(method: string, args: RPCValue[]) {
         if (method === 'redraw') {
-            // TODO: dispatch actions
-            console.log('notified: ', method, args);
+            Dispatcher.dispatch(redraw(args as RPCValue[][]));
         } else {
             console.log('unknown method', method, args);
         }

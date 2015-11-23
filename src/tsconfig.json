@@ -9,6 +9,9 @@
     "sourceMap": true
   },
   "files": [
+    "neovim/actions.ts",
+    "neovim/dispatcher.ts",
+    "neovim/store.ts",
     "neovim/screen.ts",
     "neovim/process.ts",
     "index.ts",

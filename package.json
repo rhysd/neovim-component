@@ -14,6 +14,7 @@
   "author": "rhysd",
   "license": "MIT",
   "dependencies": {
+    "flux": "^2.1.1",
     "promised-neovim-client": "^0.1.11"
   },
   "devDependencies": {
