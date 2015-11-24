@@ -23,11 +23,14 @@ export default class Neovim {
 
     start() {
         this.screen.initializeCanvas();
-        console.log(this.screen);
         this.process.attach(this.screen.lines, this.screen.columns);
     }
 
     quit() {
         this.process.finalize();
+    }
+
+    getClient() {
+        return this.process.client;
     }
 }

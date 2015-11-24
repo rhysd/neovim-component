@@ -2,17 +2,17 @@ import {EventEmitter} from 'events';
 import Dispatcher from './dispatcher';
 import {Kind, ActionType} from './actions';
 
-interface Size {
+export interface Size {
     lines: number;
     cols: number;
 }
 
-interface Cursor {
+export interface Cursor {
     line: number;
     col: number;
 }
 
-interface Color {
+export interface Color {
     fg: string;
     bg: string;
 }
@@ -56,7 +56,6 @@ function colorString(new_color: number, fallback: string) {
 }
 
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
-    console.log('action: ', action.type);
     switch(action.type) {
         case Kind.PutText:
             store.emit('put', action.text, store.cursor);
