@@ -22,7 +22,7 @@ Polymer({
     },
 
     ready: function() {
-        const canvas = document.querySelector('.neovim-screen') as HTMLCanvasElement;
+        const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
         console.log(canvas);
         this.app = new Neovim(
                 this.width,

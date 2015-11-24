@@ -3,13 +3,16 @@
 <dom-module id="neovim-editor">
   <template>
     <style>
-      .neovim-screen {
+      :host {
         width: 100%;
         height: 100%;
-        font-size: 12px;
+      }
+      .neovim-canvas {
+        width: 100%;
+        height: 100%;
       }
     </style>
-    <canvas class="neovim-screen"></canvas>
+    <canvas class="neovim-canvas"></canvas>
   </template>
 </dom-module>
 
