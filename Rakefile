@@ -44,7 +44,7 @@ task :build => [:dep] do
 end
 
 task :example do
-  sh "#{BIN}/electron #{ROOT}/example"
+  sh "#{BIN}/electron #{ROOT}"
 end
 
 task :default => %i(build example)

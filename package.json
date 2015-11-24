@@ -2,13 +2,16 @@
   "name": "neovim-component",
   "version": "0.0.0",
   "description": "Polymer component for Neovim frontend",
-  "main": "index.html",
+  "main": "example/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "neovim",
     "polymer",
+    "WebComponent",
+    "Electron",
+    "NW.js",
     "editor"
   ],
   "author": "rhysd",
