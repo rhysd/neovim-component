@@ -1,4 +1,4 @@
-import Store, {Cursor} from './store';
+import Store, {Cursor, FontAttributes} from './store';
 
 interface Font {
     width: number;
@@ -41,7 +41,6 @@ export default class NeovimScreen {
             bg: 'black',
         };
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.font = this.font.height + 'px monospace'; // TODO: Enable to specify font
 
         Store.on('put', this.drawText.bind(this));
     }
@@ -59,17 +58,18 @@ export default class NeovimScreen {
         this.drawBlock(0, 0, this.lines, this.columns, this.font.bg);
     }
 
-    drawText(chars: string[][], cursor: Cursor) {
+    drawText(chars: string[][], cursor: Cursor, attr: FontAttributes) {
         // Draw background
-        this.drawBlock(cursor.line, cursor.col, 1, chars.length, this.font.bg);
+        this.drawBlock(cursor.line, cursor.col, 1, chars.length, attr.bg);
 
+        this.ctx.font = this.font.height + 'px monospace'; // TODO: Enable to specify font
         this.ctx.textBaseline = 'top';
-        this.ctx.fillStyle = this.font.fg;
+        this.ctx.fillStyle = attr.fg;
         const text = chars.map(c => c[0] || '').join('');
         const x = cursor.col * this.font.width;
         const y = cursor.line * this.font.height;
         this.ctx.fillText(text, x, y);
-        console.log(`drawText(): (${x}, ${y})`, text, cursor);
+        console.log(`drawText(): (${x}, ${y})`, JSON.stringify(text), cursor);
     }
 
     drawBlock(line: number, col: number, height: number, width: number, color: string) {

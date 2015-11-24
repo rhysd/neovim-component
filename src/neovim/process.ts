@@ -88,7 +88,7 @@ function redraw(events: RPCValue[][]) {
                 Dispatcher.dispatch(Action.cursor(args[0] as number, args[1] as number));
                 break;
             case 'highlight_set':
-                Dispatcher.dispatch(Action.highlight());
+                Dispatcher.dispatch(Action.highlight(args[0] as Action.HighlightSet));
                 break;
             case 'clear':
                 Dispatcher.dispatch(Action.clearAll());

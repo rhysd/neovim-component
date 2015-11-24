@@ -1,5 +1,17 @@
 import {RPCValue} from './process';
 
+export interface HighlightSet {
+    fg?: string;
+    bg?: string;
+    bold?: boolean;
+    italic?: boolean;
+    reverse?: boolean;
+    underline?: boolean;
+    undercurl?: boolean;
+    foreground?: number;
+    background?: number;
+}
+
 export enum Kind {
     PutText,
     Cursor,
@@ -23,6 +35,7 @@ export interface ActionType {
     cols?: number;
     color?: number;
     mode?: string;
+    highlight?: HighlightSet;
 }
 
 export function putText(text: string[][]) {
@@ -39,10 +52,10 @@ export function cursor(line: number, col: number) {
     };
 }
 
-export function highlight() {
+export function highlight(highlight: HighlightSet) {
     return {
         type: Kind.Highlight,
-        // TODO
+        highlight,
     };
 }
 

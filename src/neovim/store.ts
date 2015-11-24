@@ -12,16 +12,23 @@ export interface Cursor {
     col: number;
 }
 
-export interface Color {
+export interface FontAttributes {
     fg: string;
     bg: string;
+    bold: boolean;
+    italic: boolean;
+    reverse: boolean;
+    underline: boolean;
+    undercurl: boolean;
 }
 
 export class NeovimStore extends EventEmitter {
     dispatch_token: string;
 
     size: Size;
-    color: Color;
+    font_attr: FontAttributes;
+    fg_color: string;
+    bg_color: string;
     cursor: Cursor;
     mode: string;
     busy: boolean;
@@ -32,9 +39,14 @@ export class NeovimStore extends EventEmitter {
             lines: 0,
             cols: 0,
         };
-        this.color = {
+        this.font_attr = {
             fg: 'white',
             bg: 'black',
+            bold: false,
+            italic: false,
+            reverse: false,
+            underline: false,
+            undercurl: false,
         };
         this.cursor = {
             line: 0,
@@ -58,7 +70,7 @@ function colorString(new_color: number, fallback: string) {
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
     switch(action.type) {
         case Kind.PutText:
-            store.emit('put', action.text, store.cursor);
+            store.emit('put', action.text, store.cursor, store.font_attr);
             store.cursor.col = store.cursor.col + action.text.length;
             store.emit('cursor', store.cursor);
             break;
@@ -70,7 +82,15 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.emit('cursor', store.cursor);
             break;
         case Kind.Highlight:
-            console.log('Kind.Highlight is ignored');
+            const hl = action.highlight;
+            store.font_attr.bold = hl.bold;
+            store.font_attr.italic = hl.italic;
+            store.font_attr.reverse = hl.reverse;
+            store.font_attr.underline = hl.underline;
+            store.font_attr.fg = colorString(hl.foreground, store.fg_color)
+            store.font_attr.bg = colorString(hl.background, store.bg_color)
+            if (hl.background) {
+            }
             break;
         case Kind.ClearAll:
             store.emit('clear-all');
@@ -91,12 +111,12 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.emit('resize', store.size);
             break;
         case Kind.UpdateFG:
-            store.color.fg = colorString(action.color, store.color.fg);
-            store.emit('update-fg', store.color);
+            store.fg_color = colorString(action.color, store.font_attr.fg);
+            store.emit('update-fg', store.fg_color);
             break;
         case Kind.UpdateBG:
-            store.color.bg = colorString(action.color, store.color.bg);
-            store.emit('update-bg', store.color);
+            store.bg_color = colorString(action.color, store.font_attr.bg);
+            store.emit('update-bg', store.bg_color);
             break;
         case Kind.Mode:
             store.mode = action.mode;
