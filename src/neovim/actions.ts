@@ -24,6 +24,7 @@ export enum Kind {
     Mode,
     BusyStart,
     BusyStop,
+    UpdateFontSize,
 };
 
 export interface ActionType {
@@ -36,6 +37,8 @@ export interface ActionType {
     color?: number;
     mode?: string;
     highlight?: HighlightSet;
+    width?: number;
+    height?: number;
 }
 
 export function putText(text: string[][]) {
@@ -111,3 +114,9 @@ export function stopBusy() {
     };
 }
 
+export function updateFontSize(width: number, height: number) {
+    return {
+        type: Kind.UpdateFontSize,
+        width, height,
+    };
+}

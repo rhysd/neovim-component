@@ -1,10 +1,10 @@
 import Store, {Cursor, FontAttributes} from './store';
+import Dispatcher from './dispatcher';
+import {updateFontSize} from './actions';
 
 interface Font {
     width: number;
     height: number;
-    fg: string;
-    bg: string;
 }
 
 export default class NeovimScreen {
@@ -17,8 +17,6 @@ export default class NeovimScreen {
         this.font = {
             width: font_size / 2,
             height: font_size,
-            fg: 'white',
-            bg: 'black',
         };
         this.ctx = this.canvas.getContext('2d');
 
@@ -26,49 +24,58 @@ export default class NeovimScreen {
         Store.on('clear-all', this.clearAll.bind(this));
     }
 
-    clearAll(bg_color: string) {
-        this.drawBlock(0, 0, this.lines, this.columns, bg_color);
+    clearAll() {
+        this.drawBlock(0, 0, this.lines, this.columns, Store.bg_color);
     }
 
-    clearEol(cursor: Cursor, bg_color: string) {
-        const clear_length = this.lines * this.font.width - cursor.col * this.font.width;
-        this.drawBlock(cursor.line, cursor.col, 1, clear_length, bg_color);
+    clearEol() {
+        const {line, col} = Store.cursor;
+        const width = Store.font_attr.width;
+        const clear_length = this.lines * width - col * width;
+        this.drawBlock(line, col, 1, clear_length, Store.bg_color);
     }
 
     initializeCanvas() {
         const w = this.canvas.clientWidth;
         const h = this.canvas.clientHeight;
 
-        this.font.width = this.ctx.measureText('m').width;
-        this.font.height = this.font.width * 2;
+        this.ctx.font = this.font.height + 'px monospace'; // TODO: Enable to specify font
+        const font_width = this.ctx.measureText('m').width;
+        const font_height = font_width * 2;
 
-        this.lines = Math.floor(h / this.font.height);
-        this.columns = Math.floor(w / this.font.width);
+        Dispatcher.dispatch(updateFontSize(font_width, font_height));
 
-        this.drawBlock(0, 0, this.lines, this.columns, this.font.bg);
+        this.lines = Math.floor(h / font_height);
+        this.columns = Math.floor(w / font_width);
     }
 
-    drawText(chars: string[][], cursor: Cursor, attr: FontAttributes) {
-        // Draw background
-        this.drawBlock(cursor.line, cursor.col, 1, chars.length, attr.bg);
+    drawText(chars: string[][]) {
+        const {line, col} = Store.cursor;
+        const {fg, bg, width, height} = Store.font_attr;
 
-        this.ctx.font = this.font.height + 'px monospace'; // TODO: Enable to specify font
+        // Draw background
+        this.drawBlock(line, col, 1, chars.length, bg);
+
+        // TODO: Enable to specify font
+        // TODO: Consider font attributes (e.g. underline, bold, ...)
+        this.ctx.font = height + 'px monospace';
         this.ctx.textBaseline = 'top';
-        this.ctx.fillStyle = attr.fg;
-        const text = chars.map(c => c[0] || '').join('');
-        const x = cursor.col * this.font.width;
-        const y = cursor.line * this.font.height;
+        this.ctx.fillStyle = fg;
+        const text = chars.map(c => (c[0] || '')).join('');
+        const x = col * width;
+        const y = line * height;
         this.ctx.fillText(text, x, y);
-        console.log(`drawText(): (${x}, ${y})`, JSON.stringify(text), cursor);
+        console.log(`drawText(): (${x}, ${y})`, JSON.stringify(text), Store.cursor);
     }
 
     drawBlock(line: number, col: number, height: number, width: number, color: string) {
+        const attr = Store.font_attr;
         this.ctx.fillStyle = color;
         this.ctx.fillRect(
-                col * this.font.width,
-                line * this.font.height,
-                Math.ceil(width * this.font.width),
-                Math.ceil(height * this.font.height)
+                col * attr.width,
+                line * attr.height,
+                Math.ceil(width * attr.width),
+                Math.ceil(height * attr.height)
             );
     }
 }

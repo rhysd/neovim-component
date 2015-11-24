@@ -20,6 +20,8 @@ export interface FontAttributes {
     reverse: boolean;
     underline: boolean;
     undercurl: boolean;
+    width: number;
+    height: number;
 }
 
 export class NeovimStore extends EventEmitter {
@@ -47,6 +49,8 @@ export class NeovimStore extends EventEmitter {
             reverse: false,
             underline: false,
             undercurl: false,
+            width: 1,
+            height: 1,
         };
         this.cursor = {
             line: 0,
@@ -70,16 +74,16 @@ function colorString(new_color: number, fallback: string) {
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
     switch(action.type) {
         case Kind.PutText:
-            store.emit('put', action.text, store.cursor, store.font_attr);
+            store.emit('put', action.text);
             store.cursor.col = store.cursor.col + action.text.length;
-            store.emit('cursor', store.cursor);
+            store.emit('cursor');
             break;
         case Kind.Cursor:
             store.cursor = {
                 line: action.line,
                 col: action.col,
             };
-            store.emit('cursor', store.cursor);
+            store.emit('cursor');
             break;
         case Kind.Highlight:
             const hl = action.highlight;
@@ -91,30 +95,30 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.font_attr.bg = colorString(hl.background, store.bg_color)
             break;
         case Kind.ClearAll:
-            store.emit('clear-all', store.bg_color);
+            store.emit('clear-all');
             store.cursor = {
                 line: 0,
                 col: 0,
             };
-            store.emit('cursor', store.cursor);
+            store.emit('cursor');
             break;
         case Kind.ClearEOL:
-            store.emit('clear-eol', store.cursor, store.bg_color);
+            store.emit('clear-eol');
             break;
         case Kind.Resize:
             store.size = {
                 lines: action.lines,
                 cols: action.cols,
             };
-            store.emit('resize', store.size);
+            store.emit('resize');
             break;
         case Kind.UpdateFG:
             store.fg_color = colorString(action.color, store.font_attr.fg);
-            store.emit('update-fg', store.fg_color);
+            store.emit('update-fg');
             break;
         case Kind.UpdateBG:
             store.bg_color = colorString(action.color, store.font_attr.bg);
-            store.emit('update-bg', store.bg_color);
+            store.emit('update-bg');
             break;
         case Kind.Mode:
             store.mode = action.mode;
@@ -122,11 +126,16 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             break;
         case Kind.BusyStart:
             store.busy = true;
-            store.emit('busy', store.busy);
+            store.emit('busy');
             break;
         case Kind.BusyStop:
             store.busy = false;
-            store.emit('busy', store.busy);
+            store.emit('busy');
+            break;
+        case Kind.UpdateFontSize:
+            console.log('updateFontSize: ', action);
+            store.font_attr.width = action.width;
+            store.font_attr.height = action.height;
             break;
         default:
             console.log('Unhandled action: ', action);
