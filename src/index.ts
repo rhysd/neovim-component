@@ -4,8 +4,14 @@ Polymer({
     is: 'neovim-editor',
 
     properties: {
-        width: Number,
-        height: Number,
+        width: {
+            type: Number,
+            value: 800,
+        },
+        height: {
+            type: Number,
+            value: 600,
+        },
         fontSize: {
             type: Number,
             value: 12,
@@ -25,8 +31,6 @@ Polymer({
         const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
         console.log(canvas);
         this.app = new Neovim(
-                this.width,
-                this.height,
                 this.fontSize,
                 this.nvimCmd,
                 this.argv,
