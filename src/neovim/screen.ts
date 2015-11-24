@@ -7,26 +7,6 @@ interface Font {
     bg: string;
 }
 
-
-// function handlePut(lines: Immutable.List<string>, cursor_line: number, cursor_col: number, chars: string[][]) {
-//     const prev_line = lines.get(cursor_line) || '';
-//     let next_line = prev_line.substring(0, cursor_col);
-//     if (next_line.length < cursor_col) {
-//         next_line += ' '.repeat(cursor_col - next_line.length);
-//     }
-//     for (const c of chars) {
-//         if (c.length !== 1) {
-//             console.log('Invalid character: ', c);
-//         }
-//         next_line += c[0];
-//     }
-//     if (cursor_col + chars.length < prev_line.length) {
-//         next_line += prev_line.substring(cursor_col + chars.length);
-//     }
-//     return lines.set(cursor_line, next_line);
-// }
-
-
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
     lines: number;
@@ -43,6 +23,16 @@ export default class NeovimScreen {
         this.ctx = this.canvas.getContext('2d');
 
         Store.on('put', this.drawText.bind(this));
+        Store.on('clear-all', this.clearAll.bind(this));
+    }
+
+    clearAll(bg_color: string) {
+        this.drawBlock(0, 0, this.lines, this.columns, bg_color);
+    }
+
+    clearEol(cursor: Cursor, bg_color: string) {
+        const clear_length = this.lines * this.font.width - cursor.col * this.font.width;
+        this.drawBlock(cursor.line, cursor.col, 1, clear_length, bg_color);
     }
 
     initializeCanvas() {
@@ -77,8 +67,9 @@ export default class NeovimScreen {
         this.ctx.fillRect(
                 col * this.font.width,
                 line * this.font.height,
-                width * this.font.width,
-                height * this.font.height
+                Math.ceil(width * this.font.width),
+                Math.ceil(height * this.font.height)
             );
     }
 }
+

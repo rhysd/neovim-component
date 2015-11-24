@@ -89,11 +89,9 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.font_attr.underline = hl.underline;
             store.font_attr.fg = colorString(hl.foreground, store.fg_color)
             store.font_attr.bg = colorString(hl.background, store.bg_color)
-            if (hl.background) {
-            }
             break;
         case Kind.ClearAll:
-            store.emit('clear-all');
+            store.emit('clear-all', store.bg_color);
             store.cursor = {
                 line: 0,
                 col: 0,
@@ -101,7 +99,7 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.emit('cursor', store.cursor);
             break;
         case Kind.ClearEOL:
-            store.emit('clear-eol', store.cursor);
+            store.emit('clear-eol', store.cursor, store.bg_color);
             break;
         case Kind.Resize:
             store.size = {
