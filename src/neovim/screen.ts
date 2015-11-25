@@ -14,6 +14,8 @@ export default class NeovimScreen {
         Store.on('clear-all', this.clearAll.bind(this));
         Store.on('clear-eol', this.clearEol.bind(this));
         Store.on('font-px-specified', this.updateActualFontSize.bind(this));
+        // Note: 'update-bg' clears all texts in screen.
+        Store.on('update-bg', this.clearAll.bind(this));
 
         this.updateActualFontSize();
 
@@ -40,7 +42,8 @@ export default class NeovimScreen {
     }
 
     clearAll() {
-        this.drawBlock(0, 0, this.lines, this.columns, Store.bg_color);
+        this.ctx.fillStyle = Store.bg_color;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     clearEol() {

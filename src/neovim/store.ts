@@ -98,6 +98,7 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.font_attr.underline = hl.underline;
             store.font_attr.fg = colorString(hl.foreground, store.fg_color)
             store.font_attr.bg = colorString(hl.background, store.bg_color)
+            console.log('Highlight is updated: ', store.font_attr);
             break;
         case Kind.Focus:
             store.emit('focus');
@@ -123,10 +124,12 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
         case Kind.UpdateFG:
             store.fg_color = colorString(action.color, store.font_attr.fg);
             store.emit('update-fg');
+            console.log('Foreground color is updated: ' + store.fg_color);
             break;
         case Kind.UpdateBG:
             store.bg_color = colorString(action.color, store.font_attr.bg);
             store.emit('update-bg');
+            console.log('Background color is updated: ' + store.bg_color);
             break;
         case Kind.Mode:
             store.mode = action.mode;
