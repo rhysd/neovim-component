@@ -12,9 +12,7 @@ export default class NeovimScreen {
 
         Store.on('put', this.drawText.bind(this));
         Store.on('clear-all', this.clearAll.bind(this));
-    }
 
-    initializeCanvas() {
         const w = this.canvas.clientWidth;
         const h = this.canvas.clientHeight;
 

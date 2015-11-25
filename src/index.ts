@@ -28,17 +28,11 @@ Polymer({
     },
 
     ready: function() {
-        const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
-        console.log(canvas);
-        this.app = new Neovim(
-                this.fontSize,
-                this.nvimCmd,
-                this.argv,
-                canvas
-            );
+        this.app = new Neovim(this.nvimCmd, this.argv);
     },
 
     attached: function() {
-        this.app.start();
+        const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
+        this.app.attachDOM(canvas, this.fontSize);
     },
 });
