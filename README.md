@@ -1,10 +1,14 @@
 `<neovim-editor>` web component
 ===============================
 
-This component provides `<neovim-editor>` custom element built on [Polymer](https://github.com/Polymer/polymer) and [flux](https://github.com/facebook/flux).  It provides a frontend of [Neovim editor](https://github.com/neovim/neovim) using Neovim's MessagePack API and you can embed Neovim editor easily to your application.
-**This component assumes the environment where Node.js is integrated.** So you can use this component for modern desktop application frameworks such as [Electron](https://github.com/atom/electron) or [NW.js](https://github.com/nwjs/nw.js).
+This component provides `<neovim-editor>` HTML custom element built on [Polymer](https://github.com/Polymer/polymer) and [flux](https://github.com/facebook/flux).
+It provides a frontend of [Neovim editor](https://github.com/neovim/neovim) using Neovim's MessagePack API and you can embed Neovim editor easily to your application.
 
-This component is designed with [Flux architecture](https://facebook.github.io/flux/docs/overview.html).  You can access the UI event notifications and can call Neovim APIs directly via `<neovim-editor>`'s APIs.
+**This component assumes the environment where Node.js is integrated.**
+So you can use this component for modern desktop application frameworks such as [Electron](https://github.com/atom/electron) or [NW.js](https://github.com/nwjs/nw.js).
+
+This component is designed with [Flux architecture](https://facebook.github.io/flux/docs/overview.html).
+You can access the UI event notifications and can call Neovim APIs directly via `<neovim-editor>`'s APIs.
 
 <!-- TODO: Screen shot here -->
 
@@ -28,14 +32,15 @@ Please see the very simple [Electron](https://github.com/atom/electron) app in [
 
 ## TODOs
 
-This component is currently being developped.
+This component is currently being developed.
 
 - [x] Show UI
 - [x] Highlight
 - [x] Display cursor
-- [ ] Input to neovim
+- [x] Input to neovim
+- [ ] Resize
 - [ ] Mouse support
-- [ ] WebGL rendering (using pixi.js or CreateJS)
+- [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/))
 
 ## `<neovim-editor>` Properties
 
@@ -51,9 +56,12 @@ You can customize `<neovim-editor>` with its properties.
 
 ## `<neovim-editor>` APIs
 
-### Receive internal many events
+### Receive internal various events
 
-You can receive many events (including UI redraw notifications) from **store**.  **Store** is a part of flux architecture.  Do not change the value of store directly because it breaks the internal state of component.
+You can receive various events (including UI redraw notifications) from **store**.
+Store is a part of flux architecture and global instance of [EventEmitter](https://nodejs.org/api/events.html).
+
+Note that all values are read only.  Do not change the value of store directly because it breaks the internal state of component.
 
 ```javascript
 const neovim_element = document.getElementById('neovim');
@@ -73,9 +81,12 @@ Store.on('put', () => console.log('UI was redrawn'));
 
 ### Call Neovim APIs
 
-You can call [Neovim APIs](https://neovim.io/doc/user/msgpack_rpc.html#msgpack-rpc-api) via **client**.  When you call some APIs via the client, it sends the call to underlying Neovim process via MessagePack RPC and will receive the returned value.  You can get the returned value from API as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) value.
+You can call [Neovim APIs](https://neovim.io/doc/user/msgpack_rpc.html#msgpack-rpc-api) via **client**.
+When you call some APIs via the client, it sends the call to underlying Neovim process via MessagePack RPC and will receive the returned value.
+You can get the returned value from API as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) value.
 
-`<neovim-component>` uses [promised-neovim-client](https://github.com/rhysd/promised-neovim-client) package.  You can see the all API definitions [here](https://github.com/rhysd/promised-neovim-client/blob/promisified/index.d.ts).
+`<neovim-component>` uses [promised-neovim-client](https://github.com/rhysd/promised-neovim-client) package.
+You can see the all API definitions [here](https://github.com/rhysd/promised-neovim-client/blob/promisified/index.d.ts).
 
 ```javascript
 const neovim_element = document.getElementById('neovim');
