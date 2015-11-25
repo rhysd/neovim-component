@@ -34,6 +34,7 @@ export class NeovimStore extends EventEmitter {
     cursor: Cursor;
     mode: string;
     busy: boolean;
+    font_px: number;
 
     constructor() {
         super();
@@ -58,6 +59,7 @@ export class NeovimStore extends EventEmitter {
         };
         this.mode = 'normal';
         this.busy = false;
+        this.font_px = 0;
     }
 }
 
@@ -139,9 +141,12 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.emit('busy');
             break;
         case Kind.UpdateFontSize:
-            console.log('updateFontSize: ', action);
             store.font_attr.width = action.width;
             store.font_attr.height = action.height;
+            break;
+        case Kind.UpdateFontPx:
+            store.font_px = action.font_px;
+            store.emit('font-px-specified');
             break;
         default:
             console.log('Unhandled action: ', action);

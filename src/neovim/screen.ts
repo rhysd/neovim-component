@@ -7,25 +7,31 @@ export default class NeovimScreen {
     lines: number;
     columns: number;
 
-    constructor(public canvas: HTMLCanvasElement, public specifed_font_px: number) {
+    constructor(public canvas: HTMLCanvasElement) {
         this.ctx = this.canvas.getContext('2d');
 
         Store.on('put', this.drawText.bind(this));
         Store.on('clear-all', this.clearAll.bind(this));
+        Store.on('font-px-specified', this.updateActualFontSize.bind(this));
 
-        const w = this.canvas.clientWidth;
-        const h = this.canvas.clientHeight;
+        this.updateActualFontSize();
 
-        this.ctx.font = this.specifed_font_px + 'px monospace'; // TODO: Enable to specify font
+        canvas.addEventListener('click', this.focus.bind(this));
+    }
+
+    updateActualFontSize() {
+        this.ctx.font = Store.font_px + 'px monospace'; // TODO: Enable to specify font
         const font_width = this.ctx.measureText('m').width;
         const font_height = font_width * 2;
 
-        Dispatcher.dispatch(updateFontSize(font_width, font_height));
-
+        const w = this.canvas.clientWidth;
+        const h = this.canvas.clientHeight;
         this.lines = Math.floor(h / font_height);
         this.columns = Math.floor(w / font_width);
 
-        canvas.addEventListener('click', this.focus.bind(this));
+        // TODO: Call vim_try_resize Neovim API to resize backend screen
+
+        Dispatcher.dispatch(updateFontSize(font_width, font_height));
     }
 
     focus() {
@@ -52,7 +58,7 @@ export default class NeovimScreen {
 
         // TODO: Enable to specify font
         // TODO: Consider font attributes (e.g. underline, bold, ...)
-        this.ctx.font = this.specifed_font_px + 'px monospace';
+        this.ctx.font = Store.font_px + 'px monospace';
         this.ctx.textBaseline = 'top';
         this.ctx.fillStyle = fg;
         const text = chars.map(c => (c[0] || '')).join('');

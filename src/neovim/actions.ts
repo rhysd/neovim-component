@@ -25,6 +25,7 @@ export enum Kind {
     UpdateFontSize,
     Input,
     Focus,
+    UpdateFontPx,
 };
 
 export interface ActionType {
@@ -40,6 +41,7 @@ export interface ActionType {
     width?: number;
     height?: number;
     input?: string;
+    font_px?: number;
 }
 
 export function putText(text: string[][]) {
@@ -132,5 +134,12 @@ export function inputToNeovim(input: string) {
 export function focus() {
     return {
         type: Kind.Focus,
+    };
+}
+
+export function updateFontPx(font_px: number) {
+    return {
+        type: Kind.UpdateFontPx,
+        font_px,
     };
 }
