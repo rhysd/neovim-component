@@ -26,6 +26,7 @@ export enum Kind {
     Input,
     Focus,
     UpdateFontPx,
+    UpdateFontFace,
 };
 
 export interface ActionType {
@@ -42,6 +43,7 @@ export interface ActionType {
     height?: number;
     input?: string;
     font_px?: number;
+    font_face?: string;
 }
 
 export function putText(text: string[][]) {
@@ -141,5 +143,12 @@ export function updateFontPx(font_px: number) {
     return {
         type: Kind.UpdateFontPx,
         font_px,
+    };
+}
+
+export function updateFontFace(font_face: string) {
+    return {
+        type: Kind.UpdateFontFace,
+        font_face,
     };
 }

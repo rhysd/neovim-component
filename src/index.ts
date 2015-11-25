@@ -16,6 +16,10 @@ Polymer({
             type: Number,
             value: 12,
         },
+        font: {
+            type: String,
+            value: 'monospace'
+        },
         nvimCmd: {
             type: String,
             value: 'nvim',
@@ -28,7 +32,7 @@ Polymer({
     },
 
     ready: function() {
-        this.app = new Neovim(this.nvimCmd, this.argv, this.fontSize);
+        this.app = new Neovim(this.nvimCmd, this.argv, this.font, this.fontSize);
     },
 
     attached: function() {

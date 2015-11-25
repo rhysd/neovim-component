@@ -22,6 +22,8 @@ export interface FontAttributes {
     undercurl: boolean;
     width: number;
     height: number;
+    face: string;
+    specified_px: number;
 }
 
 export class NeovimStore extends EventEmitter {
@@ -34,7 +36,6 @@ export class NeovimStore extends EventEmitter {
     cursor: Cursor;
     mode: string;
     busy: boolean;
-    font_px: number;
 
     constructor() {
         super();
@@ -52,6 +53,8 @@ export class NeovimStore extends EventEmitter {
             undercurl: false,
             width: 1,
             height: 1,
+            specified_px: 1,
+            face: 'monospace',
         };
         this.cursor = {
             line: 0,
@@ -59,7 +62,6 @@ export class NeovimStore extends EventEmitter {
         };
         this.mode = 'normal';
         this.busy = false;
-        this.font_px = 0;
     }
 }
 
@@ -149,8 +151,12 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             console.log(`Actual font size is updated: ${action.width}:${action.height}`);
             break;
         case Kind.UpdateFontPx:
-            store.font_px = action.font_px;
+            store.font_attr.specified_px = action.font_px;
             store.emit('font-px-specified');
+            break;
+        case Kind.UpdateFontPx:
+            store.font_attr.face = action.font_face;
+            store.emit('font-face-specified');
             break;
         default:
             console.log('Unhandled action: ', action);

@@ -1,4 +1,4 @@
-`<neovim-editor>` web component
+`<neovim-editor>` Web Component
 ===============================
 
 This component provides `<neovim-editor>` HTML custom element built on [Polymer](https://github.com/Polymer/polymer) and [flux](https://github.com/facebook/flux).
@@ -52,13 +52,14 @@ This component is currently being developed.
 
 You can customize `<neovim-editor>` with its properties.
 
-| Name       | Description                         | Default  |
-| ---------- | ----------------------------------- | -------- |
-| `width`    | Width of editor in pixel.           | `800`    |
-| `height`   | Height of editor in pixel.          | `600`    |
-| `fontSize` | Font size in pixel.                 | `12`     |
-| `nvimCmd`  | Command to start Neovim.            | `"nvim"` |
-| `argv`     | Arguments passed to Neovim command. | `[]`     |
+| Name       | Description                         | Default       |
+| ---------- | ----------------------------------- | ------------- |
+| `width`    | Width of editor in pixel.           | `800`         |
+| `height`   | Height of editor in pixel.          | `600`         |
+| `font`     | Face name of font.                  | `"monospace"` |
+| `fontSize` | Font size in pixel.                 | `12`          |
+| `nvimCmd`  | Command to start Neovim.            | `"nvim"`      |
+| `argv`     | Arguments passed to Neovim command. | `[]`          |
 
 ## `<neovim-editor>` APIs
 
