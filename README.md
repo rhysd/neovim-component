@@ -12,6 +12,12 @@ You can access the UI event notifications and can call Neovim APIs directly via 
 
 <!-- TODO: Screen shot here -->
 
+You can install this component as [npm package](https://www.npmjs.com/package/neovim-component).
+
+```
+$ npm install neovim-component
+```
+
 ## Example
 
 ```html
