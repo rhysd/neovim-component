@@ -1,6 +1,6 @@
 import Store, {Cursor, FontAttributes} from './store';
 import Dispatcher from './dispatcher';
-import {updateFontSize} from './actions';
+import {updateFontSize, focus} from './actions';
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
@@ -24,6 +24,12 @@ export default class NeovimScreen {
 
         this.lines = Math.floor(h / font_height);
         this.columns = Math.floor(w / font_width);
+
+        canvas.addEventListener('click', this.focus.bind(this));
+    }
+
+    focus() {
+        Dispatcher.dispatch(focus());
     }
 
     clearAll() {

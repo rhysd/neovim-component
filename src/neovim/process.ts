@@ -6,6 +6,7 @@ import NvimClient = require('promised-neovim-client');
 const attach = (global.require('promised-neovim-client') as typeof NvimClient).attach;
 import Action = require('./actions');
 import Dispatcher from './dispatcher';
+import Store from './store';
 
 // Note:
 // TypeScript doesn't allow recursive definition
@@ -41,6 +42,7 @@ export default class NeovimProcess {
                 nvim.uiAttach(columns, lines, true);
                 this.started = true;
                 console.log(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
+                Store.on('input', (i: string) => nvim.input(i));
             }).catch(err => console.log(err));
     }
 

@@ -73,6 +73,9 @@ function colorString(new_color: number, fallback: string) {
 
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
     switch(action.type) {
+        case Kind.Input:
+            store.emit('input', action.input);
+            break;
         case Kind.PutText:
             store.emit('put', action.text);
             store.cursor.col = store.cursor.col + action.text.length;
@@ -93,6 +96,9 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.font_attr.underline = hl.underline;
             store.font_attr.fg = colorString(hl.foreground, store.fg_color)
             store.font_attr.bg = colorString(hl.background, store.bg_color)
+            break;
+        case Kind.Focus:
+            store.emit('focus');
             break;
         case Kind.ClearAll:
             store.emit('clear-all');

@@ -3,12 +3,14 @@ import Screen from './neovim/screen';
 import Store, {NeovimStore as StoreType} from './neovim/store';
 import {ActionType} from './neovim/actions';
 import Cursor from './neovim/cursor';
+import Input from './neovim/input';
 
 export default class Neovim {
     process: Process;
     screen: Screen;
     store: StoreType;
     cursor: Cursor;
+    input: Input;
 
     constructor(command: string, argv: string[]) {
         this.store = Store;
@@ -19,6 +21,7 @@ export default class Neovim {
         this.screen = new Screen(canvas, font_size);
         this.process.attach(this.screen.lines, this.screen.columns);
         this.cursor = new Cursor();
+        this.input = new Input();
     }
 
     quit() {
@@ -27,5 +30,9 @@ export default class Neovim {
 
     getClient() {
         return this.process.client;
+    }
+
+    focus() {
+        this.screen.focus();
     }
 }

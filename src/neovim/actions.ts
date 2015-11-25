@@ -1,5 +1,3 @@
-import {RPCValue} from './process';
-
 export interface HighlightSet {
     fg?: string;
     bg?: string;
@@ -25,6 +23,8 @@ export enum Kind {
     BusyStart,
     BusyStop,
     UpdateFontSize,
+    Input,
+    Focus,
 };
 
 export interface ActionType {
@@ -39,6 +39,7 @@ export interface ActionType {
     highlight?: HighlightSet;
     width?: number;
     height?: number;
+    input?: string;
 }
 
 export function putText(text: string[][]) {
@@ -118,5 +119,18 @@ export function updateFontSize(width: number, height: number) {
     return {
         type: Kind.UpdateFontSize,
         width, height,
+    };
+}
+
+export function inputToNeovim(input: string) {
+    return {
+        type: Kind.Input,
+        input,
+    };
+}
+
+export function focus() {
+    return {
+        type: Kind.Focus,
     };
 }

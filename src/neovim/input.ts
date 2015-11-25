@@ -1,3 +1,6 @@
+import Store from './store';
+import Dispatcher from './dispatcher';
+import {inputToNeovim} from './actions';
 
 export default class NeovimInput {
     element: HTMLInputElement;
@@ -5,12 +8,15 @@ export default class NeovimInput {
 
     constructor() {
         this.ime_running = false;
+
         this.element = document.querySelector('.neovim-input') as HTMLInputElement;
         this.element.addEventListener('compositionstart', this.startComposition.bind(this));
         this.element.addEventListener('compositionend', this.endComposition.bind(this));
         this.element.addEventListener('keydown', this.onInsertControlChar.bind(this));
         this.element.addEventListener('input', this.onInsertNormalChar.bind(this));
         this.element.addEventListener('blur', e => e.preventDefault());
+
+        Store.on('focus', this.focus.bind(this));
     }
 
     startComposition(event: Event) {
@@ -56,10 +62,9 @@ export default class NeovimInput {
     }
 
     inputToNeovim(input: string, event: Event) {
-        console.log('Input to neovim: ' + input);
+        Dispatcher.dispatch(inputToNeovim(input));
 
-        // TODO:
-        // Input to neovim process
+        console.log('Input to neovim: ' + input);
 
         event.preventDefault();
         event.stopPropagation();
