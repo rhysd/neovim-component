@@ -3,8 +3,36 @@
 <dom-module id="neovim-editor">
   <template>
     <style>
+      .neovim-wrapper {
+        padding: 0px;
+        margin: 0px;
+      }
+      .neovim-cursor {
+        color: transparent;
+        background-color: transparent;
+        padding: 0px;
+        margin: 0px;
+        border-width: 1px;
+        border-style: solid;
+        position: absolute;
+        box-sizing: border-box;
+      }
+      .neovim-input {
+        width: 1px;
+        color: transparent;
+        background-color: transparent;
+        padding: 0px;
+        border: 0px;
+        outline: none;
+        vertical-align: middle;
+      }
     </style>
-    <canvas class="neovim-canvas" width$="[[width]]" height$="[[height]]"></canvas>
+    <div class="neovim-wrapper">
+      <canvas class="neovim-canvas" width$="[[width]]" height$="[[height]]"></canvas>
+      <div class="neovim-cursor">
+        <input class="neovim-input" autofocus />
+      </div>
+    <div>
   </template>
 </dom-module>
 

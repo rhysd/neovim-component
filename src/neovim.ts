@@ -8,6 +8,7 @@ export default class Neovim {
     process: Process;
     screen: Screen;
     store: StoreType;
+    cursor: Cursor;
 
     constructor(command: string, argv: string[]) {
         this.store = Store;
@@ -17,6 +18,7 @@ export default class Neovim {
     attachDOM(canvas: HTMLCanvasElement, font_size: number) {
         this.screen = new Screen(canvas, font_size);
         this.process.attach(this.screen.lines, this.screen.columns);
+        this.cursor = new Cursor();
     }
 
     quit() {
