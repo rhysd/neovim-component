@@ -143,6 +143,7 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
         case Kind.UpdateFontSize:
             store.font_attr.width = action.width;
             store.font_attr.height = action.height;
+            console.log(`Actual font size is updated: ${action.width}:${action.height}`);
             break;
         case Kind.UpdateFontPx:
             store.font_px = action.font_px;

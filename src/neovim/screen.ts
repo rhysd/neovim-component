@@ -12,6 +12,7 @@ export default class NeovimScreen {
 
         Store.on('put', this.drawText.bind(this));
         Store.on('clear-all', this.clearAll.bind(this));
+        Store.on('clear-eol', this.clearEol.bind(this));
         Store.on('font-px-specified', this.updateActualFontSize.bind(this));
 
         this.updateActualFontSize();
@@ -26,7 +27,7 @@ export default class NeovimScreen {
 
         const w = this.canvas.clientWidth;
         const h = this.canvas.clientHeight;
-        this.lines = Math.floor(h / font_height);
+        this.lines = Math.floor(h / font_height) - 1; // XXX
         this.columns = Math.floor(w / font_width);
 
         // TODO: Call vim_try_resize Neovim API to resize backend screen
@@ -46,6 +47,7 @@ export default class NeovimScreen {
         const {line, col} = Store.cursor;
         const width = Store.font_attr.width;
         const clear_length = this.lines * width - col * width;
+        console.log(`Clear until EOL: ${line}:${col} length=${clear_length}`);
         this.drawBlock(line, col, 1, clear_length, Store.bg_color);
     }
 
@@ -72,8 +74,8 @@ export default class NeovimScreen {
         const attr = Store.font_attr;
         this.ctx.fillStyle = color;
         this.ctx.fillRect(
-                col * attr.width,
-                line * attr.height,
+                Math.floor(col * attr.width),
+                Math.floor(line * attr.height),
                 Math.ceil(width * attr.width),
                 Math.ceil(height * attr.height)
             );
