@@ -29,10 +29,17 @@ Polymer({
             value: () => [] as string[],
         },
         neovim: Object,
+        onQuit: Object,
     },
 
     ready: function() {
-        this.app = new Neovim(this.nvimCmd, this.argv, this.font, this.fontSize);
+        this.app = new Neovim(
+                this.nvimCmd,
+                this.argv,
+                this.font,
+                this.fontSize,
+                this.onQuit
+            );
     },
 
     attached: function() {

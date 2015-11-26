@@ -18,6 +18,12 @@
     </style>
   </head>
   <body>
-    <neovim-editor></neovim-editor>
+    <neovim-editor id="neovim"></neovim-editor>
   </body>
+  <script>
+    var neovim = document.getElementById('neovim');
+    neovim.editor.on('quit', function() {
+      require('remote').require('app').quit();
+    });
+  </script>
 </html>

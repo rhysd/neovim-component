@@ -33,7 +33,7 @@ export default class NeovimProcess {
     attach(lines: number, columns: number) {
         this.neovim_process = child_process.spawn(this.command, this.argv, {stdio: ['pipe', 'pipe', process.stderr]});
         this.client = null;
-        attach(this.neovim_process.stdin, this.neovim_process.stdout)
+        return attach(this.neovim_process.stdin, this.neovim_process.stdout)
             .then(nvim => {
                 this.client = nvim;
                 nvim.on('request', this.onRequested.bind(this));

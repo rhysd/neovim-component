@@ -18,6 +18,7 @@ You can install this component as [npm package](https://www.npmjs.com/package/ne
 $ npm install neovim-component
 ```
 
+
 ## Example
 
 ```html
@@ -52,14 +53,15 @@ This component is currently being developed.
 
 You can customize `<neovim-editor>` with its properties.
 
-| Name       | Description                         | Default       |
-| ---------- | ----------------------------------- | ------------- |
-| `width`    | Width of editor in pixel.           | `800`         |
-| `height`   | Height of editor in pixel.          | `600`         |
-| `font`     | Face name of font.                  | `"monospace"` |
-| `fontSize` | Font size in pixel.                 | `12`          |
-| `nvimCmd`  | Command to start Neovim.            | `"nvim"`      |
-| `argv`     | Arguments passed to Neovim command. | `[]`          |
+| Name       | Description                           | Default       |
+| ---------- | ------------------------------------- | ------------- |
+| `width`    | Width of editor in pixel.             | `800`         |
+| `height`   | Height of editor in pixel.            | `600`         |
+| `font`     | Face name of font.                    | `"monospace"` |
+| `fontSize` | Font size in pixel.                   | `12`          |
+| `nvimCmd`  | Command to start Neovim.              | `"nvim"`      |
+| `argv`     | Arguments passed to Neovim command.   | `[]`          |
+| `onQuit`   | Callback function on Neovim quitting. | `null`        |
 
 ## `<neovim-editor>` APIs
 
@@ -85,6 +87,7 @@ Store.on('put', () => console.log('UI was redrawn'));
 
 // and so on...
 ```
+
 
 ### Call Neovim APIs
 
@@ -114,3 +117,17 @@ client
     .then(win => console.log(win));
 ```
 
+
+### Editor lifecycle
+
+You can receive notifications related to lifecycle of editor.
+
+```javascript
+const neovim_element = document.getElementById('neovim');
+
+// Called on Neovim process attached
+neovim_element.neovim.on('attached', () => console.log('Neovim process is ready'));
+
+// Called on Neovim process is disconnected (usually by :quit)
+neovim_element.neovim.on('quit', () => console.log('Neovim process died'));
+```
