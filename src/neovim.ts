@@ -24,8 +24,6 @@ export default class Neovim extends EventEmitter {
     }
 
     attachDOM(canvas: HTMLCanvasElement) {
-        this.cursor = new Cursor();
-        this.input = new Input();
         this.screen = new Screen(canvas);
         this.process
             .attach(this.screen.lines, this.screen.columns)
@@ -33,6 +31,8 @@ export default class Neovim extends EventEmitter {
                 this.process.client.on('disconnect', () => this.emit('quit'));
                 this.emit('process-attached');
             });
+        this.cursor = new Cursor();
+        this.input = new Input();
     }
 
     quit() {

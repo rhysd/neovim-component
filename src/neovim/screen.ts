@@ -29,7 +29,7 @@ export default class NeovimScreen {
 
         const w = this.canvas.clientWidth;
         const h = this.canvas.clientHeight;
-        this.lines = Math.floor(h / font_height) - 1; // XXX
+        this.lines = Math.floor(h / font_height);
         this.columns = Math.floor(w / font_width);
 
         // TODO: Call vim_try_resize Neovim API to resize backend screen
