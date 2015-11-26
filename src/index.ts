@@ -18,7 +18,7 @@ Polymer({
         },
         font: {
             type: String,
-            value: 'monospace'
+            value: 'monospace',
         },
         nvimCmd: {
             type: String,

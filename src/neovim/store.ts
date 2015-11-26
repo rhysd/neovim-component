@@ -70,7 +70,8 @@ export default store;
 
 // Note: 0x001203 -> '#001203'
 function colorString(new_color: number, fallback: string) {
-    if (typeof new_color !== "number" || new_color < 0) {
+    'use strict';
+    if (typeof new_color !== 'number' || new_color < 0) {
         return fallback;
     }
 
@@ -82,7 +83,7 @@ function colorString(new_color: number, fallback: string) {
 }
 
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
-    switch(action.type) {
+    switch (action.type) {
         case Kind.Input:
             store.emit('input', action.input);
             break;

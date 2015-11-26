@@ -47,6 +47,7 @@ export interface ActionType {
 }
 
 export function putText(text: string[][]) {
+    'use strict';
     return {
         type: Kind.PutText,
         text,
@@ -54,6 +55,7 @@ export function putText(text: string[][]) {
 }
 
 export function cursor(line: number, col: number) {
+    'use strict';
     return {
         type: Kind.Cursor,
         line, col,
@@ -61,6 +63,7 @@ export function cursor(line: number, col: number) {
 }
 
 export function highlight(highlight: HighlightSet) {
+    'use strict';
     return {
         type: Kind.Highlight,
         highlight,
@@ -68,18 +71,21 @@ export function highlight(highlight: HighlightSet) {
 }
 
 export function clearAll() {
+    'use strict';
     return {
-        type: Kind.ClearAll,
+        type: Kind.ClearAll
     };
 }
 
 export function clearEndOfLine() {
+    'use strict';
     return {
-        type: Kind.ClearEOL,
+        type: Kind.ClearEOL
     };
 }
 
 export function resize(lines: number, cols: number) {
+    'use strict';
     return {
         type: Kind.Resize,
         lines, cols,
@@ -87,6 +93,7 @@ export function resize(lines: number, cols: number) {
 }
 
 export function updateForeground(color: number) {
+    'use strict';
     return {
         type: Kind.UpdateFG,
         color,
@@ -94,6 +101,7 @@ export function updateForeground(color: number) {
 }
 
 export function updateBackground(color: number) {
+    'use strict';
     return {
         type: Kind.UpdateBG,
         color,
@@ -101,6 +109,7 @@ export function updateBackground(color: number) {
 }
 
 export function changeMode(mode: string) {
+    'use strict';
     return {
         type: Kind.Mode,
         mode,
@@ -108,18 +117,21 @@ export function changeMode(mode: string) {
 }
 
 export function startBusy() {
+    'use strict';
     return {
-        type: Kind.BusyStart,
+        type: Kind.BusyStart
     };
 }
 
 export function stopBusy() {
+    'use strict';
     return {
-        type: Kind.BusyStop,
+        type: Kind.BusyStop
     };
 }
 
 export function updateFontSize(width: number, height: number) {
+    'use strict';
     return {
         type: Kind.UpdateFontSize,
         width, height,
@@ -127,6 +139,7 @@ export function updateFontSize(width: number, height: number) {
 }
 
 export function inputToNeovim(input: string) {
+    'use strict';
     return {
         type: Kind.Input,
         input,
@@ -134,12 +147,14 @@ export function inputToNeovim(input: string) {
 }
 
 export function focus() {
+    'use strict';
     return {
-        type: Kind.Focus,
+        type: Kind.Focus
     };
 }
 
 export function updateFontPx(font_px: number) {
+    'use strict';
     return {
         type: Kind.UpdateFontPx,
         font_px,
@@ -147,6 +162,7 @@ export function updateFontPx(font_px: number) {
 }
 
 export function updateFontFace(font_face: string) {
+    'use strict';
     return {
         type: Kind.UpdateFontFace,
         font_face,

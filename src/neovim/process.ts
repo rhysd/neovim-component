@@ -18,7 +18,7 @@ export type RPCValue =
         boolean |
         string |
         any[] |
-        {[key:string]: any};
+        {[key: string]: any};
 
 export default class NeovimProcess {
     neovim_process: cp.ChildProcess;
@@ -75,10 +75,11 @@ export default class NeovimProcess {
 }
 
 function redraw(events: RPCValue[][]) {
+    'use strict';
     for (const e of events) {
         const name = e[0] as string;
         const args = e[1] as RPCValue[];
-        switch(name) {
+        switch (name) {
             case 'put':
                 e.shift();
                 if (e.length !== 0) {

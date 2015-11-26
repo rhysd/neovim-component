@@ -1,4 +1,4 @@
-import Store, {Cursor, FontAttributes} from './store';
+import Store from './store';
 import Dispatcher from './dispatcher';
 import {updateFontSize, focus} from './actions';
 

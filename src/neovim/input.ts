@@ -6,6 +6,34 @@ export default class NeovimInput {
     element: HTMLInputElement;
     ime_running: boolean;
 
+    static shouldHandleModifier(event: KeyboardEvent) {
+        return event.ctrlKey && event.keyCode !== 17 ||
+               event.altKey && event.keyCode !== 18;
+    }
+
+    static getVimSpecialChar(code: number) {
+        switch (code) {
+            case 0:   return 'Nul';
+            case 8:   return 'BS';
+            case 9:   return 'Tab';
+            case 10:  return 'NL';
+            case 13:  return 'CR';
+            case 27:  return 'Esc';
+            case 32:  return 'Space';
+            case 35:  return 'End';
+            case 36:  return 'Home';
+            case 37:  return 'Left';
+            case 38:  return 'Up';
+            case 39:  return 'Right';
+            case 40:  return 'Down';
+            case 46:  return 'Del';
+            case 92:  return 'Bslash';
+            case 124: return 'Bar';
+            case 127: return 'Del';
+            default:  return null;
+        }
+    }
+
     constructor() {
         this.ime_running = false;
 
@@ -31,11 +59,6 @@ export default class NeovimInput {
 
     focus() {
         this.element.focus();
-    }
-
-    static shouldHandleModifier(event: KeyboardEvent) {
-        return event.ctrlKey && event.keyCode !== 17 ||
-               event.altKey && event.keyCode !== 18;
     }
 
     // Note:
@@ -70,29 +93,6 @@ export default class NeovimInput {
         event.stopPropagation();
         const t = event.target as HTMLInputElement;
         t.value = '';
-    }
-
-    static getVimSpecialChar(code: number) {
-        switch(code) {
-            case 0:   return 'Nul';
-            case 8:   return 'BS';
-            case 9:   return 'Tab';
-            case 10:  return 'NL';
-            case 13:  return 'CR';
-            case 27:  return 'Esc';
-            case 32:  return 'Space';
-            case 35:  return 'End';
-            case 36:  return 'Home';
-            case 37:  return 'Left';
-            case 38:  return 'Up';
-            case 39:  return 'Right';
-            case 40:  return 'Down';
-            case 46:  return 'Del';
-            case 92:  return 'Bslash';
-            case 124: return 'Bar';
-            case 127: return 'Del';
-            default:  return null;
-        }
     }
 
     onInsertNormalChar(event: KeyboardEvent) {

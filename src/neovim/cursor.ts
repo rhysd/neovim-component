@@ -22,7 +22,7 @@ export default class NeovimCursor {
     }
 
     onModeChanged() {
-        switch(Store.mode) {
+        switch (Store.mode) {
             case 'insert':
                 this.element.style.width = '1px';
                 break;

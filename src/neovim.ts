@@ -1,7 +1,7 @@
 import Process from './neovim/process';
 import Screen from './neovim/screen';
 import Store, {NeovimStore as StoreType} from './neovim/store';
-import {ActionType, updateFontPx, updateFontFace} from './neovim/actions';
+import {updateFontPx, updateFontFace} from './neovim/actions';
 import Cursor from './neovim/cursor';
 import Input from './neovim/input';
 import Dispatcher from './neovim/dispatcher';
