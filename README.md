@@ -10,8 +10,6 @@ So you can use this component for modern desktop application frameworks such as 
 This component is designed with [Flux architecture](https://facebook.github.io/flux/docs/overview.html).
 You can access the UI event notifications and can call Neovim APIs directly via `<neovim-editor>`'s APIs.
 
-<!-- TODO: Screen shot here -->
-
 You can install this component as [npm package](https://www.npmjs.com/package/neovim-component).
 
 ```
@@ -35,7 +33,9 @@ $ npm install neovim-component
 </html>
 ```
 
-Please see the very simple [Electron](https://github.com/atom/electron) app in [example directory](/example).  You can start it easily with `rake example` command.
+Please see the very simple [Electron](https://github.com/atom/electron) app in [example directory](/example).  You can start it easily with `rake` command.
+
+![example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/neovim-component-linux.png)
 
 ## TODOs
 
@@ -45,23 +45,26 @@ This component is currently being developed.
 - [x] Highlight
 - [x] Display cursor
 - [x] Input to neovim
-- [ ] Resize
+- [ ] Resize (by pixel and by lines&columns)
 - [ ] Mouse support
 - [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/))
+- [ ] Add API to convert pixel coordinate to line&column coordinate.
+
 
 ## `<neovim-editor>` Properties
 
 You can customize `<neovim-editor>` with its properties.
 
-| Name       | Description                           | Default       |
-| ---------- | ------------------------------------- | ------------- |
-| `width`    | Width of editor in pixel.             | `800`         |
-| `height`   | Height of editor in pixel.            | `600`         |
-| `font`     | Face name of font.                    | `"monospace"` |
-| `fontSize` | Font size in pixel.                   | `12`          |
-| `nvimCmd`  | Command to start Neovim.              | `"nvim"`      |
-| `argv`     | Arguments passed to Neovim command.   | `[]`          |
-| `onQuit`   | Callback function on Neovim quitting. | `null`        |
+| Name        | Description                           | Default       |
+| ----------- | ------------------------------------- | ------------- |
+| `width`     | Width of editor in pixel.             | `800`         |
+| `height`    | Height of editor in pixel.            | `600`         |
+| `font`      | Face name of font.                    | `"monospace"` |
+| `font-size` | Font size in pixel.                   | `12`          |
+| `nvim-cmd`  | Command to start Neovim.              | `"nvim"`      |
+| `argv`      | Arguments passed to Neovim command.   | `[]`          |
+| `on-quit`   | Callback function on Neovim quitting. | `null`        |
+
 
 ## `<neovim-editor>` APIs
 

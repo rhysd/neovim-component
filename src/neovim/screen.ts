@@ -32,8 +32,6 @@ export default class NeovimScreen {
         this.lines = Math.floor(h / font_height);
         this.columns = Math.floor(w / font_width);
 
-        // TODO: Call vim_try_resize Neovim API to resize backend screen
-
         Dispatcher.dispatch(updateFontSize(font_width, font_height));
     }
 

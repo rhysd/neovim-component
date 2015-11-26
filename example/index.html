@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes" />
+    <title>Neovim Web Component Example</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="../neovim-editor.html" />
@@ -18,7 +19,7 @@
     </style>
   </head>
   <body>
-    <neovim-editor id="neovim"></neovim-editor>
+    <neovim-editor id="neovim" font="Ricty,monospace" font-size="14"></neovim-editor>
   </body>
   <script>
     var neovim = document.getElementById('neovim');

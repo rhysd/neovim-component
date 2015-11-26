@@ -8,6 +8,7 @@ app.on('ready', function() {
     var win = new BrowserWindow({
         width: 800,
         height: 600,
+        useContentSize: true,
     });
 
     win.on('closed', function() {
