@@ -68,11 +68,17 @@ export class NeovimStore extends EventEmitter {
 const store = new NeovimStore();
 export default store;
 
+// Note: 0x001203 -> '#001203'
 function colorString(new_color: number, fallback: string) {
-    if (!new_color || new_color === -1) {
+    if (typeof new_color !== "number" || new_color < 0) {
         return fallback;
     }
-    return '#' + new_color.toString(16);
+
+    return '#' + [16, 8, 0].map(shift => {
+        const mask = 0xff << shift;
+        const hex = ((new_color & mask) >> shift).toString(16);
+        return hex.length < 2 ? ('0' + hex) : hex;
+    }).join('');
 }
 
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
@@ -98,8 +104,8 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.font_attr.italic = hl.italic;
             store.font_attr.reverse = hl.reverse;
             store.font_attr.underline = hl.underline;
-            store.font_attr.fg = colorString(hl.foreground, store.fg_color)
-            store.font_attr.bg = colorString(hl.background, store.bg_color)
+            store.font_attr.fg = colorString(hl.foreground, store.fg_color);
+            store.font_attr.bg = colorString(hl.background, store.bg_color);
             console.log('Highlight is updated: ', store.font_attr);
             break;
         case Kind.Focus:

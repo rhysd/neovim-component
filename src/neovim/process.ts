@@ -81,16 +81,28 @@ function redraw(events: RPCValue[][]) {
         switch(name) {
             case 'put':
                 e.shift();
-                if (e.length === 0) {
-                    continue;
+                if (e.length !== 0) {
+                    Dispatcher.dispatch(Action.putText(e as string[][]));
                 }
-                Dispatcher.dispatch(Action.putText(e as string[][]));
                 break;
             case 'cursor_goto':
                 Dispatcher.dispatch(Action.cursor(args[0] as number, args[1] as number));
                 break;
             case 'highlight_set':
-                Dispatcher.dispatch(Action.highlight(args[0] as Action.HighlightSet));
+                e.shift();
+
+                // Note:
+                // [[{highlight_set}], [], [{highlight_set}], ...]
+                //   -> [{highlight_set}, {highlight_set}, ...]
+                const highlights = [].concat.apply([], e) as Action.HighlightSet[];
+
+                // Note:
+                // [{highlight_set}, {highlight_set}, ...]
+                //   -> {merged highlight_set}
+                highlights.unshift({});
+                const merged_highlight = Object.assign.apply(Object, highlights) as Action.HighlightSet;
+
+                Dispatcher.dispatch(Action.highlight(merged_highlight));
                 break;
             case 'clear':
                 Dispatcher.dispatch(Action.clearAll());

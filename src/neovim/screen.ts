@@ -42,7 +42,7 @@ export default class NeovimScreen {
     }
 
     clearAll() {
-        this.ctx.fillStyle = Store.bg_color;
+        this.ctx.fillStyle = Store.font_attr.bg;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
@@ -51,7 +51,7 @@ export default class NeovimScreen {
         const width = Store.font_attr.width;
         const clear_length = this.lines * width - col * width;
         console.log(`Clear until EOL: ${line}:${col} length=${clear_length}`);
-        this.drawBlock(line, col, 1, clear_length, Store.bg_color);
+        this.drawBlock(line, col, 1, clear_length, Store.font_attr.bg);
     }
 
     drawText(chars: string[][]) {
