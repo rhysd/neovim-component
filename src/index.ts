@@ -28,22 +28,30 @@ Polymer({
             type: Array,
             value: () => [] as string[],
         },
-        neovim: Object,
+        editor: Object,
+        onProcessAttached: Object,
         onQuit: Object,
     },
 
     ready: function() {
-        this.app = new Neovim(
+        this.editor = new Neovim(
                 this.nvimCmd,
                 this.argv,
                 this.font,
-                this.fontSize,
-                this.onQuit
+                this.fontSize
             );
+
+        if (this.onQuit) {
+            this.editor.on('quit', this.onQuit);
+        }
+
+        if (this.onProcessAttached) {
+            this.editor.on('process-attached', this.onProcessAttached);
+        }
     },
 
     attached: function() {
         const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
-        this.app.attachDOM(canvas);
+        this.editor.attachDOM(canvas);
     },
 });

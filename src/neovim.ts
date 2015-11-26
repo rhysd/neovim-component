@@ -14,17 +14,13 @@ export default class Neovim extends EventEmitter {
     cursor: Cursor;
     input: Input;
 
-    constructor(command: string, argv: string[], font: string, font_size: number, on_quit: Function) {
+    constructor(command: string, argv: string[], font: string, font_size: number) {
         super();
 
         this.store = Store;
         Dispatcher.dispatch(updateFontFace(font));
         Dispatcher.dispatch(updateFontPx(font_size));
         this.process = new Process(command, argv);
-
-        if (on_quit) {
-            this.on('quit', on_quit);
-        }
     }
 
     attachDOM(canvas: HTMLCanvasElement) {

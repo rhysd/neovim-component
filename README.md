@@ -74,7 +74,7 @@ Note that all values are read only.  Do not change the value of store directly b
 
 ```javascript
 const neovim_element = document.getElementById('neovim');
-const Store = neovim_element.neovim.store;
+const Store = neovim_element.editor.store;
 
 // Receive the cursor moving.
 Store.on('cursor', () => console.log('Cursor is moved to ', Store.cursor));
@@ -100,7 +100,7 @@ You can see the all API definitions [here](https://github.com/rhysd/promised-neo
 
 ```javascript
 const neovim_element = document.getElementById('neovim');
-const client = neovim_element.neovim.getClient();
+const client = neovim_element.editor.getClient();
 
 // Send command
 client.command('vsplit');
@@ -125,9 +125,9 @@ You can receive notifications related to lifecycle of editor.
 ```javascript
 const neovim_element = document.getElementById('neovim');
 
-// Called on Neovim process attached
-neovim_element.neovim.on('attached', () => console.log('Neovim process is ready'));
+// Called on Neovim background process attached
+neovim_element.editor.on('process-attached', () => console.log('Neovim process is ready'));
 
 // Called on Neovim process is disconnected (usually by :quit)
-neovim_element.neovim.on('quit', () => console.log('Neovim process died'));
+neovim_element.editor.on('quit', () => console.log('Neovim process died'));
 ```

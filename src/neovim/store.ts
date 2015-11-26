@@ -161,7 +161,7 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.font_attr.specified_px = action.font_px;
             store.emit('font-px-specified');
             break;
-        case Kind.UpdateFontPx:
+        case Kind.UpdateFontFace:
             store.font_attr.face = action.font_face;
             store.emit('font-face-specified');
             break;
