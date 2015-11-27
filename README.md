@@ -45,7 +45,7 @@ This component is currently being developed.
 - [x] Highlight
 - [x] Display cursor
 - [x] Input to neovim
-- [ ] Resize (by pixel and by lines&columns)
+- [x] Resize (by pixel and by lines&columns)
 - [ ] Mouse support
 - [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/))
 - [ ] Add API to convert pixel coordinate to line&column coordinate.
@@ -71,9 +71,10 @@ You can customize `<neovim-editor>` with its properties.
 ### Receive internal various events
 
 You can receive various events (including UI redraw notifications) from **store**.
-Store is a part of flux architecture and global instance of [EventEmitter](https://nodejs.org/api/events.html).
+`store` is a part of flux architecture and global instance of [EventEmitter](https://nodejs.org/api/events.html).
 
-Note that all values are read only.  Do not change the value of store directly because it breaks the internal state of component.
+You can also access to the state of editor via `store`. Note that all values are read only.
+Do not change the value of store directly because it breaks the internal state of component.
 
 ```javascript
 const neovim_element = document.getElementById('neovim');
@@ -88,7 +89,16 @@ Store.on('mode', () => console.log('Mode is changed to ', Store.mode));
 // Text is redrawn
 Store.on('put', () => console.log('UI was redrawn'));
 
-// and so on...
+// You can also access to the state of editor.
+const bounds = [
+    Store.size.lines,
+    Store.size.cols
+];
+
+const cursor_pos = [
+    Store.cursor.line,
+    Store.cursor.col
+];
 ```
 
 
@@ -133,4 +143,21 @@ neovim_element.editor.on('process-attached', () => console.log('Neovim process i
 
 // Called on Neovim process is disconnected (usually by :quit)
 neovim_element.editor.on('quit', () => console.log('Neovim process died'));
+```
+
+
+### Other APIs
+
+- Resize screen
+
+```javascript
+const editor = document.getElementById('neovim').editor;
+editor.resizeScreen(1920, 1080); // Resize screen to 1920x1080px
+```
+
+- Change font size
+
+```javascript
+const editor = document.getElementById('neovim').editor;
+editor.changeFontSize(18); // Change font size to 18px
 ```

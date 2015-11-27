@@ -181,6 +181,15 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.size.height = action.height;
             store.emit('update-screen-size');
             break;
+        case Kind.UpdateScreenBounds:
+            if (store.size.lines === action.lines
+                && store.size.cols === action.cols) {
+                break;
+            }
+            store.size.lines = action.lines;
+            store.size.cols = action.cols;
+            store.emit('update-screen-bounds');
+            break;
         default:
             console.log('Unhandled action: ', action);
             break;

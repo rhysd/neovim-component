@@ -22,9 +22,12 @@
     <neovim-editor id="neovim" font="Ricty,monospace" font-size="14"></neovim-editor>
   </body>
   <script>
-    var neovim = document.getElementById('neovim');
-    neovim.editor.on('quit', function() {
+    var editor = document.getElementById('neovim').editor;
+    editor.on('quit', function() {
       require('remote').require('app').quit();
+    });
+    window.addEventListener('resize', function() {
+      editor.resizeScreen(window.innerWidth, window.innerHeight);
     });
   </script>
 </html>

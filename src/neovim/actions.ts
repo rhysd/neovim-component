@@ -28,6 +28,7 @@ export enum Kind {
     UpdateFontPx,
     UpdateFontFace,
     UpdateScreenSize,
+    UpdateScreenBounds,
 };
 
 export interface ActionType {
@@ -175,5 +176,17 @@ export function updateScreenSize(width: number, height: number) {
     return {
         type: Kind.UpdateScreenSize,
         width, height,
+    };
+}
+
+// Note:
+// This function has the same effect as resize() but resize() is used
+// for neovim's UI event and this function is used to change screen bounds
+// via NeovimScreen's API.
+export function updateScreenBounds(lines: number, cols: number) {
+    'use strict';
+    return {
+        type: Kind.UpdateScreenBounds,
+        lines, cols,
     };
 }

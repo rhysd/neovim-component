@@ -1,6 +1,6 @@
 import Store from './store';
 import Dispatcher from './dispatcher';
-import {updateFontPx, updateFontSize, focus, resize, updateScreenSize} from './actions';
+import {updateFontPx, updateFontSize, focus, updateScreenSize, updateScreenBounds} from './actions';
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
@@ -13,6 +13,9 @@ export default class NeovimScreen {
         Store.on('clear-eol', this.clearEol.bind(this));
         // Note: 'update-bg' clears all texts in screen.
         Store.on('update-bg', this.clearAll.bind(this));
+
+        // TODO:
+        // Watch 'resize' event from neovim
 
         this.updateActualFontSize(Store.font_attr.specified_px);
 
@@ -30,7 +33,7 @@ export default class NeovimScreen {
 
         const lines = Math.floor(height / Store.font_attr.height);
         const columns = Math.floor(width / Store.font_attr.width);
-        Dispatcher.dispatch(resize(lines, columns));
+        Dispatcher.dispatch(updateScreenBounds(lines, columns));
     }
 
     updateActualFontSize(specified_px: number) {
@@ -54,7 +57,7 @@ export default class NeovimScreen {
     clearEol() {
         const {line, col} = Store.cursor;
         const width = Store.font_attr.width;
-        const clear_length = Store.size.lines * width - col * width;
+        const clear_length = Store.size.cols * width - col * width;
         console.log(`Clear until EOL: ${line}:${col} length=${clear_length}`);
         this.drawBlock(line, col, 1, clear_length, Store.font_attr.bg);
     }
