@@ -43,6 +43,7 @@ export default class NeovimProcess {
                 this.started = true;
                 console.log(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
                 Store.on('input', (i: string) => nvim.input(i));
+                Store.on('resize', () => nvim.uiTryResize(Store.screen_size.lines, Store.screen_size.cols));
             }).catch(err => console.log(err));
     }
 

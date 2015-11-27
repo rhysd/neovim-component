@@ -2,9 +2,11 @@ import {EventEmitter} from 'events';
 import Dispatcher from './dispatcher';
 import {Kind, ActionType} from './actions';
 
-export interface Size {
+export interface ScreenSize {
     lines: number;
     cols: number;
+    width_px: number;
+    height_px: number;
 }
 
 export interface Cursor {
@@ -29,7 +31,7 @@ export interface FontAttributes {
 export class NeovimStore extends EventEmitter {
     dispatch_token: string;
 
-    size: Size;
+    screen_size: ScreenSize;
     font_attr: FontAttributes;
     fg_color: string;
     bg_color: string;
@@ -39,9 +41,11 @@ export class NeovimStore extends EventEmitter {
 
     constructor() {
         super();
-        this.size = {
+        this.screen_size = {
             lines: 0,
             cols: 0,
+            width_px: 0,
+            height_px: 0,
         };
         this.font_attr = {
             fg: 'white',
@@ -124,11 +128,23 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.emit('clear-eol');
             break;
         case Kind.Resize:
-            store.size = {
-                lines: action.lines,
-                cols: action.cols,
-            };
+            if (store.screen_size.lines === action.lines
+                && store.screen_size.cols === action.cols) {
+                break;
+            }
+            store.screen_size.lines = action.lines;
+            store.screen_size.cols = action.cols;
             store.emit('resize');
+            break;
+        case Kind.ResizePixels:
+            if (store.screen_size.width_px === action.width
+                && store.screen_size.height_px === action.height) {
+                break;
+            }
+            const pixel_changed = store.screen_size.width_px !== action.width
+            store.screen_size.width_px = action.width;
+            store.screen_size.height_px = action.height;
+            store.emit('pixel-resize');
             break;
         case Kind.UpdateFG:
             store.fg_color = colorString(action.color, store.font_attr.fg);

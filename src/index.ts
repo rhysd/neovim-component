@@ -38,7 +38,9 @@ Polymer({
                 this.nvimCmd,
                 this.argv,
                 this.font,
-                this.fontSize
+                this.fontSize,
+                this.width,
+                this.height
             );
 
         if (this.onQuit) {
