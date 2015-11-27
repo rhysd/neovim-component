@@ -22,7 +22,7 @@ export default class NeovimScreen {
         canvas.addEventListener('click', this.focus.bind(this));
     }
 
-    resizeScreen(width: number, height: number) {
+    private resizeImpl(lines: number, cols: number, width: number, height: number) {
         if (width !== this.canvas.width) {
             this.canvas.width = width;
         }
@@ -30,10 +30,25 @@ export default class NeovimScreen {
             this.canvas.height = height;
         }
         Dispatcher.dispatch(updateScreenSize(width, height));
+        Dispatcher.dispatch(updateScreenBounds(lines, cols));
+    }
 
-        const lines = Math.floor(height / Store.font_attr.height);
-        const columns = Math.floor(width / Store.font_attr.width);
-        Dispatcher.dispatch(updateScreenBounds(lines, columns));
+    resizeScreen(width: number, height: number) {
+        this.resizeImpl(
+                Math.floor(height / Store.font_attr.height),
+                Math.floor(width / Store.font_attr.width),
+                width,
+                height
+            );
+    }
+
+    resizeView(lines: number, cols: number) {
+        this.resizeImpl(
+                lines,
+                cols,
+                Store.font_attr.width * cols,
+                Store.font_attr.height * lines
+            );
     }
 
     updateActualFontSize(specified_px: number) {

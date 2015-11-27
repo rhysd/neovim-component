@@ -57,6 +57,10 @@ export default class Neovim extends EventEmitter {
         this.screen.resizeScreen(width_px, height_px);
     }
 
+    resizeView(lines: number, cols: number) {
+        this.screen.resizeView(lines, cols);
+    }
+
     quit() {
         this.process.finalize();
     }

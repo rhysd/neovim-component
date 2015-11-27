@@ -153,6 +153,7 @@ neovim_element.editor.on('quit', () => console.log('Neovim process died'));
 ```javascript
 const editor = document.getElementById('neovim').editor;
 editor.resizeScreen(1920, 1080); // Resize screen to 1920x1080px
+editor.resizeView(80, 100); // Resize screen to 80 lines and 100 columns
 ```
 
 - Change font size
