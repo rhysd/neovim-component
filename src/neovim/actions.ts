@@ -27,6 +27,7 @@ export enum Kind {
     Focus,
     UpdateFontPx,
     UpdateFontFace,
+    UpdateScreenSize,
 };
 
 export interface ActionType {
@@ -166,5 +167,13 @@ export function updateFontFace(font_face: string) {
     return {
         type: Kind.UpdateFontFace,
         font_face,
+    };
+}
+
+export function updateScreenSize(width: number, height: number) {
+    'use strict';
+    return {
+        type: Kind.UpdateScreenSize,
+        width, height,
     };
 }

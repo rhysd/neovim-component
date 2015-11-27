@@ -13,10 +13,16 @@ export default class NeovimCursor {
 
         Store.on('cursor', this.updateCursorPos.bind(this));
         Store.on('mode', this.onModeChanged.bind(this));
-        Store.on('update-fg', this.changeColor.bind(this));
+        Store.on('update-fg', this.updateColor.bind(this));
+        Store.on('font-size-changed', this.updateSize.bind(this));
     }
 
-    changeColor() {
+    updateSize() {
+        this.element.style.width = Store.font_attr.width + 'px';
+        this.element.style.height = Store.font_attr.height + 'px';
+    }
+
+    updateColor() {
         console.log('changed cursor color: ', Store.fg_color);
         this.element.style.borderColor = Store.fg_color;
     }

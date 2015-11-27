@@ -1,11 +1,9 @@
 import Store from './store';
 import Dispatcher from './dispatcher';
-import {updateFontSize, focus} from './actions';
+import {updateFontPx, updateFontSize, focus, resize, updateScreenSize} from './actions';
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
-    lines: number;
-    columns: number;
 
     constructor(public canvas: HTMLCanvasElement) {
         this.ctx = this.canvas.getContext('2d');
@@ -13,26 +11,35 @@ export default class NeovimScreen {
         Store.on('put', this.drawText.bind(this));
         Store.on('clear-all', this.clearAll.bind(this));
         Store.on('clear-eol', this.clearEol.bind(this));
-        Store.on('font-px-specified', this.updateActualFontSize.bind(this));
         // Note: 'update-bg' clears all texts in screen.
         Store.on('update-bg', this.clearAll.bind(this));
 
-        this.updateActualFontSize();
+        this.updateActualFontSize(Store.font_attr.specified_px);
 
         canvas.addEventListener('click', this.focus.bind(this));
     }
 
-    updateActualFontSize() {
-        this.ctx.font = Store.font_attr.specified_px + 'px ' + Store.font_attr.face;
+    resizeScreen(width: number, height: number) {
+        if (width !== this.canvas.width) {
+            this.canvas.width = width;
+        }
+        if (height !== this.canvas.height) {
+            this.canvas.height = height;
+        }
+        Dispatcher.dispatch(updateScreenSize(width, height));
+
+        const lines = Math.floor(height / Store.font_attr.height);
+        const columns = Math.floor(width / Store.font_attr.width);
+        Dispatcher.dispatch(resize(lines, columns));
+    }
+
+    updateActualFontSize(specified_px: number) {
+        this.ctx.font = specified_px + 'px ' + Store.font_attr.face;
         const font_width = this.ctx.measureText('m').width;
         const font_height = font_width * 2;
-
-        const w = this.canvas.clientWidth;
-        const h = this.canvas.clientHeight;
-        this.lines = Math.floor(h / font_height);
-        this.columns = Math.floor(w / font_width);
-
+        Dispatcher.dispatch(updateFontPx(specified_px));
         Dispatcher.dispatch(updateFontSize(font_width, font_height));
+        this.resizeScreen(Store.size.width, Store.size.height);
     }
 
     focus() {
@@ -47,7 +54,7 @@ export default class NeovimScreen {
     clearEol() {
         const {line, col} = Store.cursor;
         const width = Store.font_attr.width;
-        const clear_length = this.lines * width - col * width;
+        const clear_length = Store.size.lines * width - col * width;
         console.log(`Clear until EOL: ${line}:${col} length=${clear_length}`);
         this.drawBlock(line, col, 1, clear_length, Store.font_attr.bg);
     }

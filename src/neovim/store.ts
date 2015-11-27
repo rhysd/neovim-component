@@ -5,6 +5,8 @@ import {Kind, ActionType} from './actions';
 export interface Size {
     lines: number;
     cols: number;
+    width: number;
+    height: number;
 }
 
 export interface Cursor {
@@ -42,6 +44,8 @@ export class NeovimStore extends EventEmitter {
         this.size = {
             lines: 0,
             cols: 0,
+            width: 0,
+            height: 0,
         };
         this.font_attr = {
             fg: 'white',
@@ -124,10 +128,12 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.emit('clear-eol');
             break;
         case Kind.Resize:
-            store.size = {
-                lines: action.lines,
-                cols: action.cols,
-            };
+            if (store.size.lines === action.lines
+                && store.size.cols === action.cols) {
+                break;
+            }
+            store.size.lines = action.lines;
+            store.size.cols = action.cols;
             store.emit('resize');
             break;
         case Kind.UpdateFG:
@@ -156,6 +162,7 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.font_attr.width = action.width;
             store.font_attr.height = action.height;
             console.log(`Actual font size is updated: ${action.width}:${action.height}`);
+            store.emit('font-size-changed');
             break;
         case Kind.UpdateFontPx:
             store.font_attr.specified_px = action.font_px;
@@ -164,6 +171,15 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
         case Kind.UpdateFontFace:
             store.font_attr.face = action.font_face;
             store.emit('font-face-specified');
+            break;
+        case Kind.UpdateScreenSize:
+            if (store.size.width === action.width
+                && store.size.height === action.height) {
+                break;
+            }
+            store.size.width = action.width;
+            store.size.height = action.height;
+            store.emit('update-screen-size');
             break;
         default:
             console.log('Unhandled action: ', action);
