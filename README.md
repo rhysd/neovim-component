@@ -71,9 +71,9 @@ You can customize `<neovim-editor>` with its properties.
 ### Receive internal various events
 
 You can receive various events (including UI redraw notifications) from **store**.
-`store` is a part of flux architecture and global instance of [EventEmitter](https://nodejs.org/api/events.html).
+Store is a part of flux architecture and global instance of [EventEmitter](https://nodejs.org/api/events.html).
 
-You can also access to the state of editor via `store`. Note that all values are read only.  Do not change the value of store directly because it breaks the internal state of component.
+Note that all values are read only.  Do not change the value of store directly because it breaks the internal state of component.
 
 ```javascript
 const neovim_element = document.getElementById('neovim');
@@ -88,18 +88,7 @@ Store.on('mode', () => console.log('Mode is changed to ', Store.mode));
 // Text is redrawn
 Store.on('put', () => console.log('UI was redrawn'));
 
-// You can also access to the state of editor.
-const bounds = [
-    Store.screen_size.lines,
-    Store.screen_size.cols
-];
-
-const cursor_pos = [
-    Store.cursor.line,
-    Store.cursor.col
-];
-
-
+// and so on...
 ```
 
 

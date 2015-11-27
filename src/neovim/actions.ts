@@ -17,7 +17,6 @@ export enum Kind {
     ClearAll,
     ClearEOL,
     Resize,
-    ResizePixels,
     UpdateFG,
     UpdateBG,
     Mode,
@@ -90,14 +89,6 @@ export function resize(lines: number, cols: number) {
     return {
         type: Kind.Resize,
         lines, cols,
-    };
-}
-
-export function resizePixels(width: number, height: number) {
-    'use strict';
-    return {
-        type: Kind.ResizePixels,
-        width, height,
     };
 }
 
