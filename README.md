@@ -90,15 +90,8 @@ Store.on('mode', () => console.log('Mode is changed to ', Store.mode));
 Store.on('put', () => console.log('UI was redrawn'));
 
 // You can also access to the state of editor.
-const bounds = [
-    Store.size.lines,
-    Store.size.cols
-];
-
-const cursor_pos = [
-    Store.cursor.line,
-    Store.cursor.col
-];
+const bounds = [ Store.size.lines, Store.size.cols ];
+const cursor_pos = [ Store.cursor.line, Store.cursor.col ];
 ```
 
 
@@ -121,13 +114,23 @@ client.command('vsplit');
 // Send input
 client.input('<C-w><C-l>');
 
+// Evaluate Vim script expression
+client.eval('"aaa" . "bbb"').then(result => console.log(result));
+
+// Get b:foo variable
+client.getCurrentBuffer()
+    .then(buf => buf.getVar('foo'))
+    .then(v => console.log(v));
+
 // Query something (windows, buffers, and so on)
 // Move to neighbor window and show the information of window.
-client
-    .getWindows()
+client.getWindows()
     .then(windows => client.secCurrentWindow(windows[1]))
     .then(() => client.getCurrentWindow())
     .then(win => console.log(win));
+
+// Receive RPC request from Neovim
+client.on('request', (n, args, res) => console.log(`Name: ${n}, Args: ${JSON.stringify(args)}, Response: ${res}`));
 ```
 
 
