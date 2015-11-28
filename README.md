@@ -146,6 +146,9 @@ neovim_element.editor.on('process-attached', () => console.log('Neovim process i
 
 // Called on Neovim process is disconnected (usually by :quit)
 neovim_element.editor.on('quit', () => console.log('Neovim process died'));
+
+// Called when <neovim-component> is detached
+neovim_element.editor.on('detach', () => console.log('Element does not exist in DOM.'));
 ```
 
 

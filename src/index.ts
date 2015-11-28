@@ -56,4 +56,12 @@ Polymer({
         const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
         this.editor.attachDOM(canvas);
     },
+
+    detached: function() {
+        this.editor.emit('detach');
+    },
+
+    attributeChanged: function(name: string, type: polymer.PropConstructorType) {
+        this.editor.emit('change-attribute', name, type);
+    },
 });
