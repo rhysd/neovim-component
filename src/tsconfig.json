@@ -16,6 +16,8 @@
     "neovim/store.ts",
     "neovim/screen.ts",
     "neovim/process.ts",
+    "log.ts",
+    "neovim.ts",
     "index.ts",
     "lib.d.ts"
   ]

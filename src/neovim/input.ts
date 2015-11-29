@@ -1,6 +1,7 @@
 import Store from './store';
 import Dispatcher from './dispatcher';
 import {inputToNeovim} from './actions';
+import log from '../log';
 
 export default class NeovimInput {
     element: HTMLInputElement;
@@ -48,12 +49,12 @@ export default class NeovimInput {
     }
 
     startComposition(event: Event) {
-        console.log('start composition');
+        log.debug('start composition');
         this.ime_running = true;
     }
 
     endComposition(event: Event) {
-        console.log('end composition');
+        log.debug('end composition');
         this.ime_running = false;
     }
 
@@ -87,7 +88,7 @@ export default class NeovimInput {
     inputToNeovim(input: string, event: Event) {
         Dispatcher.dispatch(inputToNeovim(input));
 
-        console.log('Input to neovim: ' + input);
+        log.info('Input to neovim: ' + input);
 
         event.preventDefault();
         event.stopPropagation();
@@ -102,7 +103,7 @@ export default class NeovimInput {
 
         const t = event.target as HTMLInputElement;
         if (t.value === '') {
-            console.log('onInsertNormalChar: Empty');
+            log.warn('onInsertNormalChar: Empty');
             return;
         }
 

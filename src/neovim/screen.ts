@@ -1,6 +1,7 @@
 import Store from './store';
 import Dispatcher from './dispatcher';
 import {updateFontPx, updateFontSize, focus, updateScreenSize, updateScreenBounds} from './actions';
+import log from '../log';
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
@@ -73,7 +74,7 @@ export default class NeovimScreen {
         const {line, col} = Store.cursor;
         const width = Store.font_attr.width;
         const clear_length = Store.size.cols * width - col * width;
-        console.log(`Clear until EOL: ${line}:${col} length=${clear_length}`);
+        log.debug(`Clear until EOL: ${line}:${col} length=${clear_length}`);
         this.drawBlock(line, col, 1, clear_length, Store.font_attr.bg);
     }
 
@@ -93,7 +94,7 @@ export default class NeovimScreen {
         const x = col * width;
         const y = line * height;
         this.ctx.fillText(text, x, y);
-        console.log(`drawText(): (${x}, ${y})`, JSON.stringify(text), Store.cursor);
+        log.debug(`drawText(): (${x}, ${y})`, text, Store.cursor);
     }
 
     drawBlock(line: number, col: number, height: number, width: number, color: string) {

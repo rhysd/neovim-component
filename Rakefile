@@ -47,6 +47,10 @@ task :example do
   sh "#{BIN}/electron #{ROOT}"
 end
 
+task :debug do
+  sh "NODE_ENV=debug #{BIN}/electron #{ROOT}"
+end
+
 task :default => %i(build example)
 
 task :lint do

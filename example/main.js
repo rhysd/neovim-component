@@ -17,5 +17,7 @@ app.on('ready', function() {
     });
 
     win.loadURL(index_html);
-    win.openDevTools({detach: true});
+    if (process.env['NODE_ENV'] !== 'production') {
+        win.openDevTools({detach: true});
+    }
 });

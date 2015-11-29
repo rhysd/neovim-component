@@ -1,4 +1,5 @@
 import Store from './store';
+import log from '../log';
 
 export default class NeovimCursor {
     element: HTMLDivElement;
@@ -23,7 +24,7 @@ export default class NeovimCursor {
     }
 
     updateColor() {
-        console.log('changed cursor color: ', Store.fg_color);
+        log.info('changed cursor color: ', Store.fg_color);
         this.element.style.borderColor = Store.fg_color;
     }
 
@@ -50,6 +51,6 @@ export default class NeovimCursor {
         this.element.style.left = x + 'px';
         this.element.style.top = y + 'px';
 
-        console.log(`Cursor is moved to (${x}, ${y})`);
+        log.info(`Cursor is moved to (${x}, ${y})`);
     }
 }

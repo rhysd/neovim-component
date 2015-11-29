@@ -7,6 +7,7 @@ const attach = (global.require('promised-neovim-client') as typeof NvimClient).a
 import Action = require('./actions');
 import Dispatcher from './dispatcher';
 import Store from './store';
+import log from '../log';
 
 // Note:
 // TypeScript doesn't allow recursive definition
@@ -41,26 +42,26 @@ export default class NeovimProcess {
                 nvim.on('disconnect', this.onDisconnected.bind(this));
                 nvim.uiAttach(columns, lines, true);
                 this.started = true;
-                console.log(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
+                log.info(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
                 Store.on('input', (i: string) => nvim.input(i));
                 Store.on('update-screen-bounds', () => nvim.uiTryResize(Store.size.cols, Store.size.lines));
-            }).catch(err => console.log(err));
+            }).catch(err => log.error(err));
     }
 
     onRequested(method: string, args: RPCValue[], response: RPCValue) {
-        console.log('requested: ', method, args, response);
+        log.info('requested: ', method, args, response);
     }
 
     onNotified(method: string, args: RPCValue[]) {
         if (method === 'redraw') {
             redraw(args as RPCValue[][]);
         } else {
-            console.log('unknown method', method, args);
+            log.warn('unknown method', method, args);
         }
     }
 
     onDisconnected() {
-        console.log('disconnected: ' + this.neovim_process.pid);
+        log.info('disconnected: ' + this.neovim_process.pid);
         // TODO:
         // Uncomment below line to close window on quit.
         // I don't do yet for debug.
@@ -131,7 +132,7 @@ function redraw(events: RPCValue[][]) {
                 Dispatcher.dispatch(Action.stopBusy());
                 break;
             default:
-                console.log('Unhandled event: ' + name, args);
+                log.warn('Unhandled event: ' + name, args);
                 break;
         }
     }
