@@ -37,6 +37,13 @@ Please see the very simple [Electron](https://github.com/atom/electron) app in [
 
 ![example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/neovim-component-linux.png)
 
+If you want to specify command line arguments, use `electron` command as below.
+
+```sh
+$ rake build
+$ electron . some arguments to pass to Neovim
+```
+
 ## TODOs
 
 This component is currently being developed.
@@ -168,3 +175,14 @@ editor.resizeView(80, 100); // Resize screen to 80 lines and 100 columns
 const editor = document.getElementById('neovim').editor;
 editor.changeFontSize(18); // Change font size to 18px
 ```
+
+- Set arguments after
+
+If your app doesn't use Polymer, you can set arguments as below after.
+Note that it is better to use `argv` property of `<neovim-element>`.
+
+```javascript
+const editor = document.getElementById('neovim').editor;
+editor.setArgv(['README.md']);
+```
+

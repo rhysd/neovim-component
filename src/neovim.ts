@@ -37,7 +37,7 @@ export default class Neovim extends EventEmitter {
         this.process = new Process(command, argv);
     }
 
-    attachDOM(canvas: HTMLCanvasElement) {
+    attachCanvas(canvas: HTMLCanvasElement) {
         this.screen = new Screen(canvas);
         this.process
             .attach(Store.size.lines, Store.size.cols)
@@ -71,5 +71,14 @@ export default class Neovim extends EventEmitter {
 
     focus() {
         this.screen.focus();
+    }
+
+    // Note:
+    // It is better to use 'argv' property of <neovim-client> for apps using Polymer.
+    setArgv(argv: string[]) {
+        if (!this.process.started) {
+            throw new Error("Process is not attached yet.  Use 'process-attached' event to ensure to specify arguments.");
+        }
+        return this.process.client.command('args ' + argv.join(' '));
     }
 }

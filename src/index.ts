@@ -54,7 +54,7 @@ Polymer({
 
     attached: function() {
         const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
-        this.editor.attachDOM(canvas);
+        this.editor.attachCanvas(canvas);
     },
 
     detached: function() {
