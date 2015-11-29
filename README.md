@@ -37,11 +37,11 @@ Please see the very simple [Electron](https://github.com/atom/electron) app in [
 
 ![example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/neovim-component-linux.png)
 
-If you want to specify command line arguments, use `electron` command as below.
+`neovim-component` also has an example executable.
 
 ```sh
-$ rake build
-$ electron . some arguments to pass to Neovim
+$ npm install neovim-component electron-prebuilt
+$ simple-neovim-gui
 ```
 
 ## TODOs

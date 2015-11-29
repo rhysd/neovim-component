@@ -1,8 +1,11 @@
 {
   "name": "neovim-component",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Polymer component for Neovim frontend",
   "main": "example/main.js",
+  "bin": {
+    "simple-neovim-gui": "./node_modules/.bin/electron ."
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/rhysd/neovim-component.git"
@@ -25,7 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "flux": "^2.1.1",
-    "promised-neovim-client": "^0.1.11"
+    "promised-neovim-client": "^1.0.0"
   },
   "devDependencies": {
     "browserify": "^12.0.1",
