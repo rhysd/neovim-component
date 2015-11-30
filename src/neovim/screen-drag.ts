@@ -9,12 +9,11 @@ export default class ScreenDrag {
     line: number;
     col: number;
 
-    static getLine(y: number) {
-        return Math.floor(y / Store.font_attr.height);
-    }
-
-    static getCol(x: number) {
-        return Math.floor(x / Store.font_attr.width);
+    static getPos(e: MouseEvent) {
+        return [
+            Math.floor(e.clientY / Store.font_attr.height),
+            Math.floor(e.clientX / Store.font_attr.width),
+        ];
     }
 
     static buildInputOf(e: MouseEvent, type: string, line: number, col: number) {
@@ -34,8 +33,7 @@ export default class ScreenDrag {
 
     constructor(down_event: MouseEvent) {
         down_event.preventDefault();
-        this.line = ScreenDrag.getLine(down_event.clientY);
-        this.col = ScreenDrag.getCol(down_event.clientX);
+        [this.line, this.col] = ScreenDrag.getPos(down_event);
         log.info('Drag start', down_event, this.line, this.col);
         const input = ScreenDrag.buildInputOf(down_event, 'Mouse', this.line, this.col) + `<${this.col},${this.line}>`;
         Dispatcher.dispatch(inputToNeovim(input))
@@ -43,10 +41,9 @@ export default class ScreenDrag {
     }
 
     drag(move_event: MouseEvent) {
-        move_event.preventDefault();
-        const line = ScreenDrag.getLine(move_event.clientY);
-        const col = ScreenDrag.getCol(move_event.clientX);
+        const [line, col] = ScreenDrag.getPos(move_event);
         if (line !== this.line || col !== this.col) {
+            move_event.preventDefault();
             log.debug('Drag continue', move_event, line, col);
             const input = ScreenDrag.buildInputOf(move_event, 'Drag', line, col) + `<${col},${line}>`;
             Dispatcher.dispatch(inputToNeovim(input))
@@ -56,19 +53,14 @@ export default class ScreenDrag {
         }
     }
 
-    // XXX: Is this method not needed?
     end(up_event: MouseEvent) {
         up_event.preventDefault();
-        // this.line = ScreenDrag.getLine(up_event.clientY);
-        // this.col = ScreenDrag.getCol(up_event.clientX);
 
-        this.line = ScreenDrag.getLine(up_event.clientY);
-        this.col = ScreenDrag.getCol(up_event.clientX);
+        [this.line, this.col] = ScreenDrag.getPos(up_event);
         log.info('Drag end', up_event, this.line, this.col);
 
         const input = ScreenDrag.buildInputOf(up_event, 'Release', this.line, this.col) + `<${this.col},${this.line}>`;
         Dispatcher.dispatch(inputToNeovim(input))
         log.info('Mouse input: ' + input);
-        console.error(input);
     }
 }
