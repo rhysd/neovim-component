@@ -2,12 +2,15 @@ import Store from './store';
 import Dispatcher from './dispatcher';
 import {updateFontPx, updateFontSize, focus, updateScreenSize, updateScreenBounds} from './actions';
 import log from '../log';
+import ScreenDrag from './screen-drag';
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
+    dragging: ScreenDrag;
 
     constructor(public canvas: HTMLCanvasElement) {
         this.ctx = this.canvas.getContext('2d');
+        this.dragging = null;
 
         Store.on('put', this.drawText.bind(this));
         Store.on('clear-all', this.clearAll.bind(this));
@@ -21,6 +24,26 @@ export default class NeovimScreen {
         this.updateActualFontSize(Store.font_attr.specified_px);
 
         canvas.addEventListener('click', this.focus.bind(this));
+        canvas.addEventListener('mousedown', this.mouseDown.bind(this));
+        canvas.addEventListener('mouseup', this.mouseUp.bind(this));
+        canvas.addEventListener('mousemove', this.mouseMove.bind(this));
+    }
+
+    mouseDown(e: MouseEvent) {
+        this.dragging = new ScreenDrag(e);
+    }
+
+    mouseUp(e: MouseEvent) {
+        if (this.dragging !== null) {
+            this.dragging.end(e);
+            this.dragging = null;
+        }
+    }
+
+    mouseMove(e: MouseEvent) {
+        if (this.dragging) {
+            this.dragging.drag(e);
+        }
     }
 
     private resizeImpl(lines: number, cols: number, width: number, height: number) {

@@ -9,6 +9,7 @@
     "sourceMap": true
   },
   "files": [
+    "neovim/screen-drag.ts",
     "neovim/input.ts",
     "neovim/cursor.ts",
     "neovim/actions.ts",
@@ -16,8 +17,8 @@
     "neovim/store.ts",
     "neovim/screen.ts",
     "neovim/process.ts",
-    "log.ts",
     "neovim.ts",
+    "log.ts",
     "index.ts",
     "lib.d.ts"
   ]
