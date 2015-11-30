@@ -31,6 +31,7 @@ export default class NeovimInput {
             case 92:  return 'Bslash';
             case 124: return 'Bar';
             case 127: return 'Del';
+            case 188: return 'LT';
             default:  return null;
         }
     }
@@ -65,7 +66,9 @@ export default class NeovimInput {
     // Note:
     // Assumes keydown event is always fired before input event
     onInsertControlChar(event: KeyboardEvent) {
+        log.debug('Keydown event:', event);
         if (this.ime_running) {
+            log.debug('IME is running.  Input canceled.');
             return;
         }
 
@@ -97,18 +100,16 @@ export default class NeovimInput {
     }
 
     onInsertNormalChar(event: KeyboardEvent) {
+        log.debug('Input event:', event);
+
         if (this.ime_running) {
+            log.debug('IME is running.  Input canceled.');
             return;
         }
 
         const t = event.target as HTMLInputElement;
         if (t.value === '') {
             log.warn('onInsertNormalChar: Empty');
-            return;
-        }
-
-        if (t.value === '<') {
-            this.inputToNeovim('\\lt', event);
             return;
         }
 
