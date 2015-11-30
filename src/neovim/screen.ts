@@ -30,6 +30,7 @@ export default class NeovimScreen {
     }
 
     mouseDown(e: MouseEvent) {
+        // TODO: If mouse is off, do not set new ScreenDrag instance
         this.dragging = new ScreenDrag(e);
     }
 
@@ -41,7 +42,7 @@ export default class NeovimScreen {
     }
 
     mouseMove(e: MouseEvent) {
-        if (this.dragging) {
+        if (this.dragging !== null) {
             this.dragging.drag(e);
         }
     }

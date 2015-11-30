@@ -61,6 +61,14 @@ export default class ScreenDrag {
         up_event.preventDefault();
         // this.line = ScreenDrag.getLine(up_event.clientY);
         // this.col = ScreenDrag.getCol(up_event.clientX);
+
+        this.line = ScreenDrag.getLine(up_event.clientY);
+        this.col = ScreenDrag.getCol(up_event.clientX);
         log.info('Drag end', up_event, this.line, this.col);
+
+        const input = ScreenDrag.buildInputOf(up_event, 'Release', this.line, this.col) + `<${this.col},${this.line}>`;
+        Dispatcher.dispatch(inputToNeovim(input))
+        log.info('Mouse input: ' + input);
+        console.error(input);
     }
 }
