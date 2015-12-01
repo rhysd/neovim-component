@@ -16,6 +16,11 @@ export enum Kind {
     ClearAll,
     ClearEOL,
     Cursor,
+    DisableMouse,
+    DragEnd,
+    DragStart,
+    DragUpdate,
+    EnableMouse,
     Focus,
     Highlight,
     Input,
@@ -29,8 +34,6 @@ export enum Kind {
     UpdateFontSize,
     UpdateScreenBounds,
     UpdateScreenSize,
-    EnableMouse,
-    DisableMouse,
 };
 
 export interface ActionType {
@@ -38,6 +41,7 @@ export interface ActionType {
     col?: number;
     color?: number;
     cols?: number;
+    event?: MouseEvent;
     font_face?: string;
     font_px?: number;
     height?: number;
@@ -204,5 +208,29 @@ export function disableMouse() {
     'use strict';
     return {
         type: Kind.DisableMouse
+    };
+}
+
+export function dragStart(event: MouseEvent) {
+    'use strict';
+    return {
+        type: Kind.DragStart,
+        event,
+    };
+}
+
+export function dragUpdate(event: MouseEvent) {
+    'use strict';
+    return {
+        type: Kind.DragUpdate,
+        event,
+    };
+}
+
+export function dragEnd(event: MouseEvent) {
+    'use strict';
+    return {
+        type: Kind.DragEnd,
+        event,
     };
 }

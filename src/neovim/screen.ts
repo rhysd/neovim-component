@@ -1,16 +1,13 @@
 import Store from './store';
 import Dispatcher from './dispatcher';
-import {updateFontPx, updateFontSize, focus, updateScreenSize, updateScreenBounds} from './actions';
+import * as A from './actions';
 import log from '../log';
-import ScreenDrag from './screen-drag';
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
-    dragging: ScreenDrag;
 
     constructor(public canvas: HTMLCanvasElement) {
         this.ctx = this.canvas.getContext('2d');
-        this.dragging = null;
 
         Store.on('put', this.drawText.bind(this));
         Store.on('clear-all', this.clearAll.bind(this));
@@ -30,23 +27,16 @@ export default class NeovimScreen {
     }
 
     mouseDown(e: MouseEvent) {
-        if (Store.mouse_enabled) {
-            this.dragging = new ScreenDrag(e);
-        } else {
-            log.debug('Click ignored because mouse is disabled.');
-        }
+        Dispatcher.dispatch(A.dragStart(e));
     }
 
     mouseUp(e: MouseEvent) {
-        if (this.dragging !== null) {
-            this.dragging.end(e);
-            this.dragging = null;
-        }
+        Dispatcher.dispatch(A.dragEnd(e));
     }
 
     mouseMove(e: MouseEvent) {
-        if (this.dragging !== null) {
-            this.dragging.drag(e);
+        if (e.buttons !== 0) {
+            Dispatcher.dispatch(A.dragUpdate(e));
         }
     }
 
@@ -57,8 +47,8 @@ export default class NeovimScreen {
         if (height !== this.canvas.height) {
             this.canvas.height = height;
         }
-        Dispatcher.dispatch(updateScreenSize(width, height));
-        Dispatcher.dispatch(updateScreenBounds(lines, cols));
+        Dispatcher.dispatch(A.updateScreenSize(width, height));
+        Dispatcher.dispatch(A.updateScreenBounds(lines, cols));
     }
 
     resizeScreen(width: number, height: number) {
@@ -83,13 +73,13 @@ export default class NeovimScreen {
         this.ctx.font = specified_px + 'px ' + Store.font_attr.face;
         const font_width = this.ctx.measureText('m').width;
         const font_height = font_width * 2;
-        Dispatcher.dispatch(updateFontPx(specified_px));
-        Dispatcher.dispatch(updateFontSize(font_width, font_height));
+        Dispatcher.dispatch(A.updateFontPx(specified_px));
+        Dispatcher.dispatch(A.updateFontSize(font_width, font_height));
         this.resizeScreen(Store.size.width, Store.size.height);
     }
 
     focus() {
-        Dispatcher.dispatch(focus());
+        Dispatcher.dispatch(A.focus());
     }
 
     clearAll() {

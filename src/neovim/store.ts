@@ -2,6 +2,7 @@ import {EventEmitter} from 'events';
 import Dispatcher from './dispatcher';
 import {Kind, ActionType} from './actions';
 import log from '../log';
+import ScreenDrag from './screen-drag';
 
 export interface Size {
     lines: number;
@@ -40,6 +41,7 @@ export class NeovimStore extends EventEmitter {
     mode: string;
     busy: boolean;
     mouse_enabled: boolean;
+    dragging: ScreenDrag;
 
     constructor() {
         super();
@@ -69,6 +71,7 @@ export class NeovimStore extends EventEmitter {
         this.mode = 'normal';
         this.busy = false;
         this.mouse_enabled = true;
+        this.dragging = null;
     }
 }
 
@@ -226,6 +229,34 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
                 store.mouse_enabled = false;
                 store.emit('mouse-disabled');
                 log.info('Mouse disabled.');
+            }
+            break;
+        }
+        case Kind.DragStart: {
+            if (store.mouse_enabled) {
+                store.dragging = new ScreenDrag();
+                store.emit('input', store.dragging.start(action.event));
+                store.emit('drag-started');
+            } else {
+                log.debug('Click ignored because mouse is disabled.');
+            }
+            break;
+        }
+        case Kind.DragUpdate: {
+            if (store.mouse_enabled && store.dragging !== null) {
+                const input = store.dragging.drag(action.event);
+                if (input) {
+                    store.emit('input', input);
+                    store.emit('drag-updated');
+                }
+            }
+            break;
+        }
+        case Kind.DragEnd: {
+            if (store.mouse_enabled && store.dragging !== null) {
+                store.emit('input', store.dragging.end(action.event));
+                store.emit('drag-ended');
+                store.dragging = null;
             }
             break;
         }
