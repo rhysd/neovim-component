@@ -131,6 +131,12 @@ function redraw(events: RPCValue[][]) {
             case 'busy_stop':
                 Dispatcher.dispatch(Action.stopBusy());
                 break;
+            case 'mouse_on':
+                Dispatcher.dispatch(Action.enableMouse());
+                break;
+            case 'mouse_off':
+                Dispatcher.dispatch(Action.disableMouse());
+                break;
             default:
                 log.warn('Unhandled event: ' + name, args);
                 break;

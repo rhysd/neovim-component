@@ -1,51 +1,53 @@
 export interface HighlightSet {
-    fg?: string;
+    background?: number;
     bg?: string;
     bold?: boolean;
+    fg?: string;
+    foreground?: number;
     italic?: boolean;
     reverse?: boolean;
-    underline?: boolean;
     undercurl?: boolean;
-    foreground?: number;
-    background?: number;
+    underline?: boolean;
 }
 
 export enum Kind {
-    PutText,
-    Cursor,
-    Highlight,
-    ClearAll,
-    ClearEOL,
-    Resize,
-    UpdateFG,
-    UpdateBG,
-    Mode,
     BusyStart,
     BusyStop,
-    UpdateFontSize,
-    Input,
+    ClearAll,
+    ClearEOL,
+    Cursor,
     Focus,
-    UpdateFontPx,
+    Highlight,
+    Input,
+    Mode,
+    PutText,
+    Resize,
+    UpdateBG,
+    UpdateFG,
     UpdateFontFace,
-    UpdateScreenSize,
+    UpdateFontPx,
+    UpdateFontSize,
     UpdateScreenBounds,
+    UpdateScreenSize,
+    EnableMouse,
+    DisableMouse,
 };
 
 export interface ActionType {
     type: Kind;
-    text?: string[][];
-    line?: number;
     col?: number;
-    lines?: number;
-    cols?: number;
     color?: number;
-    mode?: string;
-    highlight?: HighlightSet;
-    width?: number;
-    height?: number;
-    input?: string;
-    font_px?: number;
+    cols?: number;
     font_face?: string;
+    font_px?: number;
+    height?: number;
+    highlight?: HighlightSet;
+    input?: string;
+    line?: number;
+    lines?: number;
+    mode?: string;
+    text?: string[][];
+    width?: number;
 }
 
 export function putText(text: string[][]) {
@@ -188,5 +190,19 @@ export function updateScreenBounds(lines: number, cols: number) {
     return {
         type: Kind.UpdateScreenBounds,
         lines, cols,
+    };
+}
+
+export function enableMouse() {
+    'use strict';
+    return {
+        type: Kind.EnableMouse
+    };
+}
+
+export function disableMouse() {
+    'use strict';
+    return {
+        type: Kind.DisableMouse
     };
 }

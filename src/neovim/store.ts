@@ -39,6 +39,7 @@ export class NeovimStore extends EventEmitter {
     cursor: Cursor;
     mode: string;
     busy: boolean;
+    mouse_enabled: boolean;
 
     constructor() {
         super();
@@ -67,6 +68,7 @@ export class NeovimStore extends EventEmitter {
         };
         this.mode = 'normal';
         this.busy = false;
+        this.mouse_enabled = true;
     }
 }
 
@@ -89,22 +91,25 @@ function colorString(new_color: number, fallback: string) {
 
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
     switch (action.type) {
-        case Kind.Input:
+        case Kind.Input: {
             store.emit('input', action.input);
             break;
-        case Kind.PutText:
+        }
+        case Kind.PutText: {
             store.emit('put', action.text);
             store.cursor.col = store.cursor.col + action.text.length;
             store.emit('cursor');
             break;
-        case Kind.Cursor:
+        }
+        case Kind.Cursor: {
             store.cursor = {
                 line: action.line,
                 col: action.col,
             };
             store.emit('cursor');
             break;
-        case Kind.Highlight:
+        }
+        case Kind.Highlight: {
             const hl = action.highlight;
             store.font_attr.bold = hl.bold;
             store.font_attr.italic = hl.italic;
@@ -114,10 +119,12 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.font_attr.bg = colorString(hl.background, store.bg_color);
             log.debug('Highlight is updated: ', store.font_attr);
             break;
-        case Kind.Focus:
+        }
+        case Kind.Focus: {
             store.emit('focus');
             break;
-        case Kind.ClearAll:
+        }
+        case Kind.ClearAll: {
             store.emit('clear-all');
             store.cursor = {
                 line: 0,
@@ -125,10 +132,12 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             };
             store.emit('cursor');
             break;
-        case Kind.ClearEOL:
+        }
+        case Kind.ClearEOL: {
             store.emit('clear-eol');
             break;
-        case Kind.Resize:
+        }
+        case Kind.Resize: {
             if (store.size.lines === action.lines
                 && store.size.cols === action.cols) {
                 break;
@@ -137,43 +146,52 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.size.cols = action.cols;
             store.emit('resize');
             break;
-        case Kind.UpdateFG:
+        }
+        case Kind.UpdateFG: {
             store.fg_color = colorString(action.color, store.font_attr.fg);
             store.emit('update-fg');
             log.debug('Foreground color is updated: ' + store.fg_color);
             break;
-        case Kind.UpdateBG:
+        }
+        case Kind.UpdateBG: {
             store.bg_color = colorString(action.color, store.font_attr.bg);
             store.emit('update-bg');
             log.debug('Background color is updated: ' + store.bg_color);
             break;
-        case Kind.Mode:
+        }
+        case Kind.Mode: {
             store.mode = action.mode;
             store.emit('mode', store.mode);
             break;
-        case Kind.BusyStart:
+        }
+        case Kind.BusyStart: {
             store.busy = true;
             store.emit('busy');
             break;
-        case Kind.BusyStop:
+        }
+        case Kind.BusyStop: {
             store.busy = false;
             store.emit('busy');
             break;
-        case Kind.UpdateFontSize:
+        }
+        case Kind.UpdateFontSize: {
             store.font_attr.width = action.width;
             store.font_attr.height = action.height;
             log.debug(`Actual font size is updated: ${action.width}:${action.height}`);
             store.emit('font-size-changed');
             break;
-        case Kind.UpdateFontPx:
+        }
+        case Kind.UpdateFontPx: {
             store.font_attr.specified_px = action.font_px;
             store.emit('font-px-specified');
             break;
-        case Kind.UpdateFontFace:
+        }
+        case Kind.UpdateFontFace: {
             store.font_attr.face = action.font_face;
             store.emit('font-face-specified');
             break;
-        case Kind.UpdateScreenSize:
+        }
+        case Kind.UpdateScreenSize: {
             if (store.size.width === action.width
                 && store.size.height === action.height) {
                 break;
@@ -181,8 +199,10 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.size.width = action.width;
             store.size.height = action.height;
             store.emit('update-screen-size');
+            log.debug(`Screen size is updated: (${action.width}px, ${action.height}px)`);
             break;
-        case Kind.UpdateScreenBounds:
+        }
+        case Kind.UpdateScreenBounds: {
             if (store.size.lines === action.lines
                 && store.size.cols === action.cols) {
                 break;
@@ -190,9 +210,28 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.size.lines = action.lines;
             store.size.cols = action.cols;
             store.emit('update-screen-bounds');
+            log.debug(`Screen bounds are updated: (${action.lines} lines, ${action.cols} cols)`);
             break;
-        default:
+        }
+        case Kind.EnableMouse: {
+            if (!store.mouse_enabled) {
+                store.mouse_enabled = true;
+                store.emit('mouse-enabled');
+                log.info('Mouse enabled.');
+            }
+            break;
+        }
+        case Kind.DisableMouse: {
+            if (store.mouse_enabled) {
+                store.mouse_enabled = false;
+                store.emit('mouse-disabled');
+                log.info('Mouse disabled.');
+            }
+            break;
+        }
+        default: {
             log.warn('Unhandled action: ', action);
             break;
+        }
     }
 });

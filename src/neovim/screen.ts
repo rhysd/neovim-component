@@ -30,8 +30,11 @@ export default class NeovimScreen {
     }
 
     mouseDown(e: MouseEvent) {
-        // TODO: If mouse is off, do not set new ScreenDrag instance
-        this.dragging = new ScreenDrag(e);
+        if (Store.mouse_enabled) {
+            this.dragging = new ScreenDrag(e);
+        } else {
+            log.debug('Click ignored because mouse is disabled.');
+        }
     }
 
     mouseUp(e: MouseEvent) {
