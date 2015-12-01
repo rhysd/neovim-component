@@ -1,5 +1,7 @@
 import Store from './store';
 import log from '../log';
+import Dispatcher from './dispatcher';
+import {dragEnd} from './actions';
 
 export default class NeovimCursor {
     element: HTMLDivElement;
@@ -11,6 +13,10 @@ export default class NeovimCursor {
         this.element.style.left = '0px';
         this.element.style.width = Store.font_attr.width + 'px';
         this.element.style.height = Store.font_attr.height + 'px';
+
+        this.element.addEventListener('mouseup', (e: MouseEvent) => {
+            Dispatcher.dispatch(dragEnd(e));
+        });
 
         Store.on('cursor', this.updateCursorPos.bind(this));
         Store.on('mode', this.onModeChanged.bind(this));

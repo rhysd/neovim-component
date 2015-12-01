@@ -16,16 +16,17 @@ export default class ScreenDrag {
 
     static buildInputOf(e: MouseEvent, type: string, line: number, col: number) {
         let seq = '<';
-        if (e.shiftKey) {
-            seq += 'S-';
-        }
         if (e.ctrlKey) {
             seq += 'C-';
         }
         if (e.altKey) {
             seq += 'A-';
         }
+        if (e.shiftKey) {
+            seq += 'S-';
+        }
         seq += MouseButtonKind[e.button] + type + '>';
+        seq += `<${col},${line}>`;
         return seq;
     }
 
@@ -38,7 +39,7 @@ export default class ScreenDrag {
         down_event.preventDefault();
         [this.line, this.col] = ScreenDrag.getPos(down_event);
         log.info('Drag start', down_event, this.line, this.col);
-        const input = ScreenDrag.buildInputOf(down_event, 'Mouse', this.line, this.col) + `<${this.col},${this.line}>`;
+        const input = ScreenDrag.buildInputOf(down_event, 'Mouse', this.line, this.col);
         log.debug('Mouse input: ' + input);
         return input;
     }
@@ -50,7 +51,7 @@ export default class ScreenDrag {
         }
         move_event.preventDefault();
         log.debug('Drag continue', move_event, line, col);
-        const input = ScreenDrag.buildInputOf(move_event, 'Drag', line, col) + `<${col},${line}>`;
+        const input = ScreenDrag.buildInputOf(move_event, 'Drag', line, col);
         this.line = line;
         this.col = col;
         log.debug('Mouse input: ' + input);
@@ -63,7 +64,7 @@ export default class ScreenDrag {
         [this.line, this.col] = ScreenDrag.getPos(up_event);
         log.info('Drag end', up_event, this.line, this.col);
 
-        const input = ScreenDrag.buildInputOf(up_event, 'Release', this.line, this.col) + `<${this.col},${this.line}>`;
+        const input = ScreenDrag.buildInputOf(up_event, 'Release', this.line, this.col);
         log.info('Mouse input: ' + input);
         return input;
     }

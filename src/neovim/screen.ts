@@ -40,17 +40,6 @@ export default class NeovimScreen {
         }
     }
 
-    private resizeImpl(lines: number, cols: number, width: number, height: number) {
-        if (width !== this.canvas.width) {
-            this.canvas.width = width;
-        }
-        if (height !== this.canvas.height) {
-            this.canvas.height = height;
-        }
-        Dispatcher.dispatch(A.updateScreenSize(width, height));
-        Dispatcher.dispatch(A.updateScreenBounds(lines, cols));
-    }
-
     resizeScreen(width: number, height: number) {
         this.resizeImpl(
                 Math.floor(height / Store.font_attr.height),
@@ -123,6 +112,17 @@ export default class NeovimScreen {
                 Math.ceil(width * attr.width),
                 Math.ceil(height * attr.height)
             );
+    }
+
+    private resizeImpl(lines: number, cols: number, width: number, height: number) {
+        if (width !== this.canvas.width) {
+            this.canvas.width = width;
+        }
+        if (height !== this.canvas.height) {
+            this.canvas.height = height;
+        }
+        Dispatcher.dispatch(A.updateScreenSize(width, height));
+        Dispatcher.dispatch(A.updateScreenBounds(lines, cols));
     }
 }
 

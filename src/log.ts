@@ -1,4 +1,4 @@
-export const NODE_ENV = global.require('remote').process.env['NODE_ENV'];
+export const NODE_ENV = global.require('remote').process.env.NODE_ENV;
 
 let LogLevel = 'info';
 
