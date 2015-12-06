@@ -34,6 +34,7 @@ export enum Kind {
     UpdateFontSize,
     UpdateScreenBounds,
     UpdateScreenSize,
+    Beep,
 };
 
 export interface ActionType {
@@ -232,5 +233,12 @@ export function dragEnd(event: MouseEvent) {
     return {
         type: Kind.DragEnd,
         event,
+    };
+}
+
+export function beep() {
+    'use strict';
+    return {
+        type: Kind.Beep
     };
 }

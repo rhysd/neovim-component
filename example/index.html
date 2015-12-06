@@ -24,6 +24,7 @@
   <script>
     var editor = document.getElementById('neovim').editor;
     var remote = require('remote');
+    var shell = require('shell');
     editor.on('process-attached', function() {
       if (remote.process.argv.length > 2) {
         editor.setArgv(remote.process.argv.slice(2)); // It is better to use 'argv' property.
@@ -31,6 +32,9 @@
     });
     editor.on('quit', function() {
       remote.require('app').quit();
+    });
+    editor.store.on('beep', function() {
+      shell.beep();
     });
     window.addEventListener('resize', function() {
       editor.resizeScreen(window.innerWidth, window.innerHeight);

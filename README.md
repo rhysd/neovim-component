@@ -58,9 +58,9 @@ This component is currently being developed.
 - [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/))
 - [ ] Add API to convert pixel coordinate to line&column coordinate.
 - [ ] Handle all UI events
-  - [ ] `mouse_on`
+  - [x] `mouse_on`
   - [ ] `scroll`
-  - [ ] `bell`
+  - [x] `bell`
 
 
 ## `<neovim-editor>` Properties

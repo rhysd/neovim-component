@@ -127,6 +127,10 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.emit('focus');
             break;
         }
+        case Kind.ClearEOL: {
+            store.emit('clear-eol');
+            break;
+        }
         case Kind.ClearAll: {
             store.emit('clear-all');
             store.cursor = {
@@ -134,10 +138,6 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
                 col: 0,
             };
             store.emit('cursor');
-            break;
-        }
-        case Kind.ClearEOL: {
-            store.emit('clear-eol');
             break;
         }
         case Kind.Resize: {
@@ -258,6 +258,10 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
                 store.emit('drag-ended');
                 store.dragging = null;
             }
+            break;
+        }
+        case Kind.Beep: {
+            store.emit('beep');
             break;
         }
         default: {

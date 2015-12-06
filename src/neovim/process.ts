@@ -137,6 +137,9 @@ function redraw(events: RPCValue[][]) {
             case 'mouse_off':
                 Dispatcher.dispatch(Action.disableMouse());
                 break;
+            case 'visual_bell':
+                Dispatcher.dispatch(Action.beep());
+                break;
             default:
                 log.warn('Unhandled event: ' + name, args);
                 break;
