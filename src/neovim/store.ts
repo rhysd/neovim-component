@@ -42,6 +42,8 @@ export class NeovimStore extends EventEmitter {
     busy: boolean;
     mouse_enabled: boolean;
     dragging: ScreenDrag;
+    title: string;
+    icon_path: string;
 
     constructor() {
         super();
@@ -72,6 +74,8 @@ export class NeovimStore extends EventEmitter {
         this.busy = false;
         this.mouse_enabled = true;
         this.dragging = null;
+        this.title = 'Neovim';  // TODO: This should be set by API.  I must implement it after making store non-singleton
+        this.icon_path = '';
     }
 }
 
@@ -262,6 +266,18 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
         }
         case Kind.Bell: {
             store.emit(action.visual ? 'visual-bell' : 'beep');
+            break;
+        }
+        case Kind.SetTitle: {
+            store.title = action.title;
+            store.emit('title-changed');
+            log.info(`Title is set to '${store.title}'`);
+            break;
+        }
+        case Kind.SetIcon: {
+            store.icon_path = action.icon_path;
+            store.emit('icon-changed');
+            log.info(`Icon is set to '${store.icon_path}'`);
             break;
         }
         default: {

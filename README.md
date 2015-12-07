@@ -61,8 +61,8 @@ This component is currently being developed.
   - [x] `bell`/`visual_bell`
   - [x] `mouse_on`/`mouse_off`
   - [ ] `scroll`
-  - [ ] `set_icon`
-  - [ ] `set_title`
+  - [x] `set_icon`
+  - [x] `set_title`
   - [ ] `set_scroll_region`
 
 

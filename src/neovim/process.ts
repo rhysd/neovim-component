@@ -143,6 +143,12 @@ function redraw(events: RPCValue[][]) {
             case 'visual_bell':
                 Dispatcher.dispatch(Action.bell(true));
                 break;
+            case 'set_title':
+                Dispatcher.dispatch(Action.setTitle(args[0] as string));
+                break;
+            case 'set_icon':
+                Dispatcher.dispatch(Action.setIcon(args[0] as string));
+                break;
             default:
                 log.warn('Unhandled event: ' + name, args);
                 break;

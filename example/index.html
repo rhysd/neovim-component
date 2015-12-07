@@ -36,6 +36,20 @@
     editor.store.on('beep', function() {
       shell.beep();
     });
+    editor.store.on('title-changed', function() {
+      document.title = editor.store.title;
+    });
+    editor.store.on('icon-changed', function() {
+      var icon = editor.store.icon_path;
+      if (icon === '') {
+        return;
+      }
+      if (process.platform === 'darwin') {
+        remote.getCurrentWindow().setRepresentedFilename(icon);
+      } else {
+        remote.getCurrentWindow().icon = icon;
+      }
+    });
     window.addEventListener('resize', function() {
       editor.resizeScreen(window.innerWidth, window.innerHeight);
     });

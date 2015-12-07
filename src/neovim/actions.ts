@@ -35,6 +35,8 @@ export enum Kind {
     UpdateScreenBounds,
     UpdateScreenSize,
     Bell,
+    SetTitle,
+    SetIcon,
 };
 
 export interface ActionType {
@@ -54,6 +56,8 @@ export interface ActionType {
     text?: string[][];
     width?: number;
     visual?: boolean;
+    title?: string;
+    icon_path?: string;
 }
 
 export function putText(text: string[][]) {
@@ -242,5 +246,21 @@ export function bell(visual: boolean) {
     return {
         type: Kind.Bell,
         visual,
+    };
+}
+
+export function setTitle(title: string) {
+    'use strict';
+    return {
+        type: Kind.SetTitle,
+        title,
+    };
+}
+
+export function setIcon(icon_path: string) {
+    'use strict';
+    return {
+        type: Kind.SetIcon,
+        icon_path,
     };
 }
