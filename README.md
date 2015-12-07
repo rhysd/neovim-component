@@ -194,3 +194,11 @@ const editor = document.getElementById('neovim').editor;
 editor.setArgv(['README.md']);
 ```
 
+### Log Levels
+
+`<neovim-component>` prints logs in browser console.  The log level is controlled by environment variable `NODE_ENV`.
+
+- `NODE_ENV=debug` enables all logs.
+- `NODE_ENV=production` disables all logs except for warnings and errors.
+- Setting empty string or other value to `NODE_ENV` enable info log, warnings, and errors.
+
