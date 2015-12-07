@@ -12,7 +12,7 @@ export default class NeovimInput {
                event.altKey && event.keyCode !== 18;
     }
 
-    static getVimSpecialChar(code: number) {
+    static getVimSpecialChar(code: number, shift: boolean) {
         switch (code) {
             case 0:   return 'Nul';
             case 8:   return 'BS';
@@ -31,7 +31,7 @@ export default class NeovimInput {
             case 92:  return 'Bslash';
             case 124: return 'Bar';
             case 127: return 'Del';
-            case 188: return 'LT';
+            case 188: return shift ? 'LT' : null;
             default:  return null;
         }
     }
@@ -72,7 +72,7 @@ export default class NeovimInput {
             return;
         }
 
-        const special_char = NeovimInput.getVimSpecialChar(event.keyCode);
+        const special_char = NeovimInput.getVimSpecialChar(event.keyCode, event.shiftKey);
         if (!NeovimInput.shouldHandleModifier(event) && !special_char) {
             return;
         }
