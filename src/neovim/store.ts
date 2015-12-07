@@ -3,6 +3,7 @@ import Dispatcher from './dispatcher';
 import {Kind, ActionType} from './actions';
 import log from '../log';
 import ScreenDrag from './screen-drag';
+import ScreenWheel from './screen-wheel';
 
 export interface Size {
     lines: number;
@@ -44,6 +45,7 @@ export class NeovimStore extends EventEmitter {
     dragging: ScreenDrag;
     title: string;
     icon_path: string;
+    wheel_scrolling: ScreenWheel;
 
     constructor() {
         super();
@@ -76,6 +78,7 @@ export class NeovimStore extends EventEmitter {
         this.dragging = null;
         this.title = 'Neovim';  // TODO: This should be set by API.  I must implement it after making store non-singleton
         this.icon_path = '';
+        this.wheel_scrolling = new ScreenWheel();
     }
 }
 
@@ -94,6 +97,12 @@ function colorString(new_color: number, fallback: string) {
         const hex = ((new_color & mask) >> shift).toString(16);
         return hex.length < 2 ? ('0' + hex) : hex;
     }).join('');
+}
+
+function handleWheelScroll(event: WheelEvent) {
+    'use strict';
+    
+    return '';
 }
 
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
@@ -278,6 +287,17 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             store.icon_path = action.icon_path;
             store.emit('icon-changed');
             log.info(`Icon is set to '${store.icon_path}'`);
+            break;
+        }
+        case Kind.WheelScroll: {
+            if (store.mouse_enabled) {
+                const input = store.wheel_scrolling.handleEvent(action.event as WheelEvent);
+                console.log('Input!: ' + input);
+                if (input) {
+                    store.emit('input', input);
+                    store.emit('wheel-scrolled');
+                }
+            }
             break;
         }
         default: {

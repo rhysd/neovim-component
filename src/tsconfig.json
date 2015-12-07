@@ -9,6 +9,7 @@
     "sourceMap": true
   },
   "files": [
+    "neovim/screen-wheel.ts",
     "neovim/screen-drag.ts",
     "neovim/input.ts",
     "neovim/cursor.ts",

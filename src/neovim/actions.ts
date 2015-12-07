@@ -11,6 +11,7 @@ export interface HighlightSet {
 }
 
 export enum Kind {
+    Bell,
     BusyStart,
     BusyStop,
     ClearAll,
@@ -27,6 +28,8 @@ export enum Kind {
     Mode,
     PutText,
     Resize,
+    SetIcon,
+    SetTitle,
     UpdateBG,
     UpdateFG,
     UpdateFontFace,
@@ -34,9 +37,7 @@ export enum Kind {
     UpdateFontSize,
     UpdateScreenBounds,
     UpdateScreenSize,
-    Bell,
-    SetTitle,
-    SetIcon,
+    WheelScroll,
 };
 
 export interface ActionType {
@@ -44,20 +45,20 @@ export interface ActionType {
     col?: number;
     color?: number;
     cols?: number;
-    event?: MouseEvent;
+    event?: MouseEvent | WheelEvent;
     font_face?: string;
     font_px?: number;
     height?: number;
     highlight?: HighlightSet;
+    icon_path?: string;
     input?: string;
     line?: number;
     lines?: number;
     mode?: string;
     text?: string[][];
-    width?: number;
-    visual?: boolean;
     title?: string;
-    icon_path?: string;
+    visual?: boolean;
+    width?: number;
 }
 
 export function putText(text: string[][]) {
@@ -262,5 +263,13 @@ export function setIcon(icon_path: string) {
     return {
         type: Kind.SetIcon,
         icon_path,
+    };
+}
+
+export function wheelScroll(event: WheelEvent) {
+    'use strict';
+    return {
+        type: Kind.WheelScroll,
+        event,
     };
 }

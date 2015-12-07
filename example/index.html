@@ -46,8 +46,6 @@
       }
       if (process.platform === 'darwin') {
         remote.getCurrentWindow().setRepresentedFilename(icon);
-      } else {
-        remote.getCurrentWindow().icon = icon;
       }
     });
     window.addEventListener('resize', function() {

@@ -57,6 +57,6 @@ export default class NeovimCursor {
         this.element.style.left = x + 'px';
         this.element.style.top = y + 'px';
 
-        log.info(`Cursor is moved to (${x}, ${y})`);
+        log.debug(`Cursor is moved to (${x}, ${y})`);
     }
 }

@@ -53,10 +53,7 @@ This component is currently being developed.
 - [x] Display cursor
 - [x] Input to neovim
 - [x] Resize (by pixel and by lines&columns)
-- [ ] Mouse/Scroll support
-  - [x] Click
-  - [x] Drag
-  - [ ] Wheel
+- [x] Mouse/Scroll support (click, drag, wheel scroll)
 - [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/))
 - [ ] Add API to convert pixel coordinate to line&column coordinate.
 - [ ] Handle all UI events

@@ -24,6 +24,11 @@ export default class NeovimScreen {
         canvas.addEventListener('mousedown', this.mouseDown.bind(this));
         canvas.addEventListener('mouseup', this.mouseUp.bind(this));
         canvas.addEventListener('mousemove', this.mouseMove.bind(this));
+        canvas.addEventListener('wheel', this.wheel.bind(this));
+    }
+
+    wheel(e: WheelEvent) {
+        Dispatcher.dispatch(A.wheelScroll(e));
     }
 
     mouseDown(e: MouseEvent) {
