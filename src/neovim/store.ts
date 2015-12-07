@@ -99,12 +99,6 @@ function colorString(new_color: number, fallback: string) {
     }).join('');
 }
 
-function handleWheelScroll(event: WheelEvent) {
-    'use strict';
-    
-    return '';
-}
-
 store.dispatch_token = Dispatcher.register((action: ActionType) => {
     switch (action.type) {
         case Kind.Input: {
@@ -292,7 +286,6 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
         case Kind.WheelScroll: {
             if (store.mouse_enabled) {
                 const input = store.wheel_scrolling.handleEvent(action.event as WheelEvent);
-                console.log('Input!: ' + input);
                 if (input) {
                     store.emit('input', input);
                     store.emit('wheel-scrolled');

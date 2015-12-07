@@ -55,7 +55,7 @@ task :default => %i(build example)
 
 task :lint do
   ensure_cmd 'tslint'
-  sh "tslint #{Dir['./**/*.ts'].join(' ')}"
+  sh "tslint #{Dir['./src/**/*.ts'].join(' ')}"
 end
 
 task :test do
