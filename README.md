@@ -54,13 +54,16 @@ This component is currently being developed.
 - [x] Input to neovim
 - [x] Resize (by pixel and by lines&columns)
 - [x] Mouse support
-- [x] Scroll support
+- [ ] Scroll support (click, drag, wheel)
 - [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/))
 - [ ] Add API to convert pixel coordinate to line&column coordinate.
 - [ ] Handle all UI events
-  - [x] `mouse_on`
+  - [x] `bell`/`visual_bell`
+  - [x] `mouse_on`/`mouse_off`
   - [ ] `scroll`
-  - [x] `bell`
+  - [ ] `set_icon`
+  - [ ] `set_title`
+  - [ ] `set_scroll_region`
 
 
 ## `<neovim-editor>` Properties

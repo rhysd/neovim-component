@@ -260,8 +260,8 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             }
             break;
         }
-        case Kind.Beep: {
-            store.emit('beep');
+        case Kind.Bell: {
+            store.emit(action.visual ? 'visual-bell' : 'beep');
             break;
         }
         default: {

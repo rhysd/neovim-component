@@ -34,7 +34,7 @@ export enum Kind {
     UpdateFontSize,
     UpdateScreenBounds,
     UpdateScreenSize,
-    Beep,
+    Bell,
 };
 
 export interface ActionType {
@@ -53,6 +53,7 @@ export interface ActionType {
     mode?: string;
     text?: string[][];
     width?: number;
+    visual?: boolean;
 }
 
 export function putText(text: string[][]) {
@@ -236,9 +237,10 @@ export function dragEnd(event: MouseEvent) {
     };
 }
 
-export function beep() {
+export function bell(visual: boolean) {
     'use strict';
     return {
-        type: Kind.Beep
+        type: Kind.Bell,
+        visual,
     };
 }
