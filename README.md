@@ -56,13 +56,8 @@ This component is currently being developed.
 - [x] Mouse/Scroll support (click, drag, wheel scroll)
 - [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/))
 - [ ] Add API to convert pixel coordinate to line&column coordinate.
-- [ ] Handle all UI events
-  - [x] `bell`/`visual_bell`
-  - [x] `mouse_on`/`mouse_off`
-  - [ ] `scroll` (screen scroll on message from neovim)
-  - [x] `set_icon`
-  - [x] `set_title`
-  - [x] `set_scroll_region`
+- [ ] Make store component-local to support multiple `<neovim-editor>` components in one source.
+- [x] Handle all UI events
 
 
 ## `<neovim-editor>` Properties

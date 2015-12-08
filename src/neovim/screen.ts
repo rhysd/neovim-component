@@ -73,8 +73,15 @@ export default class NeovimScreen {
         this.resizeScreen(Store.size.width, Store.size.height);
     }
 
-    scroll(cols: number) {
-        log.warn('Scrolling screen is not implemented yet!: ' + cols);
+    // Note:
+    //  cols_delta > 0 -> screen up
+    //  cols_delta < 0 -> screen down
+    scroll(cols_delta: number) {
+        if (cols_delta > 0) {
+            this.scrollUp(cols_delta);
+        } else if (cols_delta < 0){
+            this.scrollDown(-cols_delta);
+        }
     }
 
     focus() {
@@ -94,7 +101,7 @@ export default class NeovimScreen {
         this.drawBlock(line, col, 1, clear_length, Store.font_attr.bg);
     }
 
-    drawText(chars: string[][]) {
+    private drawText(chars: string[][]) {
         const {line, col} = Store.cursor;
         const {fg, bg, width, height, face, specified_px} = Store.font_attr;
 
@@ -113,15 +120,65 @@ export default class NeovimScreen {
         log.debug(`drawText(): (${x}, ${y})`, text, Store.cursor);
     }
 
-    drawBlock(line: number, col: number, height: number, width: number, color: string) {
-        const attr = Store.font_attr;
+    private drawBlock(line: number, col: number, height: number, width: number, color: string) {
+        const font = Store.font_attr;
         this.ctx.fillStyle = color;
         this.ctx.fillRect(
-                Math.floor(col * attr.width),
-                Math.floor(line * attr.height),
-                Math.ceil(width * attr.width),
-                Math.ceil(height * attr.height)
+                Math.floor(col * font.width),
+                Math.floor(line * font.height),
+                Math.ceil(width * font.width),
+                Math.ceil(height * font.height)
             );
+    }
+
+    private scrollUp(cols_up: number) {
+        const {top, bottom, left, right} = Store.scroll_region;
+        const font = Store.font_attr;
+        const captured
+            = this.ctx.getImageData(
+                left * font.width,
+                (top + cols_up) * font.height,
+                (right - left + 1) * font.width,
+                (bottom - top + cols_up + 1) * font.height
+            );
+        this.ctx.putImageData(
+            captured,
+            left * font.width,
+            top * font.height
+        );
+        this.drawBlock(
+            bottom - cols_up + 1,
+            left,
+            cols_up,
+            right - left + 1,
+            font.bg
+        );
+        log.debug('Scroll up: ' + cols_up);
+    }
+
+    private scrollDown(cols_down: number) {
+        const {top, bottom, left, right} = Store.scroll_region;
+        const font = Store.font_attr;
+        const captured
+            = this.ctx.getImageData(
+                left * font.width,
+                top * font.height,
+                (right - left + 1) * font.width,
+                (bottom - top + cols_down + 1) * font.height
+            );
+        this.ctx.putImageData(
+            captured,
+            left * font.width,
+            (top + cols_down) * font.height
+        );
+        this.drawBlock(
+            top,
+            left,
+            cols_down,
+            right - left + 1,
+            font.bg
+        );
+        log.debug('Scroll down: ' + cols_down);
     }
 
     private resizeImpl(lines: number, cols: number, width: number, height: number) {
