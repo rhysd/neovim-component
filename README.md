@@ -62,7 +62,7 @@ This component is currently being developed.
   - [ ] `scroll` (screen scroll on message from neovim)
   - [x] `set_icon`
   - [x] `set_title`
-  - [ ] `set_scroll_region`
+  - [x] `set_scroll_region`
 
 
 ## `<neovim-editor>` Properties

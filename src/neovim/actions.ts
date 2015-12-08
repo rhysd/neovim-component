@@ -10,6 +10,13 @@ export interface HighlightSet {
     underline?: boolean;
 }
 
+export interface Region {
+    top: number;
+    left: number;
+    right: number;
+    bottom: number;
+}
+
 export enum Kind {
     Bell,
     BusyStart,
@@ -28,7 +35,9 @@ export enum Kind {
     Mode,
     PutText,
     Resize,
+    ScrollScreen,
     SetIcon,
+    SetScrollRegion,
     SetTitle,
     UpdateBG,
     UpdateFG,
@@ -55,6 +64,7 @@ export interface ActionType {
     line?: number;
     lines?: number;
     mode?: string;
+    region?: Region;
     text?: string[][];
     title?: string;
     visual?: boolean;
@@ -271,5 +281,21 @@ export function wheelScroll(event: WheelEvent) {
     return {
         type: Kind.WheelScroll,
         event,
+    };
+}
+
+export function scrollScreen(cols: number) {
+    'use strict';
+    return {
+        type: Kind.ScrollScreen,
+        cols,
+    };
+}
+
+export function setScrollRegion(region: Region) {
+    'use strict';
+    return {
+        type: Kind.SetScrollRegion,
+        region,
     };
 }

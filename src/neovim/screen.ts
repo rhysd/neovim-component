@@ -14,6 +14,7 @@ export default class NeovimScreen {
         Store.on('clear-eol', this.clearEol.bind(this));
         // Note: 'update-bg' clears all texts in screen.
         Store.on('update-bg', this.clearAll.bind(this));
+        Store.on('screen-scrolled', this.scroll.bind(this));
 
         // TODO:
         // Watch 'resize' event from neovim
@@ -70,6 +71,10 @@ export default class NeovimScreen {
         Dispatcher.dispatch(A.updateFontPx(specified_px));
         Dispatcher.dispatch(A.updateFontSize(font_width, font_height));
         this.resizeScreen(Store.size.width, Store.size.height);
+    }
+
+    scroll(cols: number) {
+        log.warn('Scrolling screen is not implemented yet!: ' + cols);
     }
 
     focus() {

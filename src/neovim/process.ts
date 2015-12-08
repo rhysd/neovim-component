@@ -113,6 +113,17 @@ function redraw(events: RPCValue[][]) {
             case 'eol_clear':
                 Dispatcher.dispatch(Action.clearEndOfLine());
                 break;
+            case 'scroll':
+                Dispatcher.dispatch(Action.scrollScreen(args[0] as number));
+                break;
+            case 'set_scroll_region':
+                Dispatcher.dispatch(Action.setScrollRegion({
+                    top: args[0] as number,
+                    bottom: args[1] as number,
+                    left: args[2] as number,
+                    right: args[3] as number,
+                }));
+                break;
             case 'resize':
                 Dispatcher.dispatch(Action.resize(args[1] as number, args[0] as number));
                 break;

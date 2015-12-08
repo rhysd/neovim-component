@@ -1,9 +1,13 @@
 import {EventEmitter} from 'events';
 import Dispatcher from './dispatcher';
-import {Kind, ActionType} from './actions';
+import {Kind, ActionType, Region} from './actions';
 import log from '../log';
 import ScreenDrag from './screen-drag';
 import ScreenWheel from './screen-wheel';
+
+// TODO:
+// Debug log should be implemented as the subscriber of store
+// and be controlled by registering it or not watching NODE_ENV variable.
 
 export interface Size {
     lines: number;
@@ -46,6 +50,7 @@ export class NeovimStore extends EventEmitter {
     title: string;
     icon_path: string;
     wheel_scrolling: ScreenWheel;
+    scroll_region: Region;
 
     constructor() {
         super();
@@ -79,6 +84,12 @@ export class NeovimStore extends EventEmitter {
         this.title = 'Neovim';  // TODO: This should be set by API.  I must implement it after making store non-singleton
         this.icon_path = '';
         this.wheel_scrolling = new ScreenWheel();
+        this.scroll_region = {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+        };
     }
 }
 
@@ -145,6 +156,16 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
                 col: 0,
             };
             store.emit('cursor');
+            break;
+        }
+        case Kind.ScrollScreen: {
+            store.emit('screen-scrolled', action.cols);
+            break;
+        }
+        case Kind.SetScrollRegion: {
+            store.scroll_region = action.region;
+            log.debug('Region is set: ', store.scroll_region);
+            store.emit('scroll-region-updated');
             break;
         }
         case Kind.Resize: {
@@ -219,6 +240,12 @@ store.dispatch_token = Dispatcher.register((action: ActionType) => {
             }
             store.size.lines = action.lines;
             store.size.cols = action.cols;
+            store.scroll_region = {
+                top: 0,
+                left: 0,
+                right: action.cols - 1,
+                bottom: action.lines - 1,
+            };
             store.emit('update-screen-bounds');
             log.debug(`Screen bounds are updated: (${action.lines} lines, ${action.cols} cols)`);
             break;
