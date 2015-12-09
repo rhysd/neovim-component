@@ -130,52 +130,53 @@ export default class NeovimScreen {
             );
     }
 
-    private scrollUp(cols_up: number) {
-        const {top, bottom, left, right} = Store.scroll_region;
-        const font = Store.font_attr;
-        const captured
-            = this.ctx.getImageData(
-                left * font.width,
-                (top + cols_up) * font.height,
-                (right - left + 1) * font.width,
-                (bottom - top + cols_up - 1) * font.height // Specify just before the bottom line
-            );
-        this.ctx.putImageData(
-            captured,
-            left * font.width,
-            top * font.height
-        );
-        this.drawBlock(
-            bottom - cols_up + 1,
-            left,
-            cols_up,
-            right - left + 1,
-            font.bg
-        );
-        log.debug('Scroll up: ' + cols_up, Store.scroll_region);
-    }
-
-    private scrollDown(cols_down: number) {
-        const {top, bottom, left, right} = Store.scroll_region;
+    private slideVertical(top: number, height: number, dst_top: number) {
+        const {left, right} = Store.scroll_region;
         const font = Store.font_attr;
         const captured
             = this.ctx.getImageData(
                 left * font.width,
                 top * font.height,
                 (right - left + 1) * font.width,
-                (bottom - top - cols_down) * font.height
+                height * font.height
             );
         this.ctx.putImageData(
             captured,
             left * font.width,
-            (top + cols_down) * font.height
+            dst_top * font.height
+        );
+    }
+
+    private scrollUp(cols_up: number) {
+        const {top, bottom, left, right} = Store.scroll_region;
+        this.slideVertical(
+            top + cols_up,
+            bottom - top + cols_up - 1, // Specify just before the bottom line
+            top
+        );
+        this.drawBlock(
+            bottom - cols_up + 1,
+            left,
+            cols_up,
+            right - left + 1,
+            Store.font_attr.bg
+        );
+        log.debug('Scroll up: ' + cols_up, Store.scroll_region);
+    }
+
+    private scrollDown(cols_down: number) {
+        const {top, bottom, left, right} = Store.scroll_region;
+        this.slideVertical(
+            top,
+            bottom - top - cols_down,
+            top + cols_down
         );
         this.drawBlock(
             top,
             left,
             cols_down - 1, // Specify just before the bottom line
             right - left + 1,
-            font.bg
+            Store.font_attr.bg
         );
         log.debug('Scroll down: ' + cols_down, Store.scroll_region);
     }
