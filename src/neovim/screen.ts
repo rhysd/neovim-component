@@ -95,8 +95,8 @@ export default class NeovimScreen {
 
     clearEol() {
         const {line, col} = Store.cursor;
-        const width = Store.font_attr.width;
-        const clear_length = Store.size.cols * width - col * width;
+        const font_width = Store.font_attr.width;
+        const clear_length = Store.size.cols * font_width - col * font_width;
         log.debug(`Clear until EOL: ${line}:${col} length=${clear_length}`);
         this.drawBlock(line, col, 1, clear_length, Store.font_attr.bg);
     }
@@ -108,7 +108,6 @@ export default class NeovimScreen {
         // Draw background
         this.drawBlock(line, col, 1, chars.length, bg);
 
-        // TODO: Enable to specify font
         // TODO: Consider font attributes (e.g. underline, bold, ...)
         this.ctx.font = specified_px + 'px ' + face;
         this.ctx.textBaseline = 'top';
@@ -139,7 +138,7 @@ export default class NeovimScreen {
                 left * font.width,
                 (top + cols_up) * font.height,
                 (right - left + 1) * font.width,
-                (bottom - top + cols_up + 1) * font.height
+                (bottom - top + cols_up - 1) * font.height // Specify just before the bottom line
             );
         this.ctx.putImageData(
             captured,
@@ -153,7 +152,7 @@ export default class NeovimScreen {
             right - left + 1,
             font.bg
         );
-        log.debug('Scroll up: ' + cols_up);
+        log.debug('Scroll up: ' + cols_up, Store.scroll_region);
     }
 
     private scrollDown(cols_down: number) {
@@ -164,7 +163,7 @@ export default class NeovimScreen {
                 left * font.width,
                 top * font.height,
                 (right - left + 1) * font.width,
-                (bottom - top + cols_down + 1) * font.height
+                (bottom - top - cols_down) * font.height
             );
         this.ctx.putImageData(
             captured,
@@ -174,11 +173,11 @@ export default class NeovimScreen {
         this.drawBlock(
             top,
             left,
-            cols_down,
+            cols_down - 1, // Specify just before the bottom line
             right - left + 1,
             font.bg
         );
-        log.debug('Scroll down: ' + cols_down);
+        log.debug('Scroll down: ' + cols_down, Store.scroll_region);
     }
 
     private resizeImpl(lines: number, cols: number, width: number, height: number) {
