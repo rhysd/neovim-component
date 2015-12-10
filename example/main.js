@@ -1,6 +1,7 @@
 var path = require('path');
-var app = require('app');
-var BrowserWindow = require('browser-window');
+var electron = require('electron');
+var app = electron.app;
+var BrowserWindow = electron.BrowserWindow;
 
 var index_html = 'file://' + path.join(__dirname, 'index.html');
 
