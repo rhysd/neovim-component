@@ -38,18 +38,6 @@ export default class Neovim extends EventEmitter {
             });
     }
 
-    changeFontSize(new_size: number) {
-        this.screen.updateActualFontSize(new_size);
-    }
-
-    resizeScreen(width_px: number, height_px: number) {
-        this.screen.resizeScreen(width_px, height_px);
-    }
-
-    resizeView(lines: number, cols: number) {
-        this.screen.resizeView(lines, cols);
-    }
-
     quit() {
         this.process.finalize();
     }

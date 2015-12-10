@@ -161,22 +161,37 @@ neovim_element.editor.on('detach', () => console.log('Element does not exist in 
 ```
 
 
-### Other APIs
+### View APIs
 
 - Resize screen
 
 ```javascript
 const editor = document.getElementById('neovim').editor;
-editor.resizeScreen(1920, 1080); // Resize screen to 1920x1080px
-editor.resizeView(80, 100); // Resize screen to 80 lines and 100 columns
+editor.screen.resize(80, 100); // Resize screen to 80 lines and 100 columns
+editor.screen.resizeWithPixels(1920, 1080); // Resize screen to 1920x1080px
 ```
 
 - Change font size
 
 ```javascript
 const editor = document.getElementById('neovim').editor;
-editor.changeFontSize(18); // Change font size to 18px
+editor.screen.changeFontSize(18); // Change font size to 18px
 ```
+
+- Convert pixels to lines/cols.
+
+```javascript
+const editor = document.getElementById('neovim').editor;
+
+const loc = editor.screen.convertPositionToLocation(80, 24);
+console.log(loc.x, loc.y);  // Coordinates in pixels of (line, col) = (80, 24)
+
+const pos = editor.screen.convertLocationToPosition(400, 300);
+const.log(pos.col, pos.line);  // line/col of location (400px, 300px)
+```
+
+
+### Other APIs
 
 - Set arguments after
 
@@ -187,6 +202,7 @@ Note that it is better to use `argv` property of `<neovim-element>`.
 const editor = document.getElementById('neovim').editor;
 editor.setArgv(['README.md']);
 ```
+
 
 ### Log Levels
 

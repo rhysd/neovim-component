@@ -22,7 +22,7 @@ export default class NeovimScreen {
         // TODO:
         // Watch 'resize' event from neovim
 
-        this.updateActualFontSize(this.store.font_attr.specified_px);
+        this.changeFontSize(this.store.font_attr.specified_px);
 
         canvas.addEventListener('click', this.focus.bind(this));
         canvas.addEventListener('mousedown', this.mouseDown.bind(this));
@@ -52,16 +52,16 @@ export default class NeovimScreen {
         }
     }
 
-    resizeScreen(width: number, height: number) {
+    resizeWithPixels(width_px: number, height_px: number) {
         this.resizeImpl(
-                Math.floor(height / this.store.font_attr.height),
-                Math.floor(width / this.store.font_attr.width),
-                width,
-                height
+                Math.floor(height_px / this.store.font_attr.height),
+                Math.floor(width_px / this.store.font_attr.width),
+                width_px,
+                height_px
             );
     }
 
-    resizeView(lines: number, cols: number) {
+    resize(lines: number, cols: number) {
         this.resizeImpl(
                 lines,
                 cols,
@@ -70,14 +70,14 @@ export default class NeovimScreen {
             );
     }
 
-    updateActualFontSize(specified_px: number) {
+    changeFontSize(specified_px: number) {
         this.ctx.font = specified_px + 'px ' + this.store.font_attr.face;
         const font_width = this.ctx.measureText('m').width;
         const font_height = font_width * 2;
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
         this.store.dispatcher.dispatch(A.updateFontSize(font_width, font_height));
         const {width, height} = this.store.size;
-        this.resizeScreen(width, height);
+        this.resizeWithPixels(width, height);
     }
 
     // Note:
@@ -106,6 +106,31 @@ export default class NeovimScreen {
         const clear_length = this.store.size.cols * font_width - col * font_width;
         log.debug(`Clear until EOL: ${line}:${col} length=${clear_length}`);
         this.drawBlock(line, col, 1, clear_length, this.store.font_attr.bg);
+    }
+
+    // Origin is at left-above.
+    //
+    //      O-------------> x
+    //      |
+    //      |
+    //      |
+    //      |
+    //      V
+    //      y
+    //
+    convertPositionToLocation(line: number, col: number) {
+        const {width, height} = this.store.font_attr;
+        return {
+            x: col * width,
+            y: line * height,
+        };
+    }
+    convertLocationToPosition(x: number, y: number) {
+        const {width, height} = this.store.font_attr;
+        return {
+            line: Math.floor(y / height),
+            col: Math.floor(x / width),
+        };
     }
 
     private drawText(chars: string[][]) {
