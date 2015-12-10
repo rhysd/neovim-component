@@ -3,16 +3,11 @@ import Process from './neovim/process';
 import Screen from './neovim/screen';
 import NeovimStore from './neovim/store';
 import {updateFontPx, updateFontFace, updateScreenSize} from './neovim/actions';
-import Cursor from './neovim/cursor';
-import Input from './neovim/input';
-import Dispatcher from './neovim/dispatcher';
 
 export default class Neovim extends EventEmitter {
     process: Process;
     screen: Screen;
     store: NeovimStore;
-    cursor: Cursor;
-    input: Input;
 
     constructor(
             command: string,
@@ -25,11 +20,6 @@ export default class Neovim extends EventEmitter {
         super();
 
         this.store = new NeovimStore();
-
-        // Note:
-        // Perhaps store should not be singlton because:
-        //  1. Store can't be initialized by <neovim-editor> props.
-        //  2. Multiple <neovim-editor> component can't exist.
         this.store.dispatcher.dispatch(updateFontFace(font));
         this.store.dispatcher.dispatch(updateFontPx(font_size));
         this.store.dispatcher.dispatch(updateScreenSize(width, height));
@@ -46,8 +36,6 @@ export default class Neovim extends EventEmitter {
                 this.process.client.on('disconnect', () => this.emit('quit'));
                 this.emit('process-attached');
             });
-        this.cursor = new Cursor(this.store);
-        this.input = new Input(this.store);
     }
 
     changeFontSize(new_size: number) {

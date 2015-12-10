@@ -5,7 +5,6 @@ const child_process: typeof cp = global.require('child_process');
 import NvimClient = require('promised-neovim-client');
 const attach = (global.require('promised-neovim-client') as typeof NvimClient).attach;
 import Action = require('./actions');
-import Dispatcher from './dispatcher';
 import NeovimStore from './store';
 import log from '../log';
 

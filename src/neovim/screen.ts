@@ -1,9 +1,13 @@
 import NeovimStore from './store';
 import * as A from './actions';
+import Cursor from './cursor';
+import Input from './input';
 import log from '../log';
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
+    cursor: Cursor;
+    input: Input;
 
     constructor(private store: NeovimStore, public canvas: HTMLCanvasElement) {
         this.ctx = this.canvas.getContext('2d');
@@ -25,6 +29,9 @@ export default class NeovimScreen {
         canvas.addEventListener('mouseup', this.mouseUp.bind(this));
         canvas.addEventListener('mousemove', this.mouseMove.bind(this));
         canvas.addEventListener('wheel', this.wheel.bind(this));
+
+        this.cursor = new Cursor(this.store);
+        this.input = new Input(this.store);
     }
 
     wheel(e: WheelEvent) {
