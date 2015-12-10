@@ -44,21 +44,6 @@ $ npm install neovim-component electron-prebuilt
 $ simple-neovim-gui
 ```
 
-## TODOs
-
-This component is currently being developed.
-
-- [x] Show UI
-- [x] Highlight
-- [x] Display cursor
-- [x] Input to neovim
-- [x] Resize (by pixel and by lines&columns)
-- [x] Mouse/Scroll support (click, drag, wheel scroll)
-- [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/))
-- [ ] Add API to convert pixel coordinate to line&column coordinate.
-- [x] Make store component-local to support multiple `<neovim-editor>` components in one source.
-- [x] Handle all UI events
-
 
 ## `<neovim-editor>` Properties
 
@@ -211,4 +196,10 @@ editor.setArgv(['README.md']);
 - `NODE_ENV=debug` enables all logs.
 - `NODE_ENV=production` disables all logs except for warnings and errors.
 - Setting empty string or other value to `NODE_ENV` enable info log, warnings, and errors.
+
+
+## TODOs
+
+- [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/)). See #2.
+- [ ] Add tests.
 
