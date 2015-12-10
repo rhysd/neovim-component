@@ -1,9 +1,9 @@
 import {EventEmitter} from 'events';
-import Dispatcher from './dispatcher';
 import {Kind, ActionType, Region} from './actions';
 import log from '../log';
 import ScreenDrag from './screen-drag';
 import ScreenWheel from './screen-wheel';
+import {Dispatcher} from 'flux';
 
 // TODO:
 // Debug log should be implemented as the subscriber of store
@@ -35,7 +35,23 @@ export interface FontAttributes {
     specified_px: number;
 }
 
-export class NeovimStore extends EventEmitter {
+export type DispatcherType = Dispatcher<ActionType>;
+
+// Note: 0x001203 -> '#001203'
+function colorString(new_color: number, fallback: string) {
+    'use strict';
+    if (typeof new_color !== 'number' || new_color < 0) {
+        return fallback;
+    }
+
+    return '#' + [16, 8, 0].map(shift => {
+        const mask = 0xff << shift;
+        const hex = ((new_color & mask) >> shift).toString(16);
+        return hex.length < 2 ? ('0' + hex) : hex;
+    }).join('');
+}
+
+export default class NeovimStore extends EventEmitter {
     dispatch_token: string;
 
     size: Size;
@@ -51,9 +67,11 @@ export class NeovimStore extends EventEmitter {
     icon_path: string;
     wheel_scrolling: ScreenWheel;
     scroll_region: Region;
+    dispatcher: Dispatcher<ActionType>;
 
     constructor() {
         super();
+        this.dispatcher = new Dispatcher<ActionType>();
         this.size = {
             lines: 0,
             cols: 0,
@@ -83,246 +101,231 @@ export class NeovimStore extends EventEmitter {
         this.dragging = null;
         this.title = 'Neovim';  // TODO: This should be set by API.  I must implement it after making store non-singleton
         this.icon_path = '';
-        this.wheel_scrolling = new ScreenWheel();
+        this.wheel_scrolling = new ScreenWheel(this);
         this.scroll_region = {
             left: 0,
             right: 0,
             top: 0,
             bottom: 0,
         };
+        this.dispatch_token = this.dispatcher.register(this.receiveAction.bind(this));
+    }
+
+    receiveAction(action: ActionType) {
+        switch (action.type) {
+            case Kind.Input: {
+                this.emit('input', action.input);
+                break;
+            }
+            case Kind.PutText: {
+                this.emit('put', action.text);
+                this.cursor.col = this.cursor.col + action.text.length;
+                this.emit('cursor');
+                break;
+            }
+            case Kind.Cursor: {
+                this.cursor = {
+                    line: action.line,
+                    col: action.col,
+                };
+                this.emit('cursor');
+                break;
+            }
+            case Kind.Highlight: {
+                const hl = action.highlight;
+                this.font_attr.bold = hl.bold;
+                this.font_attr.italic = hl.italic;
+                this.font_attr.reverse = hl.reverse;
+                this.font_attr.underline = hl.underline;
+                this.font_attr.fg = colorString(hl.foreground, this.fg_color);
+                this.font_attr.bg = colorString(hl.background, this.bg_color);
+                log.debug('Highlight is updated: ', this.font_attr);
+                break;
+            }
+            case Kind.Focus: {
+                this.emit('focus');
+                break;
+            }
+            case Kind.ClearEOL: {
+                this.emit('clear-eol');
+                break;
+            }
+            case Kind.ClearAll: {
+                this.emit('clear-all');
+                this.cursor = {
+                    line: 0,
+                    col: 0,
+                };
+                this.emit('cursor');
+                break;
+            }
+            case Kind.ScrollScreen: {
+                this.emit('screen-scrolled', action.cols);
+                break;
+            }
+            case Kind.SetScrollRegion: {
+                this.scroll_region = action.region;
+                log.debug('Region is set: ', this.scroll_region);
+                this.emit('scroll-region-updated');
+                break;
+            }
+            case Kind.Resize: {
+                if (this.size.lines === action.lines
+                    && this.size.cols === action.cols) {
+                    break;
+                }
+                this.size.lines = action.lines;
+                this.size.cols = action.cols;
+                this.emit('resize');
+                break;
+            }
+            case Kind.UpdateFG: {
+                this.fg_color = colorString(action.color, this.font_attr.fg);
+                this.emit('update-fg');
+                log.debug('Foreground color is updated: ' + this.fg_color);
+                break;
+            }
+            case Kind.UpdateBG: {
+                this.bg_color = colorString(action.color, this.font_attr.bg);
+                this.emit('update-bg');
+                log.debug('Background color is updated: ' + this.bg_color);
+                break;
+            }
+            case Kind.Mode: {
+                this.mode = action.mode;
+                this.emit('mode', this.mode);
+                break;
+            }
+            case Kind.BusyStart: {
+                this.busy = true;
+                this.emit('busy');
+                break;
+            }
+            case Kind.BusyStop: {
+                this.busy = false;
+                this.emit('busy');
+                break;
+            }
+            case Kind.UpdateFontSize: {
+                this.font_attr.width = action.width;
+                this.font_attr.height = action.height;
+                log.debug(`Actual font size is updated: ${action.width}:${action.height}`);
+                this.emit('font-size-changed');
+                break;
+            }
+            case Kind.UpdateFontPx: {
+                this.font_attr.specified_px = action.font_px;
+                this.emit('font-px-specified');
+                break;
+            }
+            case Kind.UpdateFontFace: {
+                this.font_attr.face = action.font_face;
+                this.emit('font-face-specified');
+                break;
+            }
+            case Kind.UpdateScreenSize: {
+                if (this.size.width === action.width
+                    && this.size.height === action.height) {
+                    break;
+                }
+                this.size.width = action.width;
+                this.size.height = action.height;
+                this.emit('update-screen-size');
+                log.debug(`Screen size is updated: (${action.width}px, ${action.height}px)`);
+                break;
+            }
+            case Kind.UpdateScreenBounds: {
+                if (this.size.lines === action.lines
+                    && this.size.cols === action.cols) {
+                    break;
+                }
+                this.size.lines = action.lines;
+                this.size.cols = action.cols;
+                this.scroll_region = {
+                    top: 0,
+                    left: 0,
+                    right: action.cols - 1,
+                    bottom: action.lines - 1,
+                };
+                this.emit('update-screen-bounds');
+                log.debug(`Screen bounds are updated: (${action.lines} lines, ${action.cols} cols)`);
+                break;
+            }
+            case Kind.EnableMouse: {
+                if (!this.mouse_enabled) {
+                    this.mouse_enabled = true;
+                    this.emit('mouse-enabled');
+                    log.info('Mouse enabled.');
+                }
+                break;
+            }
+            case Kind.DisableMouse: {
+                if (this.mouse_enabled) {
+                    this.mouse_enabled = false;
+                    this.emit('mouse-disabled');
+                    log.info('Mouse disabled.');
+                }
+                break;
+            }
+            case Kind.DragStart: {
+                if (this.mouse_enabled) {
+                    this.dragging = new ScreenDrag(this);
+                    this.emit('input', this.dragging.start(action.event));
+                    this.emit('drag-started');
+                } else {
+                    log.debug('Click ignored because mouse is disabled.');
+                }
+                break;
+            }
+            case Kind.DragUpdate: {
+                if (this.mouse_enabled && this.dragging !== null) {
+                    const input = this.dragging.drag(action.event);
+                    if (input) {
+                        this.emit('input', input);
+                        this.emit('drag-updated');
+                    }
+                }
+                break;
+            }
+            case Kind.DragEnd: {
+                if (this.mouse_enabled && this.dragging !== null) {
+                    this.emit('input', this.dragging.end(action.event));
+                    this.emit('drag-ended');
+                    this.dragging = null;
+                }
+                break;
+            }
+            case Kind.Bell: {
+                this.emit(action.visual ? 'visual-bell' : 'beep');
+                break;
+            }
+            case Kind.SetTitle: {
+                this.title = action.title;
+                this.emit('title-changed');
+                log.info(`Title is set to '${this.title}'`);
+                break;
+            }
+            case Kind.SetIcon: {
+                this.icon_path = action.icon_path;
+                this.emit('icon-changed');
+                log.info(`Icon is set to '${this.icon_path}'`);
+                break;
+            }
+            case Kind.WheelScroll: {
+                if (this.mouse_enabled) {
+                    const input = this.wheel_scrolling.handleEvent(action.event as WheelEvent);
+                    if (input) {
+                        this.emit('input', input);
+                        this.emit('wheel-scrolled');
+                    }
+                }
+                break;
+            }
+            default: {
+                log.warn('Unhandled action: ', action);
+                break;
+            }
+        }
     }
 }
 
-const store = new NeovimStore();
-export default store;
-
-// Note: 0x001203 -> '#001203'
-function colorString(new_color: number, fallback: string) {
-    'use strict';
-    if (typeof new_color !== 'number' || new_color < 0) {
-        return fallback;
-    }
-
-    return '#' + [16, 8, 0].map(shift => {
-        const mask = 0xff << shift;
-        const hex = ((new_color & mask) >> shift).toString(16);
-        return hex.length < 2 ? ('0' + hex) : hex;
-    }).join('');
-}
-
-store.dispatch_token = Dispatcher.register((action: ActionType) => {
-    switch (action.type) {
-        case Kind.Input: {
-            store.emit('input', action.input);
-            break;
-        }
-        case Kind.PutText: {
-            store.emit('put', action.text);
-            store.cursor.col = store.cursor.col + action.text.length;
-            store.emit('cursor');
-            break;
-        }
-        case Kind.Cursor: {
-            store.cursor = {
-                line: action.line,
-                col: action.col,
-            };
-            store.emit('cursor');
-            break;
-        }
-        case Kind.Highlight: {
-            const hl = action.highlight;
-            store.font_attr.bold = hl.bold;
-            store.font_attr.italic = hl.italic;
-            store.font_attr.reverse = hl.reverse;
-            store.font_attr.underline = hl.underline;
-            store.font_attr.fg = colorString(hl.foreground, store.fg_color);
-            store.font_attr.bg = colorString(hl.background, store.bg_color);
-            log.debug('Highlight is updated: ', store.font_attr);
-            break;
-        }
-        case Kind.Focus: {
-            store.emit('focus');
-            break;
-        }
-        case Kind.ClearEOL: {
-            store.emit('clear-eol');
-            break;
-        }
-        case Kind.ClearAll: {
-            store.emit('clear-all');
-            store.cursor = {
-                line: 0,
-                col: 0,
-            };
-            store.emit('cursor');
-            break;
-        }
-        case Kind.ScrollScreen: {
-            store.emit('screen-scrolled', action.cols);
-            break;
-        }
-        case Kind.SetScrollRegion: {
-            store.scroll_region = action.region;
-            log.debug('Region is set: ', store.scroll_region);
-            store.emit('scroll-region-updated');
-            break;
-        }
-        case Kind.Resize: {
-            if (store.size.lines === action.lines
-                && store.size.cols === action.cols) {
-                break;
-            }
-            store.size.lines = action.lines;
-            store.size.cols = action.cols;
-            store.emit('resize');
-            break;
-        }
-        case Kind.UpdateFG: {
-            store.fg_color = colorString(action.color, store.font_attr.fg);
-            store.emit('update-fg');
-            log.debug('Foreground color is updated: ' + store.fg_color);
-            break;
-        }
-        case Kind.UpdateBG: {
-            store.bg_color = colorString(action.color, store.font_attr.bg);
-            store.emit('update-bg');
-            log.debug('Background color is updated: ' + store.bg_color);
-            break;
-        }
-        case Kind.Mode: {
-            store.mode = action.mode;
-            store.emit('mode', store.mode);
-            break;
-        }
-        case Kind.BusyStart: {
-            store.busy = true;
-            store.emit('busy');
-            break;
-        }
-        case Kind.BusyStop: {
-            store.busy = false;
-            store.emit('busy');
-            break;
-        }
-        case Kind.UpdateFontSize: {
-            store.font_attr.width = action.width;
-            store.font_attr.height = action.height;
-            log.debug(`Actual font size is updated: ${action.width}:${action.height}`);
-            store.emit('font-size-changed');
-            break;
-        }
-        case Kind.UpdateFontPx: {
-            store.font_attr.specified_px = action.font_px;
-            store.emit('font-px-specified');
-            break;
-        }
-        case Kind.UpdateFontFace: {
-            store.font_attr.face = action.font_face;
-            store.emit('font-face-specified');
-            break;
-        }
-        case Kind.UpdateScreenSize: {
-            if (store.size.width === action.width
-                && store.size.height === action.height) {
-                break;
-            }
-            store.size.width = action.width;
-            store.size.height = action.height;
-            store.emit('update-screen-size');
-            log.debug(`Screen size is updated: (${action.width}px, ${action.height}px)`);
-            break;
-        }
-        case Kind.UpdateScreenBounds: {
-            if (store.size.lines === action.lines
-                && store.size.cols === action.cols) {
-                break;
-            }
-            store.size.lines = action.lines;
-            store.size.cols = action.cols;
-            store.scroll_region = {
-                top: 0,
-                left: 0,
-                right: action.cols - 1,
-                bottom: action.lines - 1,
-            };
-            store.emit('update-screen-bounds');
-            log.debug(`Screen bounds are updated: (${action.lines} lines, ${action.cols} cols)`);
-            break;
-        }
-        case Kind.EnableMouse: {
-            if (!store.mouse_enabled) {
-                store.mouse_enabled = true;
-                store.emit('mouse-enabled');
-                log.info('Mouse enabled.');
-            }
-            break;
-        }
-        case Kind.DisableMouse: {
-            if (store.mouse_enabled) {
-                store.mouse_enabled = false;
-                store.emit('mouse-disabled');
-                log.info('Mouse disabled.');
-            }
-            break;
-        }
-        case Kind.DragStart: {
-            if (store.mouse_enabled) {
-                store.dragging = new ScreenDrag();
-                store.emit('input', store.dragging.start(action.event));
-                store.emit('drag-started');
-            } else {
-                log.debug('Click ignored because mouse is disabled.');
-            }
-            break;
-        }
-        case Kind.DragUpdate: {
-            if (store.mouse_enabled && store.dragging !== null) {
-                const input = store.dragging.drag(action.event);
-                if (input) {
-                    store.emit('input', input);
-                    store.emit('drag-updated');
-                }
-            }
-            break;
-        }
-        case Kind.DragEnd: {
-            if (store.mouse_enabled && store.dragging !== null) {
-                store.emit('input', store.dragging.end(action.event));
-                store.emit('drag-ended');
-                store.dragging = null;
-            }
-            break;
-        }
-        case Kind.Bell: {
-            store.emit(action.visual ? 'visual-bell' : 'beep');
-            break;
-        }
-        case Kind.SetTitle: {
-            store.title = action.title;
-            store.emit('title-changed');
-            log.info(`Title is set to '${store.title}'`);
-            break;
-        }
-        case Kind.SetIcon: {
-            store.icon_path = action.icon_path;
-            store.emit('icon-changed');
-            log.info(`Icon is set to '${store.icon_path}'`);
-            break;
-        }
-        case Kind.WheelScroll: {
-            if (store.mouse_enabled) {
-                const input = store.wheel_scrolling.handleEvent(action.event as WheelEvent);
-                if (input) {
-                    store.emit('input', input);
-                    store.emit('wheel-scrolled');
-                }
-            }
-            break;
-        }
-        default: {
-            log.warn('Unhandled action: ', action);
-            break;
-        }
-    }
-});

@@ -1,4 +1,4 @@
-import Store from './store';
+import NeovimStore from './store';
 import log from '../log';
 
 // Note: Mouse has its origin at left-bottom
@@ -20,7 +20,7 @@ export default class ScreenWheel {
     shift: boolean;
     ctrl: boolean;
 
-    constructor() {
+    constructor(private store: NeovimStore) {
         this.reset();
     }
 
@@ -36,8 +36,8 @@ export default class ScreenWheel {
         this.x += e.deltaX;
         this.y += e.deltaY;
 
-        const scroll_x = Math.round(this.x / Store.font_attr.width / 6);
-        const scroll_y = Math.round(this.y / Store.font_attr.height / 3);
+        const scroll_x = Math.round(this.x / this.store.font_attr.width / 6);
+        const scroll_y = Math.round(this.y / this.store.font_attr.height / 3);
 
         if (scroll_x === 0 && scroll_y === 0) {
             // Note: At least 3 lines or 6 columns are needed to scroll screen

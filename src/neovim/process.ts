@@ -6,7 +6,7 @@ import NvimClient = require('promised-neovim-client');
 const attach = (global.require('promised-neovim-client') as typeof NvimClient).attach;
 import Action = require('./actions');
 import Dispatcher from './dispatcher';
-import Store from './store';
+import NeovimStore from './store';
 import log from '../log';
 
 // Note:
@@ -26,7 +26,7 @@ export default class NeovimProcess {
     client: NvimClient.Nvim;
     started: boolean;
 
-    constructor(public command: string, public argv: string[]) {
+    constructor(private store: NeovimStore, public command: string, public argv: string[]) {
         this.started = false;
         this.argv.push('--embed');
     }
@@ -43,8 +43,8 @@ export default class NeovimProcess {
                 nvim.uiAttach(columns, lines, true);
                 this.started = true;
                 log.info(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
-                Store.on('input', (i: string) => nvim.input(i));
-                Store.on('update-screen-bounds', () => nvim.uiTryResize(Store.size.cols, Store.size.lines));
+                this.store.on('input', (i: string) => nvim.input(i));
+                this.store.on('update-screen-bounds', () => nvim.uiTryResize(this.store.size.cols, this.store.size.lines));
             }).catch(err => log.error(err));
     }
 
@@ -54,7 +54,7 @@ export default class NeovimProcess {
 
     onNotified(method: string, args: RPCValue[]) {
         if (method === 'redraw') {
-            redraw(args as RPCValue[][]);
+            this.redraw(args as RPCValue[][]);
         } else {
             log.warn('unknown method', method, args);
         }
@@ -74,98 +74,96 @@ export default class NeovimProcess {
         this.client.quit();
         this.started = false;
     }
-}
 
-function redraw(events: RPCValue[][]) {
-    'use strict';
-    for (const e of events) {
-        const name = e[0] as string;
-        const args = e[1] as RPCValue[];
-        switch (name) {
-            case 'put':
-                e.shift();
-                if (e.length !== 0) {
-                    Dispatcher.dispatch(Action.putText(e as string[][]));
-                }
-                break;
-            case 'cursor_goto':
-                Dispatcher.dispatch(Action.cursor(args[0] as number, args[1] as number));
-                break;
-            case 'highlight_set':
-                e.shift();
+    private redraw(events: RPCValue[][]) {
+        const d = this.store.dispatcher;
+        for (const e of events) {
+            const name = e[0] as string;
+            const args = e[1] as RPCValue[];
+            switch (name) {
+                case 'put':
+                    e.shift();
+                    if (e.length !== 0) {
+                        d.dispatch(Action.putText(e as string[][]));
+                    }
+                    break;
+                case 'cursor_goto':
+                    d.dispatch(Action.cursor(args[0] as number, args[1] as number));
+                    break;
+                case 'highlight_set':
+                    e.shift();
 
-                // Note:
-                // [[{highlight_set}], [], [{highlight_set}], ...]
-                //   -> [{highlight_set}, {highlight_set}, ...]
-                const highlights = [].concat.apply([], e) as Action.HighlightSet[];
+                    // Note:
+                    // [[{highlight_set}], [], [{highlight_set}], ...]
+                    //   -> [{highlight_set}, {highlight_set}, ...]
+                    const highlights = [].concat.apply([], e) as Action.HighlightSet[];
 
-                // Note:
-                // [{highlight_set}, {highlight_set}, ...]
-                //   -> {merged highlight_set}
-                highlights.unshift({});
-                const merged_highlight = Object.assign.apply(Object, highlights) as Action.HighlightSet;
+                    // Note:
+                    // [{highlight_set}, {highlight_set}, ...]
+                    //   -> {merged highlight_set}
+                    highlights.unshift({});
+                    const merged_highlight = Object.assign.apply(Object, highlights) as Action.HighlightSet;
 
-                Dispatcher.dispatch(Action.highlight(merged_highlight));
-                break;
-            case 'clear':
-                Dispatcher.dispatch(Action.clearAll());
-                break;
-            case 'eol_clear':
-                Dispatcher.dispatch(Action.clearEndOfLine());
-                break;
-            case 'scroll':
-                Dispatcher.dispatch(Action.scrollScreen(args[0] as number));
-                break;
-            case 'set_scroll_region':
-                Dispatcher.dispatch(Action.setScrollRegion({
-                    top: args[0] as number,
-                    bottom: args[1] as number,
-                    left: args[2] as number,
-                    right: args[3] as number,
-                }));
-                break;
-            case 'resize':
-                Dispatcher.dispatch(Action.resize(args[1] as number, args[0] as number));
-                break;
-            case 'update_fg':
-                Dispatcher.dispatch(Action.updateForeground(args[0] as number));
-                break;
-            case 'update_bg':
-                Dispatcher.dispatch(Action.updateBackground(args[0] as number));
-                break;
-            case 'mode_change':
-                Dispatcher.dispatch(Action.changeMode(args[0] as string));
-                break;
-            case 'busy_start':
-                Dispatcher.dispatch(Action.startBusy());
-                break;
-            case 'busy_stop':
-                Dispatcher.dispatch(Action.stopBusy());
-                break;
-            case 'mouse_on':
-                Dispatcher.dispatch(Action.enableMouse());
-                break;
-            case 'mouse_off':
-                Dispatcher.dispatch(Action.disableMouse());
-                break;
-            case 'bell':
-                Dispatcher.dispatch(Action.bell(false));
-                break;
-            case 'visual_bell':
-                Dispatcher.dispatch(Action.bell(true));
-                break;
-            case 'set_title':
-                Dispatcher.dispatch(Action.setTitle(args[0] as string));
-                break;
-            case 'set_icon':
-                Dispatcher.dispatch(Action.setIcon(args[0] as string));
-                break;
-            default:
-                log.warn('Unhandled event: ' + name, args);
-                break;
+                    d.dispatch(Action.highlight(merged_highlight));
+                    break;
+                case 'clear':
+                    d.dispatch(Action.clearAll());
+                    break;
+                case 'eol_clear':
+                    d.dispatch(Action.clearEndOfLine());
+                    break;
+                case 'scroll':
+                    d.dispatch(Action.scrollScreen(args[0] as number));
+                    break;
+                case 'set_scroll_region':
+                    d.dispatch(Action.setScrollRegion({
+                        top: args[0] as number,
+                        bottom: args[1] as number,
+                        left: args[2] as number,
+                        right: args[3] as number,
+                    }));
+                    break;
+                case 'resize':
+                    d.dispatch(Action.resize(args[1] as number, args[0] as number));
+                    break;
+                case 'update_fg':
+                    d.dispatch(Action.updateForeground(args[0] as number));
+                    break;
+                case 'update_bg':
+                    d.dispatch(Action.updateBackground(args[0] as number));
+                    break;
+                case 'mode_change':
+                    d.dispatch(Action.changeMode(args[0] as string));
+                    break;
+                case 'busy_start':
+                    d.dispatch(Action.startBusy());
+                    break;
+                case 'busy_stop':
+                    d.dispatch(Action.stopBusy());
+                    break;
+                case 'mouse_on':
+                    d.dispatch(Action.enableMouse());
+                    break;
+                case 'mouse_off':
+                    d.dispatch(Action.disableMouse());
+                    break;
+                case 'bell':
+                    d.dispatch(Action.bell(false));
+                    break;
+                case 'visual_bell':
+                    d.dispatch(Action.bell(true));
+                    break;
+                case 'set_title':
+                    d.dispatch(Action.setTitle(args[0] as string));
+                    break;
+                case 'set_icon':
+                    d.dispatch(Action.setIcon(args[0] as string));
+                    break;
+                default:
+                    log.warn('Unhandled event: ' + name, args);
+                    break;
+            }
         }
     }
 }
-
-
 

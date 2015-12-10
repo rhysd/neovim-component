@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events';
 import Process from './neovim/process';
 import Screen from './neovim/screen';
-import Store, {NeovimStore as StoreType} from './neovim/store';
+import NeovimStore from './neovim/store';
 import {updateFontPx, updateFontFace, updateScreenSize} from './neovim/actions';
 import Cursor from './neovim/cursor';
 import Input from './neovim/input';
@@ -10,7 +10,7 @@ import Dispatcher from './neovim/dispatcher';
 export default class Neovim extends EventEmitter {
     process: Process;
     screen: Screen;
-    store: StoreType;
+    store: NeovimStore;
     cursor: Cursor;
     input: Input;
 
@@ -24,29 +24,30 @@ export default class Neovim extends EventEmitter {
     ) {
         super();
 
-        this.store = Store;
+        this.store = new NeovimStore();
 
         // Note:
         // Perhaps store should not be singlton because:
         //  1. Store can't be initialized by <neovim-editor> props.
         //  2. Multiple <neovim-editor> component can't exist.
-        Dispatcher.dispatch(updateFontFace(font));
-        Dispatcher.dispatch(updateFontPx(font_size));
-        Dispatcher.dispatch(updateScreenSize(width, height));
+        this.store.dispatcher.dispatch(updateFontFace(font));
+        this.store.dispatcher.dispatch(updateFontPx(font_size));
+        this.store.dispatcher.dispatch(updateScreenSize(width, height));
 
-        this.process = new Process(command, argv);
+        this.process = new Process(this.store, command, argv);
     }
 
     attachCanvas(canvas: HTMLCanvasElement) {
-        this.screen = new Screen(canvas);
+        this.screen = new Screen(this.store, canvas);
+        const {lines, cols} = this.store.size;
         this.process
-            .attach(Store.size.lines, Store.size.cols)
+            .attach(lines, cols)
             .then(() => {
                 this.process.client.on('disconnect', () => this.emit('quit'));
                 this.emit('process-attached');
             });
-        this.cursor = new Cursor();
-        this.input = new Input();
+        this.cursor = new Cursor(this.store);
+        this.input = new Input(this.store);
     }
 
     changeFontSize(new_size: number) {
