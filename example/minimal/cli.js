@@ -2,7 +2,7 @@
 'use strict';
 
 var argv = process.argv.slice(2);
-argv.unshift(require('path').join(__dirname, '..'));
+argv.unshift(require('path').join(__dirname, '..', '..'));
 if (!process.env['NODE_ENV']) {
     process.env['NODE_ENV'] = 'production';
 }

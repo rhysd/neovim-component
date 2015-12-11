@@ -2,7 +2,7 @@
   "name": "neovim-component",
   "version": "0.1.1",
   "description": "Polymer component for Neovim frontend",
-  "main": "example/main.js",
+  "main": "example/minimal/main.js",
   "bin": {
     "simple-neovim-gui": "./example/cli.js"
   },
@@ -14,6 +14,10 @@
     "url": "https://github.com/rhysd/neovim-component/issues"
   },
   "scripts": {
+    "dep": "bower install && npm install && $(npm bin)/tsd install",
+    "build": "$(npm bin)/tsc -p src && $(npm bin)/browserify -o build/index.js src/out/index.js",
+    "example": "$(npm bin)/electron .",
+    "all": "npm run dep && npm run build && npm run example",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
