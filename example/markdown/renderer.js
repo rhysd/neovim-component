@@ -7,6 +7,20 @@
     const editor = document.getElementById('neovim').editor;
     const mdviewer = document.getElementById('markdown-viewer');
 
+    marked.setOptions({
+        highlight: function(code, lang) {
+            if (lang === undefined) {
+                return code;
+            }
+            try {
+                return hljs.highlight(lang, code).value;
+            } catch (e) {
+                return code;
+            }
+        }
+    });
+
+
     editor.on('process-attached', function() {
         if (remote.process.argv.length > 2) {
             editor.setArgv(remote.process.argv.slice(2)); // It is better to use 'argv' property.
