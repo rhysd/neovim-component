@@ -10,6 +10,7 @@
   "dependencies": {
     "github-markdown-css": "^2.1.1",
     "highlightjs": "^8.7.0",
+    "katex": "^0.5.1",
     "marked": "^0.3.5"
   }
 }

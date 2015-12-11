@@ -12,6 +12,9 @@
             if (lang === undefined) {
                 return code;
             }
+            if (lang === 'katex') {
+                return katex.renderToString(code);
+            }
             try {
                 return hljs.highlight(lang, code).value;
             } catch (e) {
