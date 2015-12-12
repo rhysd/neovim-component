@@ -45,7 +45,7 @@ export default class ScreenWheel {
         }
 
         const input = this.getInput(scroll_x, scroll_y);
-        log.info(`Scroll (${scroll_x}, ${scroll_y})`);
+        log.debug(`Scroll (${scroll_x}, ${scroll_y})`);
         this.reset();
         return input;
     }
