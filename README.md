@@ -49,6 +49,11 @@ If you want to see the more complicated and practical example, see [markdown edi
 ![markdown example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/markdown-example.gif)
 
 
+## Why You Created This?
+
+Vim has very powerful features for editing.  But Vim is an editor (see `:help design-not`).  But there are many graphical features for writers and coders.  I want to support them without loosing Vim's powerful text editing.  So I thought it is good to support them in GUI layer by HTML and CSS and created this using [Neovim's msgpack APIs](https://neovim.io/doc/user/msgpack_rpc.html).  I'm creating a new GUI frontend for proof of concept.
+
+
 ## `<neovim-editor>` Properties
 
 You can customize `<neovim-editor>` with its properties.
