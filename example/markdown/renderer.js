@@ -31,12 +31,12 @@
         const c = editor.getClient();
         c.command('setf markdown');
         c.command('autocmd TextChanged,TextChangedI * if &ft ==# "markdown" | call rpcnotify(0, "markdown-viewer:text-update", join(getline(1, "$"), "\\n")) | endif');
+        c.command('autocmd FileType markdown call rpcnotify(0, "markdown-viewer:text-update", join(getline(1, "$"), "\\n"))');
         c.subscribe('markdown-viewer:text-update');
         c.on('notification', function(method, args) {
             if (method === 'markdown-viewer:text-update' &&
                 args.length > 0 &&
                 typeof args[0] === 'string') {
-                console.log(args[0]);
                 mdviewer.innerHTML = marked(args[0]);
             }
         });

@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="./node_modules/highlightjs/styles/github.css">
 
     <style>
+      html {
+        height: 100%;
+        width: 100%;
+      }
       body {
         height: 100%;
         width: 100%;
@@ -20,9 +24,14 @@
         overflow: hidden;
         display: flex;
       }
-      .editor-wrapper,.markdown-body {
+      .editor-wrapper {
         width: 50%;
         height: 100%;
+      }
+      .markdown-wrapper {
+        width: 50%;
+        height: 100%;
+        overflow: auto;
       }
       .markdown-body {
         box-sizing: border-box;
@@ -33,13 +42,17 @@
       }
     </style>
   </head>
+
   <body>
     <div class="editor-wrapper">
       <neovim-editor id="neovim" font="Ricty,monospace" width="800" height="1000"></neovim-editor>
     </div>
-    <div id="markdown-viewer" class="markdown-body">
+    <div class="markdown-wrapper">
+      <div id="markdown-viewer" class="markdown-body">
+      </div>
     </div>
   </body>
+
   <script src="./node_modules/highlightjs/highlight.pack.min.js"></script>
   <script src="./renderer.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
