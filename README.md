@@ -54,6 +54,19 @@ If you want to see the more complicated and practical example, see [markdown edi
 Vim has very powerful features for editing.  But Vim is an editor (see `:help design-not`).  But there are many graphical features for writers and coders.  I want to support them without loosing Vim's powerful text editing.  So I thought it is good to support them in GUI layer by HTML and CSS and created this using [Neovim's msgpack APIs](https://neovim.io/doc/user/msgpack_rpc.html).  I'm creating a new GUI frontend for proof of concept.
 
 
+## Architecture
+
+![data flow](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/flow.png)
+
+`<neovim-editor>` has a property `editor` to access the internal APIs of the component.
+
+`editor.screen` is a view of this component (using canvas).  It receives user input and dispatches input action to store.
+
+`editor.process` is a event receiver from neovim process via msgpack-rpc APIs.  This object interacts with neovim process.  You can call neovim's APIs via neovim client.
+
+`editor.store` is a state of this component.  You can access the current state via this object.
+
+
 ## `<neovim-editor>` Properties
 
 You can customize `<neovim-editor>` with its properties.
@@ -67,19 +80,6 @@ You can customize `<neovim-editor>` with its properties.
 | `nvim-cmd`  | Command to start Neovim.              | `"nvim"`      |
 | `argv`      | Arguments passed to Neovim command.   | `[]`          |
 | `on-quit`   | Callback function on Neovim quitting. | `null`        |
-
-
-## Architecture
-
-![data flow](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/flow.png)
-
-`<neovim-editor>` has a property `editor` to access the internal APIs of the component.
-
-`editor.screen` is a view of this component (using canvas).  It receives user input and dispatches input action to store.
-
-`editor.process` is a event receiver from neovim process via msgpack-rpc APIs.  This object interacts with neovim process.  You can call neovim's APIs via neovim client.
-
-`editor.store` is a state of this component.  You can access the current state via this object.
 
 
 ## `<neovim-editor>` APIs
