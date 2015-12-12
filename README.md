@@ -33,7 +33,7 @@ $ npm install neovim-component
 </html>
 ```
 
-Please see the very simple [Electron](https://github.com/atom/electron) app in [example directory](/example).  You can start it easily with `rake` command.
+Please see the very simple [Electron](https://github.com/atom/electron) app in [example directory](/example/minimal).  You can start it easily with `rake` command.
 
 ![example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/neovim-component-linux.png)
 
@@ -43,6 +43,10 @@ Please see the very simple [Electron](https://github.com/atom/electron) app in [
 $ npm install neovim-component electron-prebuilt
 $ simple-neovim-gui
 ```
+
+If you want to see the more complicated and practical example, see [markdown editor example](/example/markdown).  Markdown previewer is integrated to neovim GUI using `<neovim-editor>` component.
+
+![markdown example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/markdown-example.gif)
 
 
 ## `<neovim-editor>` Properties
