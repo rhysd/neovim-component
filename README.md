@@ -60,11 +60,9 @@ Vim has very powerful features for editing.  But Vim is an editor (see `:help de
 
 `<neovim-editor>` has a property `editor` to access the internal APIs of the component.
 
-`editor.screen` is a view of this component (using canvas).  It receives user input and dispatches input action to store.
-
-`editor.process` is a event receiver from neovim process via msgpack-rpc APIs.  This object interacts with neovim process.  You can call neovim's APIs via neovim client.
-
-`editor.store` is a state of this component.  You can access the current state via this object.
+- `editor.screen` is a view of this component (using canvas).  It receives user input and dispatches input action to store.
+- `editor.process` is a process handler to interact with Neovim process via msgpack-rpc APIs.  You can call Neovim's APIs via Neovim client (`editor.getClient()` helper).
+- `editor.store` is a state of this component.  You can access the current state via this object.
 
 
 ## `<neovim-editor>` Properties
