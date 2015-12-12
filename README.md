@@ -69,6 +69,19 @@ You can customize `<neovim-editor>` with its properties.
 | `on-quit`   | Callback function on Neovim quitting. | `null`        |
 
 
+## Architecture
+
+![data flow](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/flow.png)
+
+`<neovim-editor>` has a property `editor` to access the internal APIs of the component.
+
+`editor.screen` is a view of this component (using canvas).  It receives user input and dispatches input action to store.
+
+`editor.process` is a event receiver from neovim process via msgpack-rpc APIs.  This object interacts with neovim process.  You can call neovim's APIs via neovim client.
+
+`editor.store` is a state of this component.  You can access the current state via this object.
+
+
 ## `<neovim-editor>` APIs
 
 ### Receive internal various events
