@@ -7,13 +7,6 @@ export default class ScreenDrag {
     line: number;
     col: number;
 
-    getPos(e: MouseEvent) {
-        return [
-            Math.floor(e.clientY / this.store.font_attr.height),
-            Math.floor(e.clientX / this.store.font_attr.width),
-        ];
-    }
-
     static buildInputOf(e: MouseEvent, type: string, line: number, col: number) {
         let seq = '<';
         if (e.ctrlKey) {
@@ -67,5 +60,12 @@ export default class ScreenDrag {
         const input = ScreenDrag.buildInputOf(up_event, 'Release', this.line, this.col);
         log.info('Mouse input: ' + input);
         return input;
+    }
+
+    private getPos(e: MouseEvent) {
+        return [
+            Math.floor(e.clientY / this.store.font_attr.height),
+            Math.floor(e.clientX / this.store.font_attr.width),
+        ];
     }
 }

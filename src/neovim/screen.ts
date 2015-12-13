@@ -86,7 +86,7 @@ export default class NeovimScreen {
     scroll(cols_delta: number) {
         if (cols_delta > 0) {
             this.scrollUp(cols_delta);
-        } else if (cols_delta < 0){
+        } else if (cols_delta < 0) {
             this.scrollDown(-cols_delta);
         }
     }

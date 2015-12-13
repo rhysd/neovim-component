@@ -55,7 +55,8 @@ export default class NeovimProcess {
         if (method === 'redraw') {
             this.redraw(args as RPCValue[][]);
         } else {
-            log.warn('unknown method', method, args);
+            // User defined notifications are passed here.
+            log.debug('Unknown method', method, args);
         }
     }
 
