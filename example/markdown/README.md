@@ -16,3 +16,5 @@ $ cd ./example/markdown
 $ npm run dep
 $ npm run app
 ```
+
+When you change the buffer, `TextChanged` or `TextChangedI` is fired in Neovim and notifies it to the callback which is set in `index.html`.  The callback get the buffer and set it to `<markdown-viewer>` component.  Finally, `<markdown-viewer>` renders markdown preview.

@@ -1,0 +1,61 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+<script src="./node_modules/marked/lib/marked.js"></script>
+<script src="./node_modules/highlightjs/highlight.pack.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+
+<dom-module id="markdown-viewer">
+  <template>
+    <link rel="stylesheet" href="./node_modules/github-markdown-css/github-markdown.css" />
+    <link rel="stylesheet" href="./node_modules/highlightjs/styles/github.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css" />
+    <style>
+      .markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 25px;
+        overflow: auto;
+      }
+    </style>
+
+    <div id="markdown-contents" class="markdown-body">
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  marked.setOptions({
+    highlight: function(code, lang) {
+      if (lang === undefined) {
+        return code;
+      }
+      if (lang === 'katex') {
+        return katex.renderToString(code);
+      }
+      try {
+        return hljs.highlight(lang, code).value;
+      } catch (e) {
+        return code;
+      }
+    }
+  });
+
+  Polymer({
+    is: 'markdown-viewer',
+
+    properties: {
+      contents: {
+        type: String,
+        value: '',
+        observer: '_contentsChanged'
+      }
+    },
+
+    _contentsChanged: function(markdown_text) {
+      console.log('updated!: ', markdown_text);
+      var v = document.getElementById('markdown-contents');
+      v.innerHTML = marked(markdown_text);
+    }
+  });
+</script>
