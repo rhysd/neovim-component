@@ -18,7 +18,7 @@
     "build": "$(npm bin)/tsc -p src && $(npm bin)/browserify -o build/index.js src/out/index.js",
     "example": "$(npm bin)/electron .",
     "all": "npm run dep && npm run build && npm run example",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "$(npm bin)/mocha test/prop_test/default_test.js"
   },
   "keywords": [
     "neovim",
@@ -37,7 +37,11 @@
   },
   "devDependencies": {
     "browserify": "^12.0.1",
+    "chai": "^3.4.1",
     "electron-prebuilt": "^0.35.1",
+    "mocha": "^2.3.4",
+    "mocha-generators": "^1.2.0",
+    "nightmare": "https://github.com/rhysd/nightmare.git#custom-electron-path",
     "tsd": "^0.6.5",
     "typescript": "^1.7.3"
   }
