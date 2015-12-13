@@ -45,7 +45,7 @@ $ npm install neovim-component electron-prebuilt
 $ simple-neovim-gui
 ```
 
-If you want to see the more complicated and practical example, see [markdown editor example](/example/markdown).  Markdown previewer is integrated to neovim GUI using `<neovim-editor>` component.
+If you want to see the more complicated and practical composable example, see [markdown editor example](/example/markdown).  Markdown previewer is integrated to Neovim GUI using `<neovim-editor>` component.
 
 ![markdown example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/markdown-example.gif)
 

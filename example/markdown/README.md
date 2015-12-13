@@ -17,4 +17,6 @@ $ npm run dep
 $ npm run app
 ```
 
-When you change the buffer, `TextChanged` or `TextChangedI` is fired in Neovim and notifies it to the callback which is set in `index.html`.  The callback get the buffer and set it to `<markdown-viewer>` component.  Finally, `<markdown-viewer>` renders markdown preview.
+When you change the buffer, `TextChanged` or `TextChangedI` is fired in Neovim and notifies it to the callback which is set in `index.html`.  The callback gets the buffer and sets it to `<markdown-viewer>` component.  Finally, `<markdown-viewer>` renders markdown preview.
+
+It is important that `<markdown-viewer>` component doen't know about `<neovim-editor>` component at all but they work well together.  It means that now Neovim (= `<neovim-editor>` component) can work with so many WebComponents (e.g. [Polymer components](https://elements.polymer-project.org/)).
