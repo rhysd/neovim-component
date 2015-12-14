@@ -4,7 +4,6 @@ import log from '../log';
 import ScreenDrag from './screen-drag';
 import ScreenWheel from './screen-wheel';
 import {Dispatcher} from 'flux';
-import Process from './process';
 
 // TODO:
 // Debug log should be implemented as the subscriber of store
@@ -69,7 +68,6 @@ export default class NeovimStore extends EventEmitter {
     wheel_scrolling: ScreenWheel;
     scroll_region: Region;
     dispatcher: Dispatcher<ActionType>;
-    process: Process;
 
     constructor() {
         super();

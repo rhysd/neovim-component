@@ -3,6 +3,7 @@ import Process from './neovim/process';
 import Screen from './neovim/screen';
 import NeovimStore from './neovim/store';
 import {updateFontPx, updateFontFace, updateScreenSize} from './neovim/actions';
+import {Nvim} from 'promised-neovim-client';
 
 export default class Neovim extends EventEmitter {
     process: Process;
@@ -42,7 +43,7 @@ export default class Neovim extends EventEmitter {
         this.process.finalize();
     }
 
-    getClient() {
+    getClient(): Nvim {
         return this.process.client;
     }
 
