@@ -1,19 +1,30 @@
 language: node_js
+
+# https://github.com/travis-ci/apt-source-whitelist/pull/208
+sudo: required
+
 node_js:
     - "stable"
 install:
+    - sudo add-apt-repository --yes ppa:neovim-ppa/unstable
+    - sudo apt-get -qq update
+    - sudo apt-get install neovim xvfb
     - npm install -g bower
     - npm run dep
     - export DISPLAY=':99.0'
     - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     - mkdir -p ./build
-script:
     - ./node_modules/.bin/tsc --version
     - ./node_modules/.bin/browserify --version
-    - npm run build
     - ./node_modules/.bin/mocha --version
+    - nvim --version
+script:
+    - npm run build
     - npm run test
-addons:
-    apt:
-        packages:
-            - xvfb
+# addons:
+#     apt:
+#         sources:
+#             - neovim-ppa/unstable
+#         packages:
+#             - xvfb
+#             - neovim
