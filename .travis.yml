@@ -12,8 +12,12 @@ script:
     - ./node_modules/.bin/browserify --version
     - npm run build
     - ./node_modules/.bin/mocha --version
+    - nvim --version
     - npm run test
 addons:
     apt:
+        sources:
+            - neovim-ppa/unstable
         packages:
             - xvfb
+            - neovim
