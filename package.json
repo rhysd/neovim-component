@@ -1,10 +1,10 @@
 {
   "name": "neovim-component",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Polymer component for Neovim frontend",
   "main": "example/minimal/main.js",
   "bin": {
-    "simple-neovim-gui": "./example/cli.js"
+    "nvim-md-example": "./example/minimal/cli.js"
   },
   "repository": {
     "type": "git",
