@@ -1,0 +1,110 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+
+<dom-module id="popup-tooltip">
+  <template>
+    <style>
+      #popup {
+        position: absolute;
+        padding: 8px;
+        border-radius: 8px;
+        display: none;
+        background-color: #dddddd;
+      }
+      #proj {
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        display: none;
+        border: 13px transparent solid;
+        border-top-width: 0;
+        border-bottom-color: #dddddd;
+      }
+      #btn {
+        display: block;
+        margin: auto;
+      }
+    </style>
+
+    <span id="proj">
+    </span>
+    <div id="popup">
+      <content></content>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  var popup, proj;
+
+  Polymer({
+    is: 'popup-tooltip',
+
+    properties: {
+      color: {
+        type: String,
+        value: ''
+      },
+
+      shown: {
+        type: Boolean,
+        value: false
+      },
+
+      x: {
+        type: Number,
+        value: 0
+      },
+
+      y: {
+        type: Number,
+        value: 0
+      }
+    },
+
+    ready: function() {
+      popup = document.getElementById('popup');
+      proj = document.getElementById('proj');
+
+      if (this.color) {
+        popup.style.backgroundColor = this.color;
+        proj.style.backgroundColor = this.color;
+      }
+      if (this.shown) {
+        this.show(this.x, this.y);
+      }
+    },
+
+    setContent(elem) {
+      var len = popup.childNodes.length;
+      if (len > 1) {
+        popup.replaceChild(elem, popup.lastChild);
+      } else {
+        popup.appendChild(elem);
+      }
+    },
+
+    show: function(x, y) {
+      popup.style.left = (x - 20 - 13) + 'px';
+      popup.style.top = (y + 13) + 'px';
+      popup.style.display = 'block';
+      proj.style.left = (x - 13) + 'px';
+      proj.style.top = y + 'px';
+      proj.style.display = 'inline'
+      this.shown = true;
+    },
+
+    dismiss: function() {
+      popup.style.display = 'none';
+      proj.style.display = 'none'
+      this.shown = false;
+    },
+
+    toggle: function(x, y) {
+      if (this.shown) {
+        this.dismiss();
+      } else {
+        this.show(x, y);
+      }
+    }
+  });
+</script>
