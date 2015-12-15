@@ -1,0 +1,9 @@
+{
+  "name": "neovim-component-mini-browser-example",
+  "version": "0.0.1",
+  "main": "main.js",
+  "scripts": {
+    "app": "../../node_modules/.bin/electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
