@@ -28,10 +28,38 @@
   <script>
     var editor = document.getElementById('neovim').editor;
     var remote = require('electron').remote;
+    var tooltip = document.getElementById('tooltip');
+
+    // Note: Callback on Neovim process attached
     editor.on('process-attached', function() {
       if (remote.process.argv.length > 2) {
         editor.setArgv(remote.process.argv.slice(2)); // It is better to use 'argv' property.
       }
+      var c = editor.getClient();
+
+      // Note:
+      // Define mapping 'gi' from JavaScript.
+      // Of course you can execute these commands in Vim plugin.
+      c.command('nnoremap <silent>gi :<C-u>call rpcnotify(0, "image-tooltip:open", \'<C-r><C-p>\', line("."), col("."))<CR>')
+
+      // Note:
+      // Subscribe notification sent by rpcnotify() from Neovim process
+      c.subscribe('image-tooltip:open');
+      c.on('notification', function(method, args) {
+          if (method === 'image-tooltip:open' && args.length === 3 && args[0]) {
+            // Toggle tooltip with image
+            if (tooltip.shown) {
+              tooltip.dismiss();
+            } else {
+              // Note: col('.') is 1-based
+              var loc = editor.screen.convertPositionToLocation(args[1], args[2] - 1);
+              var img = document.createElement('img');
+              img.src = args[0];
+              tooltip.setContent(img);
+              tooltip.toggle(loc.x, loc.y);
+            }
+          }
+      });
     });
     editor.on('quit', function() {
       remote.require('app').quit();
