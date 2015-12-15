@@ -127,7 +127,7 @@ When you call some APIs via the client, it sends the call to underlying Neovim p
 You can get the returned value from API as a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) value.
 
 `<neovim-component>` uses [promised-neovim-client](https://github.com/rhysd/promised-neovim-client) package.
-You can see the all API definitions [here](https://github.com/rhysd/promised-neovim-client/blob/promisified/index.d.ts).
+You can see the all API definitions [here](https://github.com/rhysd/promised-neovim-client/blob/promisified/index.d.ts).  If you know further about Neovim APIs, [python client implementation](https://github.com/neovim/python-client) may be helpful.
 
 ```javascript
 const neovim_element = document.getElementById('neovim');
