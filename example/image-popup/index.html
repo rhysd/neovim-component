@@ -3,46 +3,32 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes" />
-    <title>Neovim Embedded Markdown Editor</title>
+    <title>Image Tooltip Example</title>
 
     <script src="../../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="../../neovim-editor.html" />
-    <link rel="import" href="./markdown-viewer.html" />
+    <link rel="import" href="./popup-tooltip.html" />
 
     <style>
-      html {
-        height: 100%;
-        width: 100%;
-      }
       body {
         height: 100%;
         width: 100%;
         margin: 0px;
         padding: 0px;
         overflow: hidden;
-        display: flex;
-      }
-      #neovim {
-        width: 50%;
-        height: 100%;
-      }
-      #mdviewer {
-        width: 50%;
-        height: 100%;
-        overflow: auto;
       }
     </style>
   </head>
 
   <body>
-    <neovim-editor id="neovim" font="Ricty,monospace" width="800" height="1000"></neovim-editor>
-    <markdown-viewer id="mdviewer"></markdown-viewer>
+    <neovim-editor id="neovim" font="Ricty,monospace" font-size="14"></neovim-editor>
+    <popup-tooltip id="tooltip"></popup-tooltip>
   </body>
 
   <script>
-    var remote = require('electron').remote;
     var editor = document.getElementById('neovim').editor;
-    var mdviewer = document.getElementById('mdviewer');
+    var remote = require('electron').remote;
+    var tooltip = document.getElementById('tooltip');
 
     // Note: Callback on Neovim process attached
     editor.on('process-attached', function() {
@@ -52,27 +38,32 @@
       var c = editor.getClient();
 
       // Note:
-      // Send commands from JavaScript.
+      // Define mapping 'gi' from JavaScript.
       // Of course you can execute these commands in Vim plugin.
-      c.command('setf markdown');
-      c.command('autocmd TextChanged,TextChangedI * if &ft ==# "markdown" | call rpcnotify(0, "markdown-viewer:text-update", join(getline(1, "$"), "\\n")) | endif');
-      c.command('autocmd FileType markdown call rpcnotify(0, "markdown-viewer:text-update", join(getline(1, "$"), "\\n"))');
+      c.command('nnoremap <silent>gi :<C-u>call rpcnotify(0, "image-tooltip:open", \'<C-r><C-p>\', line(".") - line("w0") + 1, virtcol("."))<CR>');
 
       // Note:
       // Subscribe notification sent by rpcnotify() from Neovim process
-      c.subscribe('markdown-viewer:text-update');
+      c.subscribe('image-tooltip:open');
       c.on('notification', function(method, args) {
-        if (method === 'markdown-viewer:text-update' &&
-          args.length > 0 &&
-          typeof args[0] === 'string') {
-          mdviewer.contents = args[0];
-        }
+          if (method === 'image-tooltip:open' && args.length === 3 && args[0]) {
+            // Toggle tooltip with image
+            if (tooltip.shown) {
+              tooltip.dismiss();
+            } else {
+              // Note: col('.') is 1-based
+              var loc = editor.screen.convertPositionToLocation(args[1], args[2] - 1);
+              var img = document.createElement('img');
+              img.src = args[0];
+              tooltip.setContent(img);
+              tooltip.show(loc.x, loc.y);
+            }
+          }
       });
     });
     editor.on('quit', function() {
       remote.require('app').quit();
     });
-
     window.addEventListener('resize', function() {
       editor.screen.resizeWithPixels(window.innerWidth, window.innerHeight);
     });
