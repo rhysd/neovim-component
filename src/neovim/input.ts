@@ -6,9 +6,12 @@ export default class NeovimInput {
     element: HTMLInputElement;
     ime_running: boolean;
 
-    static shouldHandleModifier(event: KeyboardEvent) {
-        return event.ctrlKey && event.keyCode !== 17 ||
-               event.altKey && event.keyCode !== 18;
+    static shouldIgnoreOnKeydown(event: KeyboardEvent) {
+        const {ctrlKey, shiftKey, altKey, keyCode} = event;
+        return !ctrlKey && !altKey ||
+               shiftKey && keyCode === 16 ||
+               ctrlKey && keyCode === 17 ||
+               altKey && keyCode === 18;
     }
 
     static getVimSpecialChar(code: number, shift: boolean) {
@@ -72,7 +75,7 @@ export default class NeovimInput {
         }
 
         const special_char = NeovimInput.getVimSpecialChar(event.keyCode, event.shiftKey);
-        if (!special_char && !NeovimInput.shouldHandleModifier(event)) {
+        if (!special_char && NeovimInput.shouldIgnoreOnKeydown(event)) {
             return;
         }
 
