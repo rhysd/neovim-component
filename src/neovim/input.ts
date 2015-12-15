@@ -72,7 +72,7 @@ export default class NeovimInput {
         }
 
         const special_char = NeovimInput.getVimSpecialChar(event.keyCode, event.shiftKey);
-        if (!NeovimInput.shouldHandleModifier(event) && !special_char) {
+        if (!special_char && !NeovimInput.shouldHandleModifier(event)) {
             return;
         }
 
@@ -83,7 +83,11 @@ export default class NeovimInput {
         if (event.altKey) {
             vim_input += 'A-';
         }
-        vim_input += (special_char || String.fromCharCode(event.keyCode)) + '>';
+        // Note: <LT> is a special case where shift should not be handled.
+        if (event.shiftKey && special_char !== 'LT') {
+            vim_input += 'S-';
+        }
+        vim_input += (special_char || String.fromCharCode(event.keyCode).toLowerCase()) + '>';
         this.inputToNeovim(vim_input, event);
     }
 
