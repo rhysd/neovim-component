@@ -1,7 +1,7 @@
 This is image tooltip example for `<neovim-editor>` component.
 `:ShowImage` command shows an image under the cursor.  I created `<popup-tooltip>` component and use it and `<neovim-editor>` together.  Please see `index.html`.
 
-TODO: Screenshot
+![screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/popup-image-example.gif)
 
 How to run this example:
 
