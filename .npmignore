@@ -4,4 +4,5 @@
 /tsd.json
 /typings
 /src/out
+/bower_components
 node_modules

@@ -28,6 +28,7 @@ $ npm install neovim-component
   <head>
     <meta charset="utf-8" />
     <script src="/path/to/webcomponents-lite.min.js"></script>
+    <link rel="import" href="/path/to/polymer.html" />
     <link rel="import" href="/path/to/neovim-editor.html" />
   </head>
   <body>

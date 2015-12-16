@@ -10,17 +10,14 @@
     "NW.js",
     "editor"
   ],
-  "homepage": "https://github.com/rhysd/neovim-component",
+  "homepage": "",
   "authors": [
     "rhysd <lin90162@yahoo.co.jp>"
   ],
   "main": "neovim-component.html",
   "license": "MIT",
-  "homepage": "",
-  "dependencies": {
-    "polymer": "~1.2.3"
-  },
   "devDependencies": {
+    "polymer": "~1.2.3",
     "webcomponentsjs": "~0.7.18"
   }
 }
