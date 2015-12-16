@@ -3,3 +3,4 @@ node_modules
 /typings
 /src/out
 /build
+/npm-debug.log

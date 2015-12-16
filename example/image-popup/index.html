@@ -40,7 +40,7 @@
       // Note:
       // Define mapping 'gi' from JavaScript.
       // Of course you can execute these commands in Vim plugin.
-      c.command('nnoremap <silent>gi :<C-u>call rpcnotify(0, "image-tooltip:open", \'<C-r><C-p>\', line("."), col("."))<CR>')
+      c.command('nnoremap <silent>gi :<C-u>call rpcnotify(0, "image-tooltip:open", \'<C-r><C-p>\', line(".") - line("w0") + 1, virtcol("."))<CR>');
 
       // Note:
       // Subscribe notification sent by rpcnotify() from Neovim process
@@ -56,7 +56,7 @@
               var img = document.createElement('img');
               img.src = args[0];
               tooltip.setContent(img);
-              tooltip.toggle(loc.x, loc.y);
+              tooltip.show(loc.x, loc.y);
             }
           }
       });
