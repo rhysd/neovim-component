@@ -1,0 +1,133 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+
+<dom-module id="mini-browser">
+  <template>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <style>
+      #body {
+        display: none;
+        height: 100%;
+        width: 375px; /* iPhone6 width */
+        flex-direction: column;
+        font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
+      }
+      #title-bar {
+        height: 24px;
+        flex: none;
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        border-bottom: solid 1px dimgray;
+        color: dimgray;
+        background-color: #dddddd;
+      }
+      #inner-browser {
+        flex: auto;
+        height: calc(100vh - 24px);
+        width: 375px;
+      }
+      .button {
+        border: solid 1px;
+        border-radius: 4px;
+        margin: 2px;
+        padding: 4px;
+        flex: none;
+        min-width: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #title {
+        flex: auto;
+        font-size: 16px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin: 0px 8px;
+        line-height: 24px;
+      }
+    </style>
+
+    <div id="body">
+      <div id="title-bar">
+        <div class="button" id="back-btn"><i class="fa fa-arrow-left"></i></div>
+        <div class="button" id="forward-btn"><i class="fa fa-arrow-right"></i></div>
+        <div id="title"></div>
+        <div class="button" id="close-btn"><i class="fa fa-times"></i></div>
+      </div>
+      <webview id="inner-browser" src$="[[url]]" autosize="on" useragent="Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4"></webview>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  var browser, body, title;
+  Polymer({
+    is: 'mini-browser',
+
+    properties: {
+      url: {
+        type: String,
+        value: ''
+      },
+      visible: {
+        type: Boolean,
+        value: false
+      },
+      didClose: Object,
+      didShow: Object
+    },
+
+    ready: function() {
+      var self = this;
+      body = document.getElementById('body');
+      browser = document.getElementById('inner-browser');
+      title = document.getElementById('title');
+      document.getElementById('back-btn').onclick = function() {
+        browser.goBack();
+      };
+      document.getElementById('forward-btn').onclick = function() {
+        browser.goForward();
+      };
+      document.getElementById('close-btn').onclick = function() {
+        browser.src = '';
+        self.close();
+      };
+      browser.addEventListener('dom-ready', function() {
+          title.innerText = browser.getTitle();
+      });
+      console.log(JSON.stringify(this.visible));
+      if (this.visible) {
+        self.show();
+      }
+    },
+
+    show() {
+      body.style.display = 'flex';
+      this.visible = true;
+      if (this.didShow) {
+        this.didShow();
+      }
+    },
+
+    open(url) {
+      browser.src = url;
+      console.log(browser);
+      if (!this.visible) {
+        this.show();
+      }
+    },
+
+    close() {
+      body.style.display = 'none';
+      this.visible = false;
+      if (this.didClose) {
+        this.didClose();
+      }
+    }
+  });
+})();
+</script>
