@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes" />
-    <title>Image Tooltip Example</title>
+    <title>Mini Browser Example</title>
 
     <script src="../../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="../../neovim-editor.html" />
@@ -22,14 +22,31 @@
   </head>
 
   <body>
-    <neovim-editor id="neovim" font="Ricty,monospace" font-size="14"></neovim-editor>
-    <mini-browser id="browser" url="https://github.com"></mini-browser>
+    <neovim-editor id="neovim" font="Ricty,monospace" font-size="14" width="1175"></neovim-editor>
+    <mini-browser id="browser"></mini-browser>
   </body>
 
   <script>
+  (function() {
     var editor = document.getElementById('neovim').editor;
     var remote = require('electron').remote;
     var browser = document.getElementById('browser');
+
+    function resize() {
+      console.log('Visibility on resize: ' + browser.visible);
+      if (browser.visible) {
+        editor.screen.resizeWithPixels(window.innerWidth - 375, window.innerHeight);
+      } else {
+        editor.screen.resizeWithPixels(window.innerWidth, window.innerHeight);
+      }
+    }
+
+    browser.didClose = function() {
+      resize();
+      editor.focus();
+    };
+
+    browser.didShow = resize;
 
     // Note: Callback on Neovim process attached
     editor.on('process-attached', function() {
@@ -59,8 +76,7 @@
     editor.on('quit', function() {
       remote.require('app').quit();
     });
-    window.addEventListener('resize', function() {
-      editor.screen.resizeWithPixels(window.innerWidth, window.innerHeight);
-    });
+    window.addEventListener('resize', function() { resize(); });
+  })();
   </script>
 </html>

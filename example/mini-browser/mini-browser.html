@@ -2,12 +2,14 @@
 
 <dom-module id="mini-browser">
   <template>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <style>
       #body {
         display: none;
         height: 100%;
         width: 375px; /* iPhone6 width */
         flex-direction: column;
+        font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
       }
       #title-bar {
         height: 24px;
@@ -15,6 +17,9 @@
         display: flex;
         flex-direction: row;
         text-align: center;
+        border-bottom: solid 1px dimgray;
+        color: dimgray;
+        background-color: #dddddd;
       }
       #inner-browser {
         flex: auto;
@@ -22,14 +27,17 @@
         width: 375px;
       }
       .button {
-        border: solid 1px dimgray;
+        border: solid 1px;
         border-radius: 4px;
         margin: 2px;
         padding: 4px;
         flex: none;
         min-width: 20px;
         font-size: 14px;
-        vertical-align: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       #title {
         flex: auto;
@@ -37,15 +45,17 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        margin: 0px 8px;
+        line-height: 24px;
       }
     </style>
 
     <div id="body">
       <div id="title-bar">
-        <div class="button" id="back-btn"> &lt; </div>
-        <div class="button" id="forward-btn"> &gt; </div>
+        <div class="button" id="back-btn"><i class="fa fa-arrow-left"></i></div>
+        <div class="button" id="forward-btn"><i class="fa fa-arrow-right"></i></div>
         <div id="title"></div>
-        <div class="button" id="close-btn"> Close </div>
+        <div class="button" id="close-btn"><i class="fa fa-times"></i></div>
       </div>
       <webview id="inner-browser" src$="[[url]]" autosize="on" useragent="Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4"></webview>
     </div>
@@ -65,9 +75,10 @@
       },
       visible: {
         type: Boolean,
-        value: true
+        value: false
       },
-      onClose: Object
+      didClose: Object,
+      didShow: Object
     },
 
     ready: function() {
@@ -88,6 +99,7 @@
       browser.addEventListener('dom-ready', function() {
           title.innerText = browser.getTitle();
       });
+      console.log(JSON.stringify(this.visible));
       if (this.visible) {
         self.show();
       }
@@ -96,6 +108,9 @@
     show() {
       body.style.display = 'flex';
       this.visible = true;
+      if (this.didShow) {
+        this.didShow();
+      }
     },
 
     open(url) {
@@ -107,11 +122,11 @@
     },
 
     close() {
-      if (this.onClose) {
-        this.onClose();
-      }
       body.style.display = 'none';
       this.visible = false;
+      if (this.didClose) {
+        this.didClose();
+      }
     }
   });
 })();
