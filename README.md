@@ -6,7 +6,7 @@ This component provides `<neovim-editor>` HTML custom element built on [Polymer]
 It provides a frontend of [Neovim editor](https://github.com/neovim/neovim) using Neovim's MessagePack API and you can embed Neovim editor easily to your application.
 
 **This component assumes the environment where Node.js is integrated.**
-So you can use this component for modern desktop application frameworks such as [Electron](https://github.com/atom/electron) or [NW.js](https://github.com/nwjs/nw.js).
+So you can use this component for modern desktop application frameworks such as [Electron](https://github.com/atom/electron) or [NW.js](https://github.com/nwjs/nw.js).  (Or even useful for plugin of Electron-based editors such as [Atom](http://atom.io/) or [VS Code](https://github.com/Microsoft/vscode))
 
 This component is designed with [Flux architecture](https://facebook.github.io/flux/docs/overview.html).
 You can access the UI event notifications and can call Neovim APIs directly via `<neovim-editor>`'s APIs.
@@ -19,6 +19,8 @@ $ npm install neovim-component
 
 
 ## Examples
+
+Each example is implemented within 100~300 lines.
 
 ### [Minimal Example](/example/minimal)
 
@@ -58,7 +60,13 @@ If you want to see the more complicated and practical composable example, see [m
 
 This is an image popup widget example [here](/example/image-popup).  `gi` mapping is defined to show an image under the cursor in popup tooltip.
 
-![screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/popup-image-example.gif)
+![image popup example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/popup-image-example.gif)
+
+### [Mini Browser Example](/example/mini-browser)
+
+This is an embedded mini browser example implemented with [`<webview>` tag of Electron](https://github.com/atom/electron/blob/master/docs/api/web-view-tag.md).
+
+![mini browser example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/mini-browser.gif)
 
 
 ## Why You Created This?
