@@ -1,6 +1,6 @@
 `<neovim-editor>` Web Component
 ===============================
-[![Build Status](https://travis-ci.org/rhysd/neovim-component.svg?branch=test)](https://travis-ci.org/rhysd/neovim-component)
+[![Build Status](https://api.travis-ci.org/rhysd/neovim-component.svg)](https://travis-ci.org/rhysd/neovim-component)
 
 This component provides `<neovim-editor>` HTML custom element built on [Polymer](https://github.com/Polymer/polymer) and [flux](https://github.com/facebook/flux).
 It provides a frontend of [Neovim editor](https://github.com/neovim/neovim) using Neovim's MessagePack API and you can embed Neovim editor easily to your application.
