@@ -41,7 +41,8 @@ Each example is implemented within 100~300 lines.
 
 Minimal [Electron](https://github.com/atom/electron) app in [example directory](/example/minimal).
 
-![example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/neovim-component-linux.png)
+![main screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/main.gif)
+
 
 `neovim-component` also has an example executable.
 
