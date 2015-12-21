@@ -192,7 +192,6 @@ export declare function setScrollRegion(region: Region): {
 };
 
 export class NeovimCursor {
-    private store;
     element: HTMLDivElement;
     constructor(store: NeovimStore);
     updateSize(): void;
@@ -202,7 +201,6 @@ export class NeovimCursor {
 }
 
 export class NeovimInput {
-    private store;
     element: HTMLInputElement;
     ime_running: boolean;
     static shouldHandleModifier(event: KeyboardEvent): boolean;
@@ -217,7 +215,6 @@ export class NeovimInput {
 }
 
 export class NeovimProcess {
-    private store;
     command: string;
     argv: string[];
     neovim_process: cp.ChildProcess;
@@ -229,11 +226,9 @@ export class NeovimProcess {
     onNotified(method: string, args: RPCValue[]): void;
     onDisconnected(): void;
     finalize(): void;
-    private redraw(events);
 }
 
 export class ScreenDrag {
-    private store;
     line: number;
     col: number;
     static buildInputOf(e: MouseEvent, type: string, line: number, col: number): string;
@@ -241,24 +236,18 @@ export class ScreenDrag {
     start(down_event: MouseEvent): string;
     drag(move_event: MouseEvent): string;
     end(up_event: MouseEvent): string;
-    private getPos(e);
 }
 
 export class ScreenWheel {
-    private store;
     x: number;
     y: number;
     shift: boolean;
     ctrl: boolean;
     constructor(store: NeovimStore);
     handleEvent(e: WheelEvent): string;
-    private reset();
-    private getDirection(scroll_x, scroll_y);
-    private getInput(scroll_x, scroll_y);
 }
 
 export class NeovimScreen {
-    private store;
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     cursor: NeovimCursor;
@@ -283,12 +272,6 @@ export class NeovimScreen {
         line: number;
         col: number;
     };
-    private drawText(chars);
-    private drawBlock(line, col, height, width, color);
-    private slideVertical(top, height, dst_top);
-    private scrollUp(cols_up);
-    private scrollDown(cols_down);
-    private resizeImpl(lines, cols, width, height);
 }
 
 export interface Size {
@@ -331,8 +314,6 @@ export class NeovimStore extends EventEmitter {
     wheel_scrolling: ScreenWheel;
     scroll_region: Region;
     dispatcher: Dispatcher<ActionType>;
-    constructor();
-    private receiveAction(action);
 }
 
 export class Neovim extends EventEmitter {

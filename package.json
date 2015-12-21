@@ -14,10 +14,12 @@
     "url": "https://github.com/rhysd/neovim-component/issues"
   },
   "scripts": {
-    "dep": "npm install && $(npm bin)/bower install && $(npm bin)/tsd install",
-    "build": "$(npm bin)/tsc -p src && $(npm bin)/browserify -o build/index.js src/out/index.js",
-    "example": "$(npm bin)/electron .",
     "all": "npm run dep && npm run build && npm run example",
+    "build": "$(npm bin)/tsc -p src && $(npm bin)/browserify -o build/index.js src/out/index.js",
+    "debug": "NODE_ENV=debug $(npm bin)/electron .",
+    "dep": "npm install && $(npm bin)/bower install && $(npm bin)/tsd install",
+    "example": "$(npm bin)/electron .",
+    "lint": "$(npm bin)/tslint $(git ls-files | grep -E \".ts$\")",
     "test": "$(npm bin)/mocha test/prop_test/default_test.js"
   },
   "keywords": [
@@ -44,6 +46,7 @@
     "mocha-generators": "^1.2.0",
     "nightmare": "https://github.com/rhysd/nightmare.git#custom-electron-path",
     "tsd": "^0.6.5",
+    "tslint": "^3.2.1",
     "typescript": "^1.7.3"
   }
 }
