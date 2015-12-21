@@ -44,10 +44,10 @@ Minimal [Electron](https://github.com/atom/electron) app in [example directory](
 ![main screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/main.gif)
 
 
-`neovim-component` also has an example executable.
+`neovim-component` package also has an example executable.
 
 ```sh
-$ npm install neovim-component electron-prebuilt
+$ npm install -g neovim-component electron-prebuilt
 $ simple-neovim-gui
 ```
 
@@ -92,8 +92,8 @@ You can customize `<neovim-editor>` with its properties.
 
 | Name        | Description                           | Default       |
 | ----------- | ------------------------------------- | ------------- |
-| `width`     | Width of editor in pixel.             | `800`         |
-| `height`    | Height of editor in pixel.            | `600`         |
+| `width`     | Width of editor in pixel.             | `null`        |
+| `height`    | Height of editor in pixel.            | `null`        |
 | `font`      | Face name of font.                    | `"monospace"` |
 | `font-size` | Font size in pixel.                   | `12`          |
 | `nvim-cmd`  | Command to start Neovim.              | `"nvim"`      |
@@ -216,6 +216,25 @@ const pos = editor.screen.convertLocationToPosition(400, 300);
 const.log(pos.col, pos.line);  // line/col of location (400px, 300px)
 ```
 
+- Notify screen should resize
+
+When some process may change screen size, **you must notify it to screen**.  This is because screen has `<canvas>` element and it must have fixed size.  Screen must always know the size of screen by calling `screen.checkShouldResize()`.
+Note that you need not care about `resize` event of `<body>` element.  `<neovim-editor>` component automatically detects the resize event and update screen size.  And it is OK to call `screen.checkShouldResize()` if screen is not actually resized.  If screen isn't resized, `screen.checkShouldResize()` simply ignores the call.
+
+```javascript
+const editor = document.getElementById('neovim').editor;
+
+function showUpSomeElementInNeovim() {
+    const e = document.getElementById('some-elem');
+
+    // Element shows up!  Screen may be resized by the change.
+    // 'none' -> 'block'
+    e.style.display = 'block';
+
+    // You need to call this to say to <neovim-editor> that 'You may be resized.  Check it out!'.
+    editor.screen.checkShouldResize();
+}
+```
 
 ### Other APIs
 

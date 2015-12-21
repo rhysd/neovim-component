@@ -4,14 +4,8 @@ Polymer({
     is: 'neovim-editor',
 
     properties: {
-        width: {
-            type: Number,
-            value: 800,
-        },
-        height: {
-            type: Number,
-            value: 600,
-        },
+        width: Number,
+        height: Number,
         fontSize: {
             type: Number,
             value: 12,
@@ -38,9 +32,7 @@ Polymer({
                 this.nvimCmd,
                 this.argv,
                 this.font,
-                this.fontSize,
-                this.width,
-                this.height
+                this.fontSize
             );
 
         if (this.onQuit) {
@@ -54,11 +46,19 @@ Polymer({
 
     attached: function() {
         const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
-        this.editor.attachCanvas(canvas);
+        const width = this.width || canvas.parentElement.offsetWidth;
+        const height = this.height || canvas.parentElement.offsetHeight;
+        this.editor.attachCanvas(width, height, canvas);
+        this.resize_listener = window.addEventListener('resize', () => {
+            this.editor.screen.checkShouldResize();
+        });
     },
 
     detached: function() {
         this.editor.emit('detach');
+        if (this.resize_listener) {
+            window.removeEventListener('resize', this.resize_listener);
+        }
     },
 
     attributeChanged: function(name: string, type: polymer.PropConstructorType) {

@@ -272,6 +272,7 @@ export class NeovimScreen {
         line: number;
         col: number;
     };
+    checkShouldResize(): void;
 }
 
 export interface Size {
@@ -320,8 +321,8 @@ export class Neovim extends EventEmitter {
     process: NeovimProcess;
     screen: NeovimScreen;
     store: NeovimStore;
-    constructor(command: string, argv: string[], font: string, font_size: number, width: number, height: number);
-    attachCanvas(canvas: HTMLCanvasElement): void;
+    constructor(command: string, argv: string[], font: string, font_size: number);
+    attachCanvas(width: number, height: number, canvas: HTMLCanvasElement): void;
     quit(): void;
     getClient(): Nvim;
     focus(): void;

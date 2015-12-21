@@ -19,9 +19,6 @@ export default class NeovimScreen {
         this.store.on('update-bg', this.clearAll.bind(this));
         this.store.on('screen-scrolled', this.scroll.bind(this));
 
-        // TODO:
-        // Watch 'resize' event from neovim
-
         this.changeFontSize(this.store.font_attr.specified_px);
 
         canvas.addEventListener('click', this.focus.bind(this));
@@ -131,6 +128,17 @@ export default class NeovimScreen {
             line: Math.floor(y / height),
             col: Math.floor(x / width),
         };
+    }
+
+    checkShouldResize() {
+        const p = this.canvas.parentElement;
+        const cw = p.clientWidth;
+        const ch = p.clientHeight;
+        const w = this.canvas.width;
+        const h = this.canvas.height;
+        if (cw !== w || ch !== h) {
+            this.resizeWithPixels(cw, ch);
+        }
     }
 
     private drawText(chars: string[][]) {

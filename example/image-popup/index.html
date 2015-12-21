@@ -11,12 +11,16 @@
     <link rel="import" href="./popup-tooltip.html" />
 
     <style>
-      body {
+      html,body {
         height: 100%;
         width: 100%;
         margin: 0px;
         padding: 0px;
         overflow: hidden;
+      }
+      #neovim {
+        width: 100%;
+        height: 100%;
       }
     </style>
   </head>
@@ -64,9 +68,6 @@
     });
     editor.on('quit', function() {
       remote.require('app').quit();
-    });
-    window.addEventListener('resize', function() {
-      editor.screen.resizeWithPixels(window.innerWidth, window.innerHeight);
     });
   </script>
 </html>
