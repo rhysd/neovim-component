@@ -73,8 +73,5 @@
     editor.on('quit', function() {
       remote.require('app').quit();
     });
-    window.addEventListener('resize', function() {
-      editor.screen.resizeWithPixels(window.innerWidth / 2, window.innerHeight);
-    });
   </script>
 </html>

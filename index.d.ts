@@ -272,6 +272,7 @@ export class NeovimScreen {
         line: number;
         col: number;
     };
+    checkShouldResize(): void;
 }
 
 export interface Size {

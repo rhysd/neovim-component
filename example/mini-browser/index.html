@@ -6,23 +6,35 @@
     <title>Mini Browser Example</title>
 
     <script src="../../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../../bower_components/polymer/polymer.html" />
     <link rel="import" href="../../neovim-editor.html" />
     <link rel="import" href="./mini-browser.html" />
 
     <style>
-      body {
+      html {
         height: 100%;
         width: 100%;
+      }
+      body {
+        height: 100%;
         margin: 0px;
         padding: 0px;
         overflow: hidden;
         display: flex;
       }
+      #neovim {
+        flex: auto;
+        height: 100%;
+      }
+      #browser {
+        flex: none;
+        height: 100%;
+      }
     </style>
   </head>
 
   <body>
-    <neovim-editor id="neovim" font="Ricty,monospace" font-size="14" width="1175"></neovim-editor>
+    <neovim-editor id="neovim" font="Ricty,monospace" font-size="14"></neovim-editor>
     <mini-browser id="browser"></mini-browser>
   </body>
 
@@ -34,11 +46,7 @@
 
     function resize() {
       console.log('Visibility on resize: ' + browser.visible);
-      if (browser.visible) {
-        editor.screen.resizeWithPixels(window.innerWidth - 375, window.innerHeight);
-      } else {
-        editor.screen.resizeWithPixels(window.innerWidth, window.innerHeight);
-      }
+      editor.screen.checkShouldResize();
     }
 
     browser.didClose = function() {

@@ -170,13 +170,9 @@ export default class NeovimStore extends EventEmitter {
                 break;
             }
             case Kind.Resize: {
-                if (this.size.lines === action.lines
-                    && this.size.cols === action.cols) {
-                    break;
+                if (this.resize(action.lines, action.cols)) {
+                    this.emit('resize');
                 }
-                this.size.lines = action.lines;
-                this.size.cols = action.cols;
-                this.emit('resize');
                 break;
             }
             case Kind.UpdateFG: {
@@ -235,20 +231,9 @@ export default class NeovimStore extends EventEmitter {
                 break;
             }
             case Kind.UpdateScreenBounds: {
-                if (this.size.lines === action.lines
-                    && this.size.cols === action.cols) {
-                    break;
+                if (this.resize(action.lines, action.cols)) {
+                    this.emit('update-screen-bounds');
                 }
-                this.size.lines = action.lines;
-                this.size.cols = action.cols;
-                this.scroll_region = {
-                    top: 0,
-                    left: 0,
-                    right: action.cols - 1,
-                    bottom: action.lines - 1,
-                };
-                this.emit('update-screen-bounds');
-                log.debug(`Screen bounds are updated: (${action.lines} lines, ${action.cols} cols)`);
                 break;
             }
             case Kind.EnableMouse: {
@@ -326,6 +311,23 @@ export default class NeovimStore extends EventEmitter {
                 break;
             }
         }
+    }
+
+    private resize(lines: number, cols: number) {
+        if (this.size.lines === lines
+            && this.size.cols === cols) {
+            return false;
+        }
+        this.size.lines = lines;
+        this.size.cols = cols;
+        this.scroll_region = {
+            top: 0,
+            left: 0,
+            right: cols - 1,
+            bottom: lines - 1,
+        };
+        log.debug(`Screen is resized: (${lines} lines, ${cols} cols)`);
+        return true;
     }
 }
 

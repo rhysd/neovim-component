@@ -10,7 +10,7 @@
     <link rel="import" href="../../neovim-editor.html" />
 
     <style>
-      body {
+      html, body {
         height: 100%;
         width: 100%;
         margin: 0px;
@@ -49,9 +49,6 @@
       if (process.platform === 'darwin') {
         remote.getCurrentWindow().setRepresentedFilename(icon);
       }
-    });
-    window.addEventListener('resize', function() {
-      editor.screen.resizeWithPixels(window.innerWidth, window.innerHeight);
     });
   </script>
 </html>

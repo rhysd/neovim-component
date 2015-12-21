@@ -55,10 +55,16 @@ Polymer({
     attached: function() {
         const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
         this.editor.attachCanvas(canvas);
+        this.resize_listener = window.addEventListener('resize', () => {
+            this.editor.screen.checkShouldResize();
+        });
     },
 
     detached: function() {
         this.editor.emit('detach');
+        if (this.resize_listener) {
+            window.removeEventListener('resize', this.resize_listener);
+        }
     },
 
     attributeChanged: function(name: string, type: polymer.PropConstructorType) {
