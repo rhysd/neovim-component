@@ -14,21 +14,19 @@ export default class Neovim extends EventEmitter {
             command: string,
             argv: string[],
             font: string,
-            font_size: number,
-            width: number,
-            height: number
+            font_size: number
     ) {
         super();
 
         this.store = new NeovimStore();
         this.store.dispatcher.dispatch(updateFontFace(font));
         this.store.dispatcher.dispatch(updateFontPx(font_size));
-        this.store.dispatcher.dispatch(updateScreenSize(width, height));
 
         this.process = new Process(this.store, command, argv);
     }
 
-    attachCanvas(canvas: HTMLCanvasElement) {
+    attachCanvas(width: number, height: number, canvas: HTMLCanvasElement) {
+        this.store.dispatcher.dispatch(updateScreenSize(width, height));
         this.screen = new Screen(this.store, canvas);
         const {lines, cols} = this.store.size;
         this.process
