@@ -13,7 +13,6 @@ You can execute this example by below commands.
 $ cd /path/to/neovim-component
 $ npm run dep
 $ cd ./example/mini-browser
-$ npm run dep
 $ npm run app
 ```
 

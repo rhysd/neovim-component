@@ -99,7 +99,6 @@
       browser.addEventListener('dom-ready', function() {
           title.innerText = browser.getTitle();
       });
-      console.log(JSON.stringify(this.visible));
       if (this.visible) {
         self.show();
       }
@@ -115,7 +114,6 @@
 
     open(url) {
       browser.src = url;
-      console.log(browser);
       if (!this.visible) {
         this.show();
       }
