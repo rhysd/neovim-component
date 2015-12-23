@@ -23,7 +23,8 @@
     <neovim-editor id="neovim" font="Ricty,monospace" font-size="14"></neovim-editor>
   </body>
   <script>
-    var editor = document.getElementById('neovim').editor;
+    var neovim_element = document.getElementById('neovim');
+    var editor = neovim_element.editor;
     var electron = require('electron');
     var remote = electron.remote;
     var shell = electron.shell;
@@ -31,6 +32,13 @@
       if (remote.process.argv.length > 2) {
         editor.setArgv(remote.process.argv.slice(2)); // It is better to use 'argv' property.
       }
+      neovim_element.addEventListener('drop', function(e) {
+        e.preventDefault();
+        var f = e.dataTransfer.files[0];
+        if (f) {
+          editor.getClient().command('e! ' + f.path);  // 'path' member is Electron extension
+        }
+      });
     });
     editor.on('quit', function() {
       remote.require('app').quit();
@@ -50,5 +58,6 @@
         remote.getCurrentWindow().setRepresentedFilename(icon);
       }
     });
+    neovim_element.addEventListener('dragover', function(e) { e.preventDefault(); });
   </script>
 </html>
