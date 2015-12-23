@@ -328,3 +328,15 @@ export class Neovim extends EventEmitter {
     focus(): void;
     setArgv(argv: string[]): Promise<void>;
 }
+
+export class NeovimElement extends HTMLElement {
+    editor: Neovim;
+    width: number;
+    height: number;
+    fontSize: number;
+    font: string;
+    nvimCmd: string;
+    argv: string[];
+    onProcessAttached: () => void;
+    onQuit: () => void;
+}
