@@ -36,24 +36,24 @@ export declare enum Kind {
     DragStart = 8,
     DragUpdate = 9,
     EnableMouse = 10,
-    Focus = 11,
-    Highlight = 12,
-    Input = 13,
-    Mode = 14,
-    PutText = 15,
-    Resize = 16,
-    ScrollScreen = 17,
-    SetIcon = 18,
-    SetScrollRegion = 19,
-    SetTitle = 20,
-    UpdateBG = 21,
-    UpdateFG = 22,
-    UpdateFontFace = 23,
-    UpdateFontPx = 24,
-    UpdateFontSize = 25,
-    UpdateScreenBounds = 26,
-    UpdateScreenSize = 27,
-    WheelScroll = 28,
+    Highlight = 11,
+    Input = 12,
+    Mode = 13,
+    PutText = 14,
+    Resize = 15,
+    ScrollScreen = 16,
+    SetIcon = 17,
+    SetScrollRegion = 18,
+    SetTitle = 19,
+    UpdateBG = 20,
+    UpdateFG = 21,
+    UpdateFontFace = 22,
+    UpdateFontPx = 23,
+    UpdateFontSize = 24,
+    UpdateScreenBounds = 25,
+    UpdateScreenSize = 26,
+    WheelScroll = 27,
+    FocusChanged = 28,
 }
 export interface ActionType {
     type: Kind;
@@ -61,6 +61,7 @@ export interface ActionType {
     color?: number;
     cols?: number;
     event?: MouseEvent | WheelEvent;
+    focused?: boolean;
     font_face?: string;
     font_px?: number;
     height?: number;
@@ -127,9 +128,6 @@ export declare function inputToNeovim(input: string): {
     type: Kind;
     input: string;
 };
-export declare function focus(): {
-    type: Kind;
-};
 export declare function updateFontPx(font_px: number): {
     type: Kind;
     font_px: number;
@@ -189,6 +187,10 @@ export declare function scrollScreen(cols: number): {
 export declare function setScrollRegion(region: Region): {
     type: Kind;
     region: Region;
+};
+export declare function notifyFocuseChanged(focused: boolean): {
+    type: Kind;
+    focused: boolean;
 };
 
 export class NeovimCursor {
@@ -302,6 +304,7 @@ export declare type DispatcherType = Dispatcher<ActionType>;
 export class NeovimStore extends EventEmitter {
     dispatch_token: string;
     size: Size;
+    focused: boolean;
     font_attr: FontAttributes;
     fg_color: string;
     bg_color: string;
