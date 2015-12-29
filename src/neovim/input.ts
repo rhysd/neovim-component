@@ -1,10 +1,10 @@
 import NeovimStore from './store';
-import {inputToNeovim} from './actions';
+import {inputToNeovim, notifyFocuseChanged} from './actions';
 import log from '../log';
 
 export default class NeovimInput {
     element: HTMLInputElement;
-    ime_running: boolean;
+    ime_running: boolean;      // XXX: Local state!
 
     static shouldIgnoreOnKeydown(event: KeyboardEvent) {
         const {ctrlKey, shiftKey, altKey, keyCode} = event;
@@ -46,9 +46,10 @@ export default class NeovimInput {
         this.element.addEventListener('compositionend', this.endComposition.bind(this));
         this.element.addEventListener('keydown', this.onInsertControlChar.bind(this));
         this.element.addEventListener('input', this.onInsertNormalChar.bind(this));
-        this.element.addEventListener('blur', e => e.preventDefault());
+        this.element.addEventListener('blur', this.onBlur.bind(this));
+        this.element.addEventListener('focus', this.onFocus.bind(this));
 
-        this.store.on('focus', this.focus.bind(this));
+        this.focus();
     }
 
     startComposition(event: Event) {
@@ -63,6 +64,15 @@ export default class NeovimInput {
 
     focus() {
         this.element.focus();
+    }
+
+    onFocus() {
+        this.store.dispatcher.dispatch(notifyFocuseChanged(true));
+    }
+
+    onBlur(e: Event) {
+        e.preventDefault();
+        this.store.dispatcher.dispatch(notifyFocuseChanged(false));
     }
 
     // Note:

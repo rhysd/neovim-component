@@ -29,7 +29,6 @@ export enum Kind {
     DragStart,
     DragUpdate,
     EnableMouse,
-    Focus,
     Highlight,
     Input,
     Mode,
@@ -47,6 +46,7 @@ export enum Kind {
     UpdateScreenBounds,
     UpdateScreenSize,
     WheelScroll,
+    FocusChanged,
 };
 
 export interface ActionType {
@@ -55,6 +55,7 @@ export interface ActionType {
     color?: number;
     cols?: number;
     event?: MouseEvent | WheelEvent;
+    focused?: boolean;
     font_face?: string;
     font_px?: number;
     height?: number;
@@ -168,13 +169,6 @@ export function inputToNeovim(input: string) {
     return {
         type: Kind.Input,
         input,
-    };
-}
-
-export function focus() {
-    'use strict';
-    return {
-        type: Kind.Focus
     };
 }
 
@@ -297,5 +291,13 @@ export function setScrollRegion(region: Region) {
     return {
         type: Kind.SetScrollRegion,
         region,
+    };
+}
+
+export function notifyFocuseChanged(focused: boolean) {
+    'use strict';
+    return {
+        type: Kind.FocusChanged,
+        focused,
     };
 }

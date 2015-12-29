@@ -89,7 +89,7 @@ export default class NeovimScreen {
     }
 
     focus() {
-        this.store.dispatcher.dispatch(A.focus());
+        this.input.focus();
     }
 
     clearAll() {

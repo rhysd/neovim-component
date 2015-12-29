@@ -68,6 +68,7 @@ export default class NeovimStore extends EventEmitter {
     wheel_scrolling: ScreenWheel;
     scroll_region: Region;
     dispatcher: Dispatcher<ActionType>;
+    focused: boolean;
 
     constructor() {
         super();
@@ -108,6 +109,7 @@ export default class NeovimStore extends EventEmitter {
             top: 0,
             bottom: 0,
         };
+        this.focused = true;
         this.dispatch_token = this.dispatcher.register(this.receiveAction.bind(this));
     }
 
@@ -142,8 +144,10 @@ export default class NeovimStore extends EventEmitter {
                 log.debug('Highlight is updated: ', this.font_attr);
                 break;
             }
-            case Kind.Focus: {
-                this.emit('focus');
+            case Kind.FocusChanged: {
+                this.focused = action.focused;
+                this.emit('focus-changed');
+                log.debug('Focus changed: ' + this.focused);
                 break;
             }
             case Kind.ClearEOL: {
