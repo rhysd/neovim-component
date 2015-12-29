@@ -248,6 +248,20 @@ const editor = document.getElementById('neovim').editor;
 editor.setArgv(['README.md']);
 ```
 
+- Focus on editor
+
+`<neovim-editor>` is just one of component in browser.  So it has focus like as other elements.  If focus is lost, editor can't take input event. `editor` instance has a method to focus on editor in JavaScript and `store` instance contains the focus state.
+
+```javascript
+const editor = document.getElementById('neovim').editor;
+console.log(editor.store.focused);
+editor.store.on('focus-changed', () => {
+    console.log('Focus was changed: ' + editor.store.focused);
+});
+
+// Focus on Neovim screen to ensure that user can input.
+editor.focus();
+```
 
 ### Log Levels
 
