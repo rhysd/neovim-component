@@ -93,7 +93,7 @@ export default class NeovimScreen {
     }
 
     clearAll() {
-        this.ctx.fillStyle = this.store.font_attr.bg;
+        this.ctx.fillStyle = this.store.bg_color;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
@@ -102,7 +102,7 @@ export default class NeovimScreen {
         const font_width = this.store.font_attr.width;
         const clear_length = this.store.size.cols * font_width - col * font_width;
         log.debug(`Clear until EOL: ${line}:${col} length=${clear_length}`);
-        this.drawBlock(line, col, 1, clear_length, this.store.font_attr.bg);
+        this.drawBlock(line, col, 1, clear_length, this.store.bg_color);
     }
 
     // Origin is at left-above.
@@ -199,7 +199,7 @@ export default class NeovimScreen {
             left,
             cols_up,
             right - left + 1,
-            this.store.font_attr.bg
+            this.store.bg_color
         );
         log.debug('Scroll up: ' + cols_up, this.store.scroll_region);
     }
@@ -216,7 +216,7 @@ export default class NeovimScreen {
             left,
             cols_down - 1, // Specify just before the bottom line
             right - left + 1,
-            this.store.font_attr.bg
+            this.store.bg_color
         );
         log.debug('Scroll down: ' + cols_down, this.store.scroll_region);
     }
