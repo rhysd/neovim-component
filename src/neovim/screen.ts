@@ -208,13 +208,13 @@ export default class NeovimScreen {
         const {top, bottom, left, right} = this.store.scroll_region;
         this.slideVertical(
             top,
-            bottom - top - cols_down,
+            bottom - (top + cols_down) + 1,
             top + cols_down
         );
         this.drawBlock(
             top,
             left,
-            cols_down - 1, // Specify just before the bottom line
+            cols_down,
             right - left + 1,
             this.store.bg_color
         );
