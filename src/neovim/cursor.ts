@@ -4,14 +4,15 @@ import {dragEnd} from './actions';
 
 export default class NeovimCursor {
     element: HTMLDivElement;
+    pixel_ratio: number;
 
     constructor(private store: NeovimStore) {
+        this.pixel_ratio = window.devicePixelRatio || 1;
         this.element = document.querySelector('.neovim-cursor') as HTMLDivElement;
         this.element.style.borderColor = 'white';
         this.element.style.top = '0px';
         this.element.style.left = '0px';
-        this.element.style.width = this.store.font_attr.width + 'px';
-        this.element.style.height = this.store.font_attr.height + 'px';
+        this.updateSize();
 
         this.element.addEventListener('mouseup', (e: MouseEvent) => {
             this.store.dispatcher.dispatch(dragEnd(e));
@@ -24,8 +25,8 @@ export default class NeovimCursor {
     }
 
     updateSize() {
-        this.element.style.width = this.store.font_attr.width + 'px';
-        this.element.style.height = this.store.font_attr.height + 'px';
+        this.element.style.width = (this.store.font_attr.width / this.pixel_ratio) + 'px';
+        this.element.style.height = (this.store.font_attr.height / this.pixel_ratio) + 'px';
     }
 
     updateColor() {
@@ -39,7 +40,7 @@ export default class NeovimCursor {
                 this.element.style.width = '1px';
                 break;
             case 'normal':
-                this.element.style.width = this.store.font_attr.width + 'px';
+                this.element.style.width = (this.store.font_attr.width) + 'px';
                 break;
             default:
                 break;
@@ -50,8 +51,8 @@ export default class NeovimCursor {
         const {line, col} = this.store.cursor;
         const {width, height} = this.store.font_attr;
 
-        const x = col * width;
-        const y = line * height;
+        const x = col * width / this.pixel_ratio;
+        const y = line * height / this.pixel_ratio;
 
         this.element.style.left = x + 'px';
         this.element.style.top = y + 'px';

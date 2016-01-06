@@ -8,8 +8,10 @@ export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
     cursor: Cursor;
     input: Input;
+    pixel_ratio: number;
 
     constructor(private store: NeovimStore, public canvas: HTMLCanvasElement) {
+        this.pixel_ratio = window.devicePixelRatio || 1;
         this.ctx = this.canvas.getContext('2d');
 
         this.store.on('put', this.drawText.bind(this));
@@ -50,11 +52,13 @@ export default class NeovimScreen {
     }
 
     resizeWithPixels(width_px: number, height_px: number) {
+        const h = height_px * this.pixel_ratio;
+        const w = width_px * this.pixel_ratio;
         this.resizeImpl(
-                Math.floor(height_px / this.store.font_attr.height),
-                Math.floor(width_px / this.store.font_attr.width),
-                width_px,
-                height_px
+                Math.floor(h / this.store.font_attr.height),
+                Math.floor(w / this.store.font_attr.width),
+                w,
+                h
             );
     }
 
@@ -68,10 +72,11 @@ export default class NeovimScreen {
     }
 
     changeFontSize(specified_px: number) {
-        this.ctx.font = specified_px + 'px ' + this.store.font_attr.face;
+        const drawn_px = specified_px * this.pixel_ratio
+        this.ctx.font = drawn_px + 'px ' + this.store.font_attr.face;
         const font_width = this.ctx.measureText('m').width;
         const font_height = font_width * 2;
-        this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
+        this.store.dispatcher.dispatch(A.updateFontPx(drawn_px));
         this.store.dispatcher.dispatch(A.updateFontSize(font_width, font_height));
         const {width, height} = this.store.size;
         this.resizeWithPixels(width, height);
@@ -136,7 +141,8 @@ export default class NeovimScreen {
         const ch = p.clientHeight;
         const w = this.canvas.width;
         const h = this.canvas.height;
-        if (cw !== w || ch !== h) {
+        if (cw * this.pixel_ratio !== w ||
+            ch * this.pixel_ratio !== h) {
             this.resizeWithPixels(cw, ch);
         }
     }
@@ -224,9 +230,11 @@ export default class NeovimScreen {
     private resizeImpl(lines: number, cols: number, width: number, height: number) {
         if (width !== this.canvas.width) {
             this.canvas.width = width;
+            this.canvas.style.width = (width / this.pixel_ratio) + 'px';
         }
         if (height !== this.canvas.height) {
             this.canvas.height = height;
+            this.canvas.style.height = (height / this.pixel_ratio) + 'px';
         }
         this.store.dispatcher.dispatch(A.updateScreenSize(width, height));
         this.store.dispatcher.dispatch(A.updateScreenBounds(lines, cols));
