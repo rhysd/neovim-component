@@ -123,15 +123,15 @@ export default class NeovimScreen {
     convertPositionToLocation(line: number, col: number) {
         const {draw_width, draw_height} = this.store.font_attr;
         return {
-            x: col * draw_width,
-            y: line * draw_height,
+            x: col * draw_width / this.pixel_ratio,
+            y: line * draw_height / this.pixel_ratio,
         };
     }
     convertLocationToPosition(x: number, y: number) {
         const {draw_width, draw_height} = this.store.font_attr;
         return {
-            line: Math.floor(y / draw_height),
-            col: Math.floor(x / draw_width),
+            line: Math.floor(y * this.pixel_ratio / draw_height),
+            col: Math.floor(x * this.pixel_ratio / draw_width),
         };
     }
 
