@@ -10,8 +10,7 @@ export default class NeovimCursor {
         this.element.style.borderColor = 'white';
         this.element.style.top = '0px';
         this.element.style.left = '0px';
-        this.element.style.width = this.store.font_attr.width + 'px';
-        this.element.style.height = this.store.font_attr.height + 'px';
+        this.updateSize();
 
         this.element.addEventListener('mouseup', (e: MouseEvent) => {
             this.store.dispatcher.dispatch(dragEnd(e));

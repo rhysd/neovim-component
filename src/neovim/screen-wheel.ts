@@ -36,8 +36,8 @@ export default class ScreenWheel {
         this.x += e.deltaX;
         this.y += e.deltaY;
 
-        const scroll_x = Math.round(this.x / this.store.font_attr.width / 6);
-        const scroll_y = Math.round(this.y / this.store.font_attr.height / 3);
+        const scroll_x = Math.round(this.x / this.store.font_attr.draw_width / 6);
+        const scroll_y = Math.round(this.y / this.store.font_attr.draw_height / 3);
 
         if (scroll_x === 0 && scroll_y === 0) {
             // Note: At least 3 lines or 6 columns are needed to scroll screen

@@ -7,8 +7,8 @@ var index_html = 'file://' + path.join(__dirname, 'index.html');
 
 app.on('ready', function() {
     var win = new BrowserWindow({
-        width: 1600,
-        height: 1000,
+        width: 1000,
+        height: 600,
         useContentSize: true,
     });
 

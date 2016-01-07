@@ -8,8 +8,10 @@ export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
     cursor: Cursor;
     input: Input;
+    pixel_ratio: number;
 
     constructor(private store: NeovimStore, public canvas: HTMLCanvasElement) {
+        this.pixel_ratio = window.devicePixelRatio || 1;
         this.ctx = this.canvas.getContext('2d');
 
         this.store.on('put', this.drawText.bind(this));
@@ -50,11 +52,13 @@ export default class NeovimScreen {
     }
 
     resizeWithPixels(width_px: number, height_px: number) {
+        const h = height_px * this.pixel_ratio;
+        const w = width_px * this.pixel_ratio;
         this.resizeImpl(
-                Math.floor(height_px / this.store.font_attr.height),
-                Math.floor(width_px / this.store.font_attr.width),
-                width_px,
-                height_px
+                Math.floor(h / this.store.font_attr.draw_height),
+                Math.floor(w / this.store.font_attr.draw_width),
+                w,
+                h
             );
     }
 
@@ -62,17 +66,25 @@ export default class NeovimScreen {
         this.resizeImpl(
                 lines,
                 cols,
-                this.store.font_attr.width * cols,
-                this.store.font_attr.height * lines
+                this.store.font_attr.draw_width * cols,
+                this.store.font_attr.draw_height * lines
             );
     }
 
     changeFontSize(specified_px: number) {
-        this.ctx.font = specified_px + 'px ' + this.store.font_attr.face;
+        const drawn_px = specified_px * this.pixel_ratio
+        this.ctx.font = drawn_px + 'px ' + this.store.font_attr.face;
         const font_width = this.ctx.measureText('m').width;
         const font_height = font_width * 2;
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
-        this.store.dispatcher.dispatch(A.updateFontSize(font_width, font_height));
+        this.store.dispatcher.dispatch(
+            A.updateFontSize(
+                font_width,
+                font_height,
+                font_width / this.pixel_ratio,
+                font_height / this.pixel_ratio
+            )
+        );
         const {width, height} = this.store.size;
         this.resizeWithPixels(width, height);
     }
@@ -99,7 +111,7 @@ export default class NeovimScreen {
 
     clearEol() {
         const {line, col} = this.store.cursor;
-        const font_width = this.store.font_attr.width;
+        const font_width = this.store.font_attr.draw_width;
         const clear_length = this.store.size.cols * font_width - col * font_width;
         log.debug(`Clear until EOL: ${line}:${col} length=${clear_length}`);
         this.drawBlock(line, col, 1, clear_length, this.store.bg_color);
@@ -125,8 +137,8 @@ export default class NeovimScreen {
     convertLocationToPosition(x: number, y: number) {
         const {width, height} = this.store.font_attr;
         return {
-            line: Math.floor(y / height),
-            col: Math.floor(x / width),
+            line: Math.floor(y * height),
+            col: Math.floor(x * width),
         };
     }
 
@@ -136,54 +148,55 @@ export default class NeovimScreen {
         const ch = p.clientHeight;
         const w = this.canvas.width;
         const h = this.canvas.height;
-        if (cw !== w || ch !== h) {
+        if (cw * this.pixel_ratio !== w ||
+            ch * this.pixel_ratio !== h) {
             this.resizeWithPixels(cw, ch);
         }
     }
 
     private drawText(chars: string[][]) {
         const {line, col} = this.store.cursor;
-        const {fg, bg, width, height, face, specified_px} = this.store.font_attr;
+        const {fg, bg, draw_width, draw_height, face, specified_px} = this.store.font_attr;
 
         // Draw background
         this.drawBlock(line, col, 1, chars.length, bg);
 
         // TODO: Consider font attributes (e.g. underline, bold, ...)
-        this.ctx.font = specified_px + 'px ' + face;
+        this.ctx.font = (specified_px * this.pixel_ratio) + 'px ' + face;
         this.ctx.textBaseline = 'top';
         this.ctx.fillStyle = fg;
         const text = chars.map(c => (c[0] || '')).join('');
-        const x = col * width;
-        const y = line * height;
+        const x = col * draw_width;
+        const y = line * draw_height;
         this.ctx.fillText(text, x, y);
         log.debug(`drawText(): (${x}, ${y})`, text, this.store.cursor);
     }
 
     private drawBlock(line: number, col: number, height: number, width: number, color: string) {
-        const font = this.store.font_attr;
+        const {draw_width, draw_height} = this.store.font_attr;
         this.ctx.fillStyle = color;
         this.ctx.fillRect(
-                Math.floor(col * font.width),
-                Math.floor(line * font.height),
-                Math.ceil(width * font.width),
-                Math.ceil(height * font.height)
+                Math.floor(col * draw_width),
+                Math.floor(line * draw_height),
+                Math.ceil(width * draw_width),
+                Math.ceil(height * draw_height)
             );
     }
 
     private slideVertical(top: number, height: number, dst_top: number) {
         const {left, right} = this.store.scroll_region;
-        const font = this.store.font_attr;
+        const {draw_width, draw_height} = this.store.font_attr;
         const captured
             = this.ctx.getImageData(
-                left * font.width,
-                top * font.height,
-                (right - left + 1) * font.width,
-                height * font.height
+                left * draw_width,
+                top * draw_height,
+                (right - left + 1) * draw_width,
+                height * draw_height
             );
         this.ctx.putImageData(
             captured,
-            left * font.width,
-            dst_top * font.height
+            left * draw_width,
+            dst_top * draw_height
         );
     }
 
@@ -224,9 +237,11 @@ export default class NeovimScreen {
     private resizeImpl(lines: number, cols: number, width: number, height: number) {
         if (width !== this.canvas.width) {
             this.canvas.width = width;
+            this.canvas.style.width = (width / this.pixel_ratio) + 'px';
         }
         if (height !== this.canvas.height) {
             this.canvas.height = height;
+            this.canvas.style.height = (height / this.pixel_ratio) + 'px';
         }
         this.store.dispatcher.dispatch(A.updateScreenSize(width, height));
         this.store.dispatcher.dispatch(A.updateScreenBounds(lines, cols));
