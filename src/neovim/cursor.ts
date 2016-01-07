@@ -4,10 +4,8 @@ import {dragEnd} from './actions';
 
 export default class NeovimCursor {
     element: HTMLDivElement;
-    pixel_ratio: number;
 
     constructor(private store: NeovimStore) {
-        this.pixel_ratio = window.devicePixelRatio || 1;
         this.element = document.querySelector('.neovim-cursor') as HTMLDivElement;
         this.element.style.borderColor = 'white';
         this.element.style.top = '0px';
@@ -25,8 +23,8 @@ export default class NeovimCursor {
     }
 
     updateSize() {
-        this.element.style.width = (this.store.font_attr.draw_width / this.pixel_ratio) + 'px';
-        this.element.style.height = (this.store.font_attr.draw_height / this.pixel_ratio) + 'px';
+        this.element.style.width = this.store.font_attr.width + 'px';
+        this.element.style.height = this.store.font_attr.height + 'px';
     }
 
     updateColor() {
@@ -40,7 +38,7 @@ export default class NeovimCursor {
                 this.element.style.width = '1px';
                 break;
             case 'normal':
-                this.element.style.width = (this.store.font_attr.draw_width / this.pixel_ratio) + 'px';
+                this.element.style.width = this.store.font_attr.width + 'px';
                 break;
             default:
                 break;
@@ -49,10 +47,10 @@ export default class NeovimCursor {
 
     updateCursorPos() {
         const {line, col} = this.store.cursor;
-        const {draw_width, draw_height} = this.store.font_attr;
+        const {width, height} = this.store.font_attr;
 
-        const x = col * draw_width / this.pixel_ratio;
-        const y = line * draw_height / this.pixel_ratio;
+        const x = col * width;
+        const y = line * height;
 
         this.element.style.left = x + 'px';
         this.element.style.top = y + 'px';
