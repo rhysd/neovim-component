@@ -6,6 +6,7 @@ const MouseButtonKind = [ 'Left', 'Middle', 'Right' ];
 export default class ScreenDrag {
     line: number;
     col: number;
+    pixel_ratio: number;
 
     static buildInputOf(e: MouseEvent, type: string, line: number, col: number) {
         let seq = '<';
@@ -26,6 +27,7 @@ export default class ScreenDrag {
     constructor(private store: NeovimStore) {
         this.line = 0;
         this.col = 0;
+        this.pixel_ratio = window.devicePixelRatio || 1;
     }
 
     start(down_event: MouseEvent) {
@@ -64,8 +66,8 @@ export default class ScreenDrag {
 
     private getPos(e: MouseEvent) {
         return [
-            Math.floor(e.clientY / this.store.font_attr.draw_height),
-            Math.floor(e.clientX / this.store.font_attr.draw_width),
+            Math.floor(e.clientY * this.pixel_ratio / this.store.font_attr.draw_height),
+            Math.floor(e.clientX * this.pixel_ratio / this.store.font_attr.draw_width),
         ];
     }
 }
