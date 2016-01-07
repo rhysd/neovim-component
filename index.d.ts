@@ -295,8 +295,8 @@ export interface FontAttributes {
     reverse: boolean;
     underline: boolean;
     undercurl: boolean;
-    width: number;
-    height: number;
+    draw_width: number;
+    draw_height: number;
     face: string;
     specified_px: number;
 }

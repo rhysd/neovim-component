@@ -25,8 +25,8 @@ export default class NeovimCursor {
     }
 
     updateSize() {
-        this.element.style.width = (this.store.font_attr.width / this.pixel_ratio) + 'px';
-        this.element.style.height = (this.store.font_attr.height / this.pixel_ratio) + 'px';
+        this.element.style.width = (this.store.font_attr.draw_width / this.pixel_ratio) + 'px';
+        this.element.style.height = (this.store.font_attr.draw_height / this.pixel_ratio) + 'px';
     }
 
     updateColor() {
@@ -40,7 +40,7 @@ export default class NeovimCursor {
                 this.element.style.width = '1px';
                 break;
             case 'normal':
-                this.element.style.width = (this.store.font_attr.width) + 'px';
+                this.element.style.width = (this.store.font_attr.draw_width / this.pixel_ratio) + 'px';
                 break;
             default:
                 break;
@@ -49,10 +49,10 @@ export default class NeovimCursor {
 
     updateCursorPos() {
         const {line, col} = this.store.cursor;
-        const {width, height} = this.store.font_attr;
+        const {draw_width, draw_height} = this.store.font_attr;
 
-        const x = col * width / this.pixel_ratio;
-        const y = line * height / this.pixel_ratio;
+        const x = col * draw_width / this.pixel_ratio;
+        const y = line * draw_height / this.pixel_ratio;
 
         this.element.style.left = x + 'px';
         this.element.style.top = y + 'px';
