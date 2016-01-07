@@ -31,6 +31,8 @@ export interface FontAttributes {
     undercurl: boolean;
     draw_width: number;
     draw_height: number;
+    width: number;
+    height: number;
     face: string;
     specified_px: number;
 }
@@ -89,6 +91,8 @@ export default class NeovimStore extends EventEmitter {
             undercurl: false,
             draw_width: 1,
             draw_height: 1,
+            width: 1,
+            height: 1,
             specified_px: 1,
             face: 'monospace',
         };
@@ -207,8 +211,10 @@ export default class NeovimStore extends EventEmitter {
                 break;
             }
             case Kind.UpdateFontSize: {
-                this.font_attr.draw_width = action.width;
-                this.font_attr.draw_height = action.height;
+                this.font_attr.draw_width = action.draw_width;
+                this.font_attr.draw_height = action.draw_height;
+                this.font_attr.width = action.width;
+                this.font_attr.height = action.height;
                 log.debug(`Actual font size is updated: ${action.width}:${action.height}`);
                 this.emit('font-size-changed');
                 break;

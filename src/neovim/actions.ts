@@ -54,6 +54,8 @@ export interface ActionType {
     col?: number;
     color?: number;
     cols?: number;
+    draw_width?: number;
+    draw_height?: number;
     event?: MouseEvent | WheelEvent;
     focused?: boolean;
     font_face?: string;
@@ -156,10 +158,11 @@ export function stopBusy() {
     };
 }
 
-export function updateFontSize(width: number, height: number) {
+export function updateFontSize(draw_width: number, draw_height: number, width: number, height: number) {
     'use strict';
     return {
         type: Kind.UpdateFontSize,
+        draw_width, draw_height,
         width, height,
     };
 }

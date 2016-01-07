@@ -77,7 +77,14 @@ export default class NeovimScreen {
         const font_width = this.ctx.measureText('m').width;
         const font_height = font_width * 2;
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
-        this.store.dispatcher.dispatch(A.updateFontSize(font_width, font_height));
+        this.store.dispatcher.dispatch(
+            A.updateFontSize(
+                font_width,
+                font_height,
+                font_width / this.pixel_ratio,
+                font_height / this.pixel_ratio
+            )
+        );
         const {width, height} = this.store.size;
         this.resizeWithPixels(width, height);
     }

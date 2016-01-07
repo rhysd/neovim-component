@@ -60,6 +60,8 @@ export interface ActionType {
     col?: number;
     color?: number;
     cols?: number;
+    draw_width?: number;
+    draw_height?: number;
     event?: MouseEvent | WheelEvent;
     focused?: boolean;
     font_face?: string;
@@ -119,8 +121,10 @@ export declare function startBusy(): {
 export declare function stopBusy(): {
     type: Kind;
 };
-export declare function updateFontSize(width: number, height: number): {
+export declare function updateFontSize(draw_width: number, draw_height: number, width: number, height: number): {
     type: Kind;
+    draw_width: number;
+    draw_height: number;
     width: number;
     height: number;
 };
@@ -297,6 +301,8 @@ export interface FontAttributes {
     undercurl: boolean;
     draw_width: number;
     draw_height: number;
+    width: number;
+    height: number;
     face: string;
     specified_px: number;
 }
