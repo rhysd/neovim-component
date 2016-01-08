@@ -192,7 +192,7 @@ export declare function setScrollRegion(region: Region): {
     type: Kind;
     region: Region;
 };
-export declare function notifyFocuseChanged(focused: boolean): {
+export declare function notifyFocusChanged(focused: boolean): {
     type: Kind;
     focused: boolean;
 };

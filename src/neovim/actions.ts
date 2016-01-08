@@ -297,7 +297,7 @@ export function setScrollRegion(region: Region) {
     };
 }
 
-export function notifyFocuseChanged(focused: boolean) {
+export function notifyFocusChanged(focused: boolean) {
     'use strict';
     return {
         type: Kind.FocusChanged,

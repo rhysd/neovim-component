@@ -1,5 +1,5 @@
 import NeovimStore from './store';
-import {inputToNeovim, notifyFocuseChanged} from './actions';
+import {inputToNeovim, notifyFocusChanged} from './actions';
 import log from '../log';
 
 export default class NeovimInput {
@@ -83,12 +83,12 @@ export default class NeovimInput {
     }
 
     onFocus() {
-        this.store.dispatcher.dispatch(notifyFocuseChanged(true));
+        this.store.dispatcher.dispatch(notifyFocusChanged(true));
     }
 
     onBlur(e: Event) {
         e.preventDefault();
-        this.store.dispatcher.dispatch(notifyFocuseChanged(false));
+        this.store.dispatcher.dispatch(notifyFocusChanged(false));
     }
 
     // Note:
