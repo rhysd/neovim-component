@@ -296,7 +296,6 @@ export interface FontAttributes {
     bg: string;
     bold: boolean;
     italic: boolean;
-    reverse: boolean;
     underline: boolean;
     undercurl: boolean;
     draw_width: number;

@@ -26,7 +26,6 @@ export interface FontAttributes {
     bg: string;
     bold: boolean;
     italic: boolean;
-    reverse: boolean;
     underline: boolean;
     undercurl: boolean;
     draw_width: number;
@@ -86,7 +85,6 @@ export default class NeovimStore extends EventEmitter {
             bg: 'black',
             bold: false,
             italic: false,
-            reverse: false,
             underline: false,
             undercurl: false,
             draw_width: 1,
@@ -141,10 +139,15 @@ export default class NeovimStore extends EventEmitter {
                 const hl = action.highlight;
                 this.font_attr.bold = hl.bold;
                 this.font_attr.italic = hl.italic;
-                this.font_attr.reverse = hl.reverse;
                 this.font_attr.underline = hl.underline;
-                this.font_attr.fg = colorString(hl.foreground, this.fg_color);
-                this.font_attr.bg = colorString(hl.background, this.bg_color);
+                this.font_attr.undercurl = hl.undercurl;
+                if (hl.reverse === true) {
+                    this.font_attr.fg = colorString(hl.background, this.bg_color);
+                    this.font_attr.bg = colorString(hl.foreground, this.fg_color);
+                } else {
+                    this.font_attr.fg = colorString(hl.foreground, this.fg_color);
+                    this.font_attr.bg = colorString(hl.background, this.bg_color);
+                }
                 log.debug('Highlight is updated: ', this.font_attr);
                 break;
             }
