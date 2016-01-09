@@ -20,7 +20,7 @@
     "dep": "npm install && $(npm bin)/bower install && $(npm bin)/tsd install && mkdir $(npm prefix)/build",
     "example": "$(npm bin)/electron .",
     "lint": "$(npm bin)/tslint $(git ls-files | grep -E \".ts$\")",
-    "test": "$(npm bin)/mocha test/prop_test/default_test.js"
+    "test": "$(npm bin)/mocha test/unit/ test/e2e/"
   },
   "keywords": [
     "neovim",
@@ -42,6 +42,7 @@
     "browserify": "^12.0.1",
     "chai": "^3.4.1",
     "electron-prebuilt": "^0.35.1",
+    "jsdom": "^7.2.2",
     "mocha": "^2.3.4",
     "mocha-generators": "^1.2.0",
     "nightmare": "https://github.com/rhysd/nightmare.git#custom-electron-path",
