@@ -4,45 +4,40 @@ const jsdom = require('jsdom').jsdom;
 const NeovimStore = require('../../src/out/neovim/store').default;
 const NeovimInput = require('../../src/out/neovim/input').default;
 
-// XXX
-function keydown(char, opts) {
-    const k = {
-        type: 'keydown',
-        preventDefault: function(){},
-        stopPropagation: function(){},
-        ctrlKey: false,
-        altKey: false,
-        shiftKey: false,
-        metaKey: false,
-        char: char,
-        cancelable: false,
-        bubbles: true,
-        view: window,
-        repeat: false,
-        target: global.input_element
-    };
-    if (opts) {
-        for (var p in opts) {
-            k[p] = opts[p];
-        }
+function keydownEvent(char, opts) {
+    const o = opts || {};
+    if (o.keyCode) {
+        o.charCode = o.which = o.keyCode;
+        o.key = String.fromCharCode(o.keyCode);
+    } else {
+        o.key = char;
+        o.keyCode = o.charCode = o.which = char.charCodeAt(0);
     }
-    k.keyCode = k.code = k.charCode = k.char.charCodeAt(0);
-    return k;
+    return new window.KeyboardEvent('keydown', o);
+}
+
+function dispatchKeydown(char, opts) {
+    return global.input_element.dispatchEvent(keydownEvent(char, opts));
+}
+
+function inputByKeydown(char, opts) {
+    global.last_input = '';
+    dispatchKeydown(char, opts);
+    const i = global.last_input;
+    global.last_input = '';
+    return i;
 }
 
 describe('NeovimInput', () => {
     before(() => {
-        /* global document */
+        /* global document input_element window input last_input */
         global.document = jsdom('<body><input class="neovim-input"/></body>');
-        /* global input_element */
         global.input_element = document.querySelector('.neovim-input');
         input_element.value = '';
-        /* global window */
         global.window = document.defaultView;
         const s = new NeovimStore();
-        /* global input */
+        /* eslint no-unused-vars:0 */
         global.input = new NeovimInput(s);
-        /* global last_input */
         global.last_input = '';
         s.on('input', i => {
             global.last_input = i;
@@ -62,18 +57,56 @@ describe('NeovimInput', () => {
 
     context("on 'keydown' event", () => {
         it('ignores normal char input without modifiers', () => {
-            var k;
-            k = keydown('a');
-            input.onInsertControlChar(k);
+            global.last_input = '';
+
+            dispatchKeydown('a');
             assert.equal(last_input, '');
-            k = keydown('[');
-            input.onInsertControlChar(k);
+
+            dispatchKeydown('[');
             assert.equal(last_input, '');
-            k = keydown('3', {
+
+            dispatchKeydown('3', {
                 shiftKey: true
             });
-            input.onInsertControlChar(k);
             assert.equal(last_input, '');
+        });
+
+        it('accepts input with ctrl key', () => {
+            assert.equal(inputByKeydown('a', {ctrlKey: true}), '<C-a>');
+            assert.equal(inputByKeydown('3', {ctrlKey: true}), '<C-3>');
+            assert.equal(inputByKeydown('[', {ctrlKey: true}), '<C-[>');
+            assert.equal(inputByKeydown('[', {ctrlKey: true, shiftKey: true}), '<C-S-[>');
+        });
+
+        it('accepts input with alt key', () => {
+            assert.equal(inputByKeydown(',', {altKey: true}), '<A-,>');
+            // assert.equal(inputByKeydown('r', {altKey: true}), '<A-r>');
+            assert.equal(inputByKeydown('4', {altKey: true}), '<A-4>');
+            // assert.equal(inputByKeydown('.', {altKey: true, shiftKey: true}), '<A-S-.>');
+        });
+
+        it('accepts input with alt and ctrl key', () => {
+            assert.equal(inputByKeydown(',', {altKey: true, ctrlKey: true}), '<C-A-,>');
+            assert.equal(inputByKeydown('a', {altKey: true, ctrlKey: true}), '<C-A-a>');
+            assert.equal(inputByKeydown('a', {altKey: true, ctrlKey: true, shiftKey: true}), '<C-A-S-a>');
+        });
+
+        it('accepts special keys', () => {
+            assert.equal(inputByKeydown('', {keyCode: 9}), '<Tab>');
+            assert.equal(inputByKeydown('', {keyCode: 9, altKey: true}), '<A-Tab>');
+            assert.equal(inputByKeydown('', {keyCode: 9, ctrlKey: true, shiftKey: true}), '<C-S-Tab>');
+            assert.equal(inputByKeydown('', {keyCode: 13}), '<CR>');
+            assert.equal(inputByKeydown('', {keyCode: 13, altKey: true}), '<A-CR>');
+            assert.equal(inputByKeydown('', {keyCode: 13, ctrlKey: true, shiftKey: true}), '<C-S-CR>');
+            assert.equal(inputByKeydown('', {keyCode: 37}), '<Left>');
+            assert.equal(inputByKeydown('', {keyCode: 37, altKey: true}), '<A-Left>');
+            assert.equal(inputByKeydown('', {keyCode: 37, ctrlKey: true, shiftKey: true}), '<C-S-Left>');
+            assert.equal(inputByKeydown('', {keyCode: 92}), '<Bslash>');
+            assert.equal(inputByKeydown('', {keyCode: 92, altKey: true}), '<A-Bslash>');
+            assert.equal(inputByKeydown('', {keyCode: 92, ctrlKey: true, shiftKey: true}), '<C-S-Bslash>');
+            assert.equal(inputByKeydown('', {keyCode: 188, shiftKey: true}), '<LT>');
+            assert.equal(inputByKeydown('', {keyCode: 188, ctrlKey: true, shiftKey: true}), '<C-LT>');
+            assert.equal(inputByKeydown('', {keyCode: 188}), '');
         });
     });
 });
