@@ -10,6 +10,7 @@ export default class NeovimCursor {
         this.element.style.borderColor = 'white';
         this.element.style.top = '0px';
         this.element.style.left = '0px';
+        this.element.classList.add(store.mode + '-mode');
         this.updateSize();
 
         this.element.addEventListener('mouseup', (e: MouseEvent) => {
@@ -34,12 +35,20 @@ export default class NeovimCursor {
 
     onModeChanged() {
         switch (this.store.mode) {
-            case 'insert':
+            case 'insert': {
                 this.element.style.width = '1px';
+                const l = this.element.classList;
+                l.remove('normal-mode');
+                l.add('insert-mode');
                 break;
-            case 'normal':
+            }
+            case 'normal': {
                 this.element.style.width = this.store.font_attr.width + 'px';
+                const l = this.element.classList;
+                l.remove('insert-mode');
+                l.add('normal-mode');
                 break;
+            }
             default:
                 break;
         }

@@ -29,6 +29,7 @@ describe('Cursor', () => {
         assert.equal(e.style.left, '0px');
         assert.equal(e.style.width, '7px');
         assert.equal(e.style.height, '14px');
+        assert.isTrue(e.classList.contains(store.mode + '-mode'), 'mode class is not specified');
     });
 
     it('updates color when cursor foreground color is updated', () => {
@@ -65,6 +66,18 @@ describe('Cursor', () => {
         store.emit('cursor');
         assert.equal(cursor.element.style.left, store.cursor.col * store.font_attr.width + 'px');
         assert.equal(cursor.element.style.top, store.cursor.line * store.font_attr.height + 'px');
+    });
+
+    it('sets "{mode}-mode" class to cursor on mode change', () => {
+        store.mode = 'normal';
+        store.emit('mode');
+        assert.isTrue(cursor.element.classList.contains('normal-mode'), '".normal-mode" is not specified on normal mode');
+        assert.isFalse(cursor.element.classList.contains('insert-mode'), '".insert-mode" is specified on normal mode');
+
+        store.mode = 'insert';
+        store.emit('mode');
+        assert.isTrue(cursor.element.classList.contains('insert-mode'), '".insert-mode" is not specified on insert mode');
+        assert.isFalse(cursor.element.classList.contains('normal-mode'), '".normal-mode" is specified on insert mode');
     });
 });
 
