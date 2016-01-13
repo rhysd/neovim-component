@@ -116,9 +116,12 @@ export default class NeovimInput {
         if (event.shiftKey && special_char !== 'LT') {
             vim_input += 'S-';
         }
-        if (special_char) {
-            vim_input += special_char;
-        } else if (event.key != "") {
+        if (special_char && special_char != "") {
+            vim_input += special_char.toLowerCase();
+        } else if (event.key && 
+                event.key.charCodeAt(0) >= 20 && 
+                event.key != "" && 
+                event.key != "Unidentified") {
             vim_input += event.key;
         } else {
             vim_input += String.fromCharCode(event.keyCode).toLowerCase();
@@ -126,7 +129,6 @@ export default class NeovimInput {
         vim_input += '>';
         this.inputToNeovim(vim_input, event);
     }
-
     inputToNeovim(input: string, event: Event) {
         this.store.dispatcher.dispatch(inputToNeovim(input));
 
