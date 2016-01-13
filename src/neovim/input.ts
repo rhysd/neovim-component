@@ -116,8 +116,14 @@ export default class NeovimInput {
         if (event.shiftKey && special_char !== 'LT') {
             vim_input += 'S-';
         }
-        vim_input += ( special_char || 
-                (event.key || String.fromCharCode(event.keyCode)).toLowerCase()) + '>';
+        if (special_char) {
+            vim_input += special_char;
+        } else if (event.key != "") {
+            vim_input += event.key;
+        } else {
+            vim_input += String.fromCharCode(event.keyCode).toLowerCase();
+        }
+        vim_input += '>';
         this.inputToNeovim(vim_input, event);
     }
 
