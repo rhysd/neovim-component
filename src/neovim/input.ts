@@ -2,6 +2,8 @@ import NeovimStore from './store';
 import {inputToNeovim, notifyFocusChanged} from './actions';
 import log from '../log';
 
+const OnDarwin = global.process.platform === 'darwin';
+
 export default class NeovimInput {
     element: HTMLInputElement;
     ime_running: boolean;      // XXX: Local state!
@@ -180,6 +182,18 @@ export default class NeovimInput {
             return;
         }
 
+        if (event.altKey && OnDarwin && this.store.mode === 'normal') {
+            // Note:
+            //
+            // In OS X, option + {key} sequences input special characters which can't be
+            // input with keyboard normally.  (e.g. option+a -> å)
+            // MacVim accepts the special characters only in insert mode, otherwise <A-x>
+            // is emitted.
+            //
+            this.inputToNeovim(NeovimInput.getVimInputFromKeyCode(event), event);
+            return;
+        }
+
         const input = event.key || NeovimInput.getVimInputFromKeyCode(event);
         this.inputToNeovim(input, event);
     }
@@ -187,7 +201,7 @@ export default class NeovimInput {
     inputToNeovim(input: string, event: Event) {
         this.store.dispatcher.dispatch(inputToNeovim(input));
 
-        log.info('Input to neovim: ' + JSON.stringify(input), input.length);
+        log.info('Input to neovim: ' + JSON.stringify(input));
 
         event.preventDefault();
         event.stopPropagation();
