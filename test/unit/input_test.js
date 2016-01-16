@@ -8,7 +8,6 @@ function keydownEvent(opts) {
     const o = opts || {};
     if (o.keyCode) {
         o.charCode = o.which = o.keyCode;
-        o.key = String.fromCharCode(o.keyCode);
     } else if (o.key) {
         o.keyCode = o.charCode = o.which = o.key.charCodeAt(0);
     } else {
@@ -86,13 +85,14 @@ describe('NeovimInput', () => {
 
             dispatchKeydown({key: '3', shiftKey: true});
             assert.equal(last_input, '');
+
+            dispatchKeydown({key: 'あ'});
+            assert.equal(last_input, '');
         });
 
         it('accepts input with ctrl key', () => {
-            assert.equal(inputByKeydown({key: 'a', ctrlKey: true}), '<C-a>');
-            assert.equal(inputByKeydown({key: '3', ctrlKey: true}), '<C-3>');
-            assert.equal(inputByKeydown({key: '[', ctrlKey: true}), '<C-[>');
-            assert.equal(inputByKeydown({key: '[', ctrlKey: true, shiftKey: true}), '<C-S-[>');
+            assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true}), '\u0001');  // <C-a>
+            assert.equal(inputByKeydown({key: '3', ctrlKey: true}), '3');
         });
 
         it('accepts input with alt key', () => {
@@ -124,6 +124,24 @@ describe('NeovimInput', () => {
             assert.equal(inputByKeydown({keyCode: 188, shiftKey: true}), '<LT>');
             assert.equal(inputByKeydown({keyCode: 188, ctrlKey: true, shiftKey: true}), '<C-LT>');
             assert.equal(inputByKeydown({keyCode: 188}), '');
+        });
+
+        it('handles <CR>, <Esc>, <BS> and <C-m>, <C-[>, <C-h> edge cases', () => {
+            assert.equal(inputByKeydown({key: 'Enter', keyCode: 13}), '<CR>');
+            assert.equal(inputByKeydown({key: 'Enter', keyCode: 77, ctrlKey: true}), '<C-m>');
+            assert.equal(inputByKeydown({key: 'Enter', keyCode: 13, ctrlKey: true}), '<C-CR>');
+
+            assert.equal(inputByKeydown({key: 'Escape', keyCode: 27}), '<Esc>');
+            assert.equal(inputByKeydown({key: 'Escape', keyCode: 219, ctrlKey: true}), '<C-[>');
+            assert.equal(inputByKeydown({key: 'Escape', keyCode: 27, ctrlKey: true}), '<C-Esc>');
+
+            assert.equal(inputByKeydown({key: 'Backspace', keyCode: 8}), '<BS>');
+            assert.equal(inputByKeydown({key: 'Backspace', keyCode: 72, ctrlKey: true}), '<C-h>');
+            assert.equal(inputByKeydown({key: 'Backspace', keyCode: 8, ctrlKey: true}), '<C-BS>');
+
+            assert.equal(inputByKeydown({key: 'Tab', keyCode: 9}), '<Tab>');
+            assert.equal(inputByKeydown({key: 'Tab', keyCode: 73, ctrlKey: true}), '<C-i>');
+            assert.equal(inputByKeydown({key: 'Tab', keyCode: 9, ctrlKey: true}), '<C-Tab>');
         });
     });
 
