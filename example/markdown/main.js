@@ -10,6 +10,9 @@ app.on('ready', function() {
         width: 1000,
         height: 600,
         useContentSize: true,
+        webPreferences: {
+            blinkFeatures: 'KeyboardEventKey'
+        }
     });
 
     win.on('closed', function() {
