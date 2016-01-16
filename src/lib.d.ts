@@ -13,3 +13,7 @@ interface ObjectConstructor {
 interface String {
     repeat(n: number): string;
 }
+
+interface KeyboardEvent {
+    code: string;
+}

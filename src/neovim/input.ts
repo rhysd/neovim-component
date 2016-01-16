@@ -14,8 +14,8 @@ export default class NeovimInput {
                altKey && keyCode === 18;
     }
 
-    static getVimSpecialChar(code: number, shift: boolean) {
-        switch (code) {
+    static getVimSpecialCharFromKeyCode(key_code: number, shift: boolean) {
+        switch (key_code) {
             case 0:   return 'Nul';
             case 8:   return 'BS';
             case 9:   return 'Tab';
@@ -52,6 +52,64 @@ export default class NeovimInput {
             case 188: return shift ? 'LT' : null;
             default:  return null;
         }
+    }
+
+    // Special key handling
+    // https://www.w3.org/TR/DOM-Level-3-Events-key/
+    static getVimSpecialCharFromKey(key: string) {
+        if (key.length === 1) {
+            return key === '<' ? 'LT' : null;
+        }
+
+        if (key[0] === 'F') {
+            // F1, F2, F3, ...
+            return /^F\d+/.test(key) ? key : null;
+        }
+
+        switch (key) {
+            case 'Escape':  return 'Esc';
+            case 'Backspace':   return 'BS';
+            case 'Tab':   return 'Tab';
+            case 'Enter':  return 'CR';  // Note: Should consider <NL>?
+            case 'PageUp':  return 'PageUp';
+            case 'PageDown':  return 'PageDown';
+            case 'End':  return 'End';
+            case 'Home':  return 'Home';
+            case 'ArrowLeft':  return 'Left';
+            case 'ArrowUp':  return 'Up';
+            case 'ArrowRight':  return 'Right';
+            case 'ArrowDown':  return 'Down';
+            case 'Insert':  return 'Insert';
+            case 'Delete':  return 'Del';
+            case 'Help':  return 'Help';
+            case '<': return 'LT';
+            case '': return 'Nul';
+            case 'Unidentified': return null;
+            default: return null;
+        }
+    }
+
+    static getVimSpecialChar(event: KeyboardEvent) {
+        if (event.key === undefined) {
+            return NeovimInput.getVimSpecialCharFromKeyCode(event.keyCode, event.shiftKey);
+        }
+        return NeovimInput.getVimSpecialCharFromKey(event.key);
+    }
+
+    static getVimInputFromKeyCode(event: KeyboardEvent) {
+        let vim_input = '<';
+        if (event.ctrlKey) {
+            vim_input += 'C-';
+        }
+        if (event.altKey) {
+            vim_input += 'A-';
+        }
+        // Note: <LT> is a special case where shift should not be handled.
+        if (event.shiftKey) {
+            vim_input += 'S-';
+        }
+        vim_input += String.fromCharCode(event.keyCode).toLowerCase() + '>';
+        return vim_input;
     }
 
     constructor(private store: NeovimStore) {
@@ -100,30 +158,36 @@ export default class NeovimInput {
             return;
         }
 
-        const special_char = NeovimInput.getVimSpecialChar(event.keyCode, event.shiftKey);
-        if (!special_char && NeovimInput.shouldIgnoreOnKeydown(event)) {
+        const special_char = NeovimInput.getVimSpecialChar(event);
+        if (special_char) {
+            let vim_input = '<';
+            if (event.ctrlKey) {
+                vim_input += 'C-';
+            }
+            if (event.altKey) {
+                vim_input += 'A-';
+            }
+            // Note: <LT> is a special case where shift should not be handled.
+            if (event.shiftKey && special_char !== 'LT') {
+                vim_input += 'S-';
+            }
+            vim_input += special_char + '>';
+            this.inputToNeovim(vim_input, event);
             return;
         }
 
-        let vim_input = '<';
-        if (event.ctrlKey) {
-            vim_input += 'C-';
+        if (NeovimInput.shouldIgnoreOnKeydown(event)) {
+            return;
         }
-        if (event.altKey) {
-            vim_input += 'A-';
-        }
-        // Note: <LT> is a special case where shift should not be handled.
-        if (event.shiftKey && special_char !== 'LT') {
-            vim_input += 'S-';
-        }
-        vim_input += (special_char || String.fromCharCode(event.keyCode).toLowerCase()) + '>';
-        this.inputToNeovim(vim_input, event);
+
+        const input = event.key || NeovimInput.getVimInputFromKeyCode(event);
+        this.inputToNeovim(input, event);
     }
 
     inputToNeovim(input: string, event: Event) {
         this.store.dispatcher.dispatch(inputToNeovim(input));
 
-        log.info('Input to neovim: ' + input);
+        log.info('Input to neovim: ' + JSON.stringify(input), input.length);
 
         event.preventDefault();
         event.stopPropagation();

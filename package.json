@@ -41,7 +41,7 @@
     "bower": "^1.7.1",
     "browserify": "^12.0.1",
     "chai": "^3.4.1",
-    "electron-prebuilt": "^0.35.1",
+    "electron-prebuilt": "^0.36.4",
     "jsdom": "^7.2.2",
     "mocha": "^2.3.4",
     "mocha-generators": "^1.2.0",
