@@ -244,8 +244,18 @@ export default class NeovimInput {
         }
 
         if (event.key) {
-            if (event.key !== 'Unidentified') {
-                this.inputToNeovim(event.key, event);
+            if (event.key.length === 1) {
+                let input = event.key;
+                if (event.altKey) {
+                    // Note:
+                    // KeyboardEvent.key considers Ctrl key and Shift key because
+                    // they're reflected to key code value.  But Alt key is not considered.
+                    // So we should care.
+                    input = `<A-${input}>`;
+                }
+                this.inputToNeovim(input, event);
+            } else {
+                log.warn("Invalid key input on 'keydown': ", event.key);
             }
         } else {
             this.inputToNeovim(NeovimInput.getVimInputFromKeyCode(event), event);
