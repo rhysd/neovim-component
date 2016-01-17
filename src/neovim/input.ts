@@ -65,7 +65,11 @@ export default class NeovimInput {
         const key = event.key;
 
         if (key.length === 1) {
-            return key === '<' ? 'LT' : null;
+            switch (key) {
+                case '<':            return 'LT';
+                case '\0':           return 'Nul';
+                default:             return null;
+            }
         }
 
         if (key[0] === 'F') {
@@ -116,21 +120,19 @@ export default class NeovimInput {
                     return 'CR';
                 }
             };
-            case 'PageUp': return 'PageUp';
-            case 'PageDown': return 'PageDown';
-            case 'End': return 'End';
-            case 'Home': return 'Home';
-            case 'ArrowLeft': return 'Left';
-            case 'ArrowUp': return 'Up';
-            case 'ArrowRight': return 'Right';
-            case 'ArrowDown': return 'Down';
-            case 'Insert': return 'Insert';
-            case 'Delete': return 'Del';
-            case 'Help': return 'Help';
-            case '<': return 'LT';
-            case '': return 'Nul';
+            case 'PageUp':       return 'PageUp';
+            case 'PageDown':     return 'PageDown';
+            case 'End':          return 'End';
+            case 'Home':         return 'Home';
+            case 'ArrowLeft':    return 'Left';
+            case 'ArrowUp':      return 'Up';
+            case 'ArrowRight':   return 'Right';
+            case 'ArrowDown':    return 'Down';
+            case 'Insert':       return 'Insert';
+            case 'Delete':       return 'Del';
+            case 'Help':         return 'Help';
             case 'Unidentified': return null;
-            default: return null;
+            default:             return null;
         }
     }
 
@@ -241,14 +243,19 @@ export default class NeovimInput {
             return;
         }
 
-        const input = event.key || NeovimInput.getVimInputFromKeyCode(event);
-        this.inputToNeovim(input, event);
+        if (event.key) {
+            if (event.key !== 'Unidentified') {
+                this.inputToNeovim(event.key, event);
+            }
+        } else {
+            this.inputToNeovim(NeovimInput.getVimInputFromKeyCode(event), event);
+        }
     }
 
     inputToNeovim(input: string, event: Event) {
         this.store.dispatcher.dispatch(inputToNeovim(input));
 
-        log.info('Input to neovim: ' + JSON.stringify(input));
+        log.info('Input to neovim:', JSON.stringify(input));
 
         event.preventDefault();
         event.stopPropagation();
