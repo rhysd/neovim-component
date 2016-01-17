@@ -108,8 +108,8 @@ describe('NeovimInput', () => {
                 assert.equal(inputByKeydown({key: 'a', ctrlKey: true, altKey: 'true'}), '<C-A-a>');
                 assert.equal(inputByKeydown({key: 'o', ctrlKey: true, altKey: 'true'}), '<C-A-o>');
             } else {
-                assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true, altKey: 'true'}), '<C-A-\u0001>');
-                assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true, altKey: 'true'}), '<C-A-\u000f>');
+                assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true, altKey: 'true'}), '<A-\u0001>');  // Ctrl is included in \u0001
+                assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true, altKey: 'true'}), '<A-\u000f>');  // Ctrl is included in \u000f
             }
         });
 
