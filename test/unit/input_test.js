@@ -8,7 +8,7 @@ function keydownEvent(opts) {
     const o = opts || {};
     if (o.keyCode) {
         o.charCode = o.which = o.keyCode;
-    } else if (o.key) {
+    } else if (o.key !== undefined) {
         o.keyCode = o.charCode = o.which = o.key.charCodeAt(0);
     } else {
         throw 'Invalid options for KeyboardEvent';
@@ -92,38 +92,40 @@ describe('NeovimInput', () => {
 
         it('accepts input with ctrl key', () => {
             assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true}), '\u0001');  // <C-a>
+            assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true}), '\u000f');  // <C-o>
+            // Note: Ctrl key input is omitted in many Ctrl+{number} or Ctrl+{sign} sequences.
             assert.equal(inputByKeydown({key: '3', ctrlKey: true}), '3');
         });
 
         it('accepts input with alt key', () => {
             assert.equal(inputByKeydown({key: ',', altKey: true}), '<A-,>');
-            // assert.equal(inputByKeydown('r', {altKey: true}), '<A-r>');
+            assert.equal(inputByKeydown({key: 'r', altKey: true}), '<A-r>');
             assert.equal(inputByKeydown({key: '4', altKey: true}), '<A-4>');
-            // assert.equal(inputByKeydown('.', {altKey: true, shiftKey: true}), '<A-S-.>');
         });
 
-        it('accepts input with alt and ctrl key', () => {
-            assert.equal(inputByKeydown({key: ',', altKey: true, ctrlKey: true}), '<C-A-,>');
-            assert.equal(inputByKeydown({key: 'a', altKey: true, ctrlKey: true}), '<C-A-a>');
-            assert.equal(inputByKeydown({key: 'a', altKey: true, ctrlKey: true, shiftKey: true}), '<C-A-S-a>');
+        it('accepts input with alt+ctrl keys', () => {
+            if (process.platform === 'darwin') {
+                assert.equal(inputByKeydown({key: 'a', ctrlKey: true, altKey: 'true'}), '<C-A-a>');
+                assert.equal(inputByKeydown({key: 'o', ctrlKey: true, altKey: 'true'}), '<C-A-o>');
+            } else {
+                assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true, altKey: 'true'}), '<C-A-\u0001>');
+                assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true, altKey: 'true'}), '<C-A-\u000f>');
+            }
         });
 
         it('accepts special keys', () => {
-            assert.equal(inputByKeydown({keyCode: 9}), '<Tab>');
-            assert.equal(inputByKeydown({keyCode: 9, altKey: true}), '<A-Tab>');
-            assert.equal(inputByKeydown({keyCode: 9, ctrlKey: true, shiftKey: true}), '<C-S-Tab>');
-            assert.equal(inputByKeydown({keyCode: 13}), '<CR>');
-            assert.equal(inputByKeydown({keyCode: 13, altKey: true}), '<A-CR>');
-            assert.equal(inputByKeydown({keyCode: 13, ctrlKey: true, shiftKey: true}), '<C-S-CR>');
-            assert.equal(inputByKeydown({keyCode: 37}), '<Left>');
-            assert.equal(inputByKeydown({keyCode: 37, altKey: true}), '<A-Left>');
-            assert.equal(inputByKeydown({keyCode: 37, ctrlKey: true, shiftKey: true}), '<C-S-Left>');
-            assert.equal(inputByKeydown({keyCode: 92}), '<Bslash>');
-            assert.equal(inputByKeydown({keyCode: 92, altKey: true}), '<A-Bslash>');
-            assert.equal(inputByKeydown({keyCode: 92, ctrlKey: true, shiftKey: true}), '<C-S-Bslash>');
-            assert.equal(inputByKeydown({keyCode: 188, shiftKey: true}), '<LT>');
-            assert.equal(inputByKeydown({keyCode: 188, ctrlKey: true, shiftKey: true}), '<C-LT>');
-            assert.equal(inputByKeydown({keyCode: 188}), '');
+            assert.equal(inputByKeydown({key: 'Tab'}), '<Tab>');
+            assert.equal(inputByKeydown({key: 'Tab', altKey: true}), '<A-Tab>');
+            assert.equal(inputByKeydown({key: 'Tab', ctrlKey: true, shiftKey: true}), '<C-S-Tab>');
+            assert.equal(inputByKeydown({key: 'Enter'}), '<CR>');
+            assert.equal(inputByKeydown({key: 'Enter', altKey: true}), '<A-CR>');
+            assert.equal(inputByKeydown({key: 'Enter', ctrlKey: true, shiftKey: true}), '<C-S-CR>');
+            assert.equal(inputByKeydown({key: 'ArrowLeft'}), '<Left>');
+            assert.equal(inputByKeydown({key: 'ArrowLeft', altKey: true}), '<A-Left>');
+            assert.equal(inputByKeydown({key: 'ArrowLeft', ctrlKey: true, shiftKey: true}), '<C-S-Left>');
+            assert.equal(inputByKeydown({key: '<', shiftKey: true}), '<LT>');
+            assert.equal(inputByKeydown({key: '<', ctrlKey: true, shiftKey: true}), '<C-LT>');
+            assert.equal(inputByKeydown({key: '\0'}), '<Nul>');
         });
 
         it('handles <CR>, <Esc>, <BS> and <C-m>, <C-[>, <C-h> edge cases', () => {
