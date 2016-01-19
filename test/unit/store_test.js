@@ -559,7 +559,7 @@ describe('NeovimStore', () => {
             assert.isFalse(wheeled, 'wheel-scrolled event must not be fired while mouse disabled');
         });
 
-        it('handles set_icon event', () => {
+        it('accepts line_height changing event', () => {
             const s = new NeovimStore();
 
             var flag = false;
