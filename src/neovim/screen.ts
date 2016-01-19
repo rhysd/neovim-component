@@ -72,7 +72,7 @@ export default class NeovimScreen {
     }
 
     changeFontSize(specified_px: number) {
-        const drawn_px = specified_px * this.pixel_ratio
+        const drawn_px = specified_px * this.pixel_ratio;
         this.ctx.font = drawn_px + 'px ' + this.store.font_attr.face;
         const font_width = this.ctx.measureText('m').width;
         const font_height = font_width * 2;
@@ -160,14 +160,16 @@ export default class NeovimScreen {
 
         // Draw background
         this.drawBlock(line, col, 1, chars.length, bg);
+        const font_size = specified_px * this.pixel_ratio;
 
         // TODO: Consider font attributes (e.g. underline, bold, ...)
-        this.ctx.font = (specified_px * this.pixel_ratio) + 'px ' + face;
+        this.ctx.font = font_size + 'px ' + face;
         this.ctx.textBaseline = 'top';
         this.ctx.fillStyle = fg;
         const text = chars.map(c => (c[0] || '')).join('');
         const x = col * draw_width;
-        const y = line * draw_height;
+        const margin = (draw_height - font_size) / 2;
+        const y = line * draw_height - margin;  // Note: Considering line-height.
         this.ctx.fillText(text, x, y);
         log.debug(`drawText(): (${x}, ${y})`, text, this.store.cursor);
     }
