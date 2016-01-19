@@ -266,6 +266,7 @@ export class NeovimScreen {
     resizeWithPixels(width_px: number, height_px: number): void;
     resize(lines: number, cols: number): void;
     changeFontSize(specified_px: number): void;
+    changeLineHeight(new_value: number): void;
     scroll(cols_delta: number): void;
     focus(): void;
     clearAll(): void;

@@ -101,6 +101,10 @@ export default class NeovimScreen {
         this.resizeWithPixels(width, height);
     }
 
+    changeLineHeight(new_value: number) {
+        this.store.dispatcher.dispatch(A.updateLineHeight(new_value));
+    }
+
     // Note:
     //  cols_delta > 0 -> screen up
     //  cols_delta < 0 -> screen down
