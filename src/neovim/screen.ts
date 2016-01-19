@@ -20,6 +20,10 @@ export default class NeovimScreen {
         // Note: 'update-bg' clears all texts in screen.
         this.store.on('update-bg', this.clearAll.bind(this));
         this.store.on('screen-scrolled', this.scroll.bind(this));
+        this.store.on(
+            'line-height-changed',
+            () => this.changeFontSize(this.store.font_attr.specified_px)
+        );
 
         this.changeFontSize(this.store.font_attr.specified_px);
 
@@ -75,7 +79,15 @@ export default class NeovimScreen {
         const drawn_px = specified_px * this.pixel_ratio;
         this.ctx.font = drawn_px + 'px ' + this.store.font_attr.face;
         const font_width = this.ctx.measureText('m').width;
-        const font_height = font_width * 2;
+        // Note:
+        // Line height of <canvas> is fixed to 1.2 (normal).
+        // If the specified line height is not 1.2, we should calculate
+        // the line height manually.
+        const font_height =
+            this.store.line_height === 1.2 ?
+                font_width * 2 :
+                drawn_px * this.store.line_height;
+        console.log('changeFontSize: ', drawn_px, font_height);
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
         this.store.dispatcher.dispatch(
             A.updateFontSize(
@@ -168,8 +180,14 @@ export default class NeovimScreen {
         this.ctx.fillStyle = fg;
         const text = chars.map(c => (c[0] || '')).join('');
         const x = col * draw_width;
-        const margin = (draw_height - font_size) / 2;
-        const y = line * draw_height - margin;  // Note: Considering line-height.
+        // Note:
+        // Line height of <canvas> is fixed to 1.2 (normal).
+        // If the specified line height is not 1.2, we should calculate
+        // the difference of margin-bottom of text.
+        const y =
+            this.store.line_height === 1.2 ?
+                line * draw_height :
+                line * draw_height + (font_size * (this.store.line_height - 1.2) / 2);
         this.ctx.fillText(text, x, y);
         log.debug(`drawText(): (${x}, ${y})`, text, this.store.cursor);
     }

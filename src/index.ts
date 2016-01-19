@@ -14,6 +14,10 @@ Polymer({
             type: String,
             value: 'monospace',
         },
+        lineHeight: {
+            type: Number,
+            value: 1.2,
+        },
         nvimCmd: {
             type: String,
             value: 'nvim',
@@ -32,7 +36,8 @@ Polymer({
                 this.nvimCmd,
                 this.argv,
                 this.font,
-                this.fontSize
+                this.fontSize,
+                this.lineHeight
             );
 
         if (this.onQuit) {

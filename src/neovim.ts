@@ -2,7 +2,7 @@ import {EventEmitter} from 'events';
 import Process from './neovim/process';
 import Screen from './neovim/screen';
 import NeovimStore from './neovim/store';
-import {updateFontPx, updateFontFace, updateScreenSize} from './neovim/actions';
+import {updateFontPx, updateFontFace, updateScreenSize, updateLineHeight} from './neovim/actions';
 import {Nvim} from 'promised-neovim-client';
 
 export default class Neovim extends EventEmitter {
@@ -14,11 +14,13 @@ export default class Neovim extends EventEmitter {
             command: string,
             argv: string[],
             font: string,
-            font_size: number
+            font_size: number,
+            line_height: number
     ) {
         super();
 
         this.store = new NeovimStore();
+        this.store.dispatcher.dispatch(updateLineHeight(line_height));
         this.store.dispatcher.dispatch(updateFontFace(font));
         this.store.dispatcher.dispatch(updateFontPx(font_size));
 

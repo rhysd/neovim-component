@@ -48,6 +48,7 @@ describe('NeovimStore', () => {
                 bottom: 0
             });
             assert.isTrue(s.focused);
+            assert.equal(s.line_height, 1.2);
         });
     });
 
