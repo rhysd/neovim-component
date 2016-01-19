@@ -16,7 +16,7 @@ Polymer({
         },
         lineHeight: {
             type: Number,
-            value: 1.2,
+            value: 1.3,
         },
         nvimCmd: {
             type: String,
