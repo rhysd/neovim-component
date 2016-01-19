@@ -90,15 +90,16 @@ Vim has very powerful features for editing.  But Vim is an editor (see `:help de
 
 You can customize `<neovim-editor>` with its properties.
 
-| Name        | Description                           | Default       |
-| ----------- | ------------------------------------- | ------------- |
-| `width`     | Width of editor in pixel.             | `null`        |
-| `height`    | Height of editor in pixel.            | `null`        |
-| `font`      | Face name of font.                    | `"monospace"` |
-| `font-size` | Font size in pixel.                   | `12`          |
-| `nvim-cmd`  | Command to start Neovim.              | `"nvim"`      |
-| `argv`      | Arguments passed to Neovim command.   | `[]`          |
-| `on-quit`   | Callback function on Neovim quitting. | `null`        |
+| Name          | Description                           | Default       |
+| ------------- | ------------------------------------- | ------------- |
+| `width`       | Width of editor in pixel.             | `null`        |
+| `height`      | Height of editor in pixel.            | `null`        |
+| `font`        | Face name of font.                    | `"monospace"` |
+| `font-size`   | Font size in pixel.                   | `12`          |
+| `line-height` | Line height rate against font size.   | `1.3`         |
+| `nvim-cmd`    | Command to start Neovim.              | `"nvim"`      |
+| `argv`        | Arguments passed to Neovim command.   | `[]`          |
+| `on-quit`     | Callback function on Neovim quitting. | `null`        |
 
 
 ## `<neovim-editor>` APIs

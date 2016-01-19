@@ -266,6 +266,7 @@ export class NeovimScreen {
     resizeWithPixels(width_px: number, height_px: number): void;
     resize(lines: number, cols: number): void;
     changeFontSize(specified_px: number): void;
+    changeLineHeight(new_value: number): void;
     scroll(cols_delta: number): void;
     focus(): void;
     clearAll(): void;
@@ -311,6 +312,7 @@ export class NeovimStore extends EventEmitter {
     size: Size;
     focused: boolean;
     font_attr: FontAttributes;
+    line_height: number;
     fg_color: string;
     bg_color: string;
     cursor: Cursor;
@@ -329,7 +331,7 @@ export class Neovim extends EventEmitter {
     process: NeovimProcess;
     screen: NeovimScreen;
     store: NeovimStore;
-    constructor(command: string, argv: string[], font: string, font_size: number);
+    constructor(command: string, argv: string[], font: string, font_size: number, line_height: number);
     attachCanvas(width: number, height: number, canvas: HTMLCanvasElement): void;
     quit(): void;
     getClient(): Nvim;
@@ -343,6 +345,7 @@ export class NeovimElement extends HTMLElement {
     height: number;
     fontSize: number;
     font: string;
+    lineHeight: number;
     nvimCmd: string;
     argv: string[];
     onProcessAttached: () => void;

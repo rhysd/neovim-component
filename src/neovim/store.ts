@@ -70,6 +70,7 @@ export default class NeovimStore extends EventEmitter {
     scroll_region: Region;
     dispatcher: Dispatcher<ActionType>;
     focused: boolean;
+    line_height: number;
 
     constructor() {
         super();
@@ -112,6 +113,7 @@ export default class NeovimStore extends EventEmitter {
             bottom: 0,
         };
         this.focused = true;
+        this.line_height = 1.2;
         this.dispatch_token = this.dispatcher.register(this.receiveAction.bind(this));
     }
 
@@ -293,6 +295,16 @@ export default class NeovimStore extends EventEmitter {
                 }
                 break;
             }
+            case Kind.WheelScroll: {
+                if (this.mouse_enabled) {
+                    const input = this.wheel_scrolling.handleEvent(action.event as WheelEvent);
+                    if (input) {
+                        this.emit('input', input);
+                        this.emit('wheel-scrolled');
+                    }
+                }
+                break;
+            }
             case Kind.Bell: {
                 this.emit(action.visual ? 'visual-bell' : 'beep');
                 break;
@@ -309,13 +321,11 @@ export default class NeovimStore extends EventEmitter {
                 log.info(`Icon is set to '${this.icon_path}'`);
                 break;
             }
-            case Kind.WheelScroll: {
-                if (this.mouse_enabled) {
-                    const input = this.wheel_scrolling.handleEvent(action.event as WheelEvent);
-                    if (input) {
-                        this.emit('input', input);
-                        this.emit('wheel-scrolled');
-                    }
+            case Kind.UpdateLineHeight: {
+                if (this.line_height !== action.line_height) {
+                    this.line_height = action.line_height;
+                    this.emit('line-height-changed');
+                    log.info(`Line height is changed to '${this.line_height}'`);
                 }
                 break;
             }

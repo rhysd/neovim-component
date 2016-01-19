@@ -43,6 +43,7 @@ export enum Kind {
     UpdateFontFace,
     UpdateFontPx,
     UpdateFontSize,
+    UpdateLineHeight,
     UpdateScreenBounds,
     UpdateScreenSize,
     WheelScroll,
@@ -65,6 +66,7 @@ export interface ActionType {
     icon_path?: string;
     input?: string;
     line?: number;
+    line_height?: number;
     lines?: number;
     mode?: string;
     region?: Region;
@@ -304,3 +306,12 @@ export function notifyFocusChanged(focused: boolean) {
         focused,
     };
 }
+
+export function updateLineHeight(line_height: number) {
+    'use strict';
+    return {
+        type: Kind.UpdateLineHeight,
+        line_height,
+    };
+}
+

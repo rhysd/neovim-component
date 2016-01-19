@@ -48,6 +48,7 @@ describe('NeovimStore', () => {
                 bottom: 0
             });
             assert.isTrue(s.focused);
+            assert.equal(s.line_height, 1.2);
         });
     });
 
@@ -557,5 +558,23 @@ describe('NeovimStore', () => {
             s.dispatcher.dispatch(A.wheelScroll(wheel));
             assert.isFalse(wheeled, 'wheel-scrolled event must not be fired while mouse disabled');
         });
+
+        it('handles set_icon event', () => {
+            const s = new NeovimStore();
+
+            var flag = false;
+            s.on('line-height-changed', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.updateLineHeight(1.5));
+            assert.isTrue(flag, 'line-height-changed event was not fired');
+            assert.equal(s.line_height, 1.5);
+
+            flag = false;
+            s.dispatcher.dispatch(A.updateLineHeight(1.5));
+            assert.isFalse(flag, 'line-height-changed event was fired although line height value is not changed');
+            assert.equal(s.line_height, 1.5);
+        });
+
     });
 });
