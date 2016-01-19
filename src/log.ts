@@ -1,7 +1,7 @@
 export const NODE_ENV = (() => {
     try {
         return global.require('remote').process.env.NODE_ENV;
-    } catch(e) {
+    } catch (e) {
         return 'production';
     }
 })();
