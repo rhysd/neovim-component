@@ -78,12 +78,16 @@ export default class NeovimScreen {
     changeFontSize(specified_px: number) {
         const drawn_px = specified_px * this.pixel_ratio;
         this.ctx.font = drawn_px + 'px ' + this.store.font_attr.face;
+        const font_width = this.ctx.measureText('m').width;
         // Note:
         // Line height of <canvas> is fixed to 1.2 (normal).
         // If the specified line height is not 1.2, we should calculate
         // the line height manually.
-        const font_width = drawn_px * 1.2 / 2;  // Monospace is assumed
-        const font_height = drawn_px * this.store.line_height;
+        const font_height =
+            this.store.line_height === 1.2 ?
+                font_width * 2 :
+                drawn_px * this.store.line_height;
+        console.log('changeFontSize: ', drawn_px, font_height);
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
         this.store.dispatcher.dispatch(
             A.updateFontSize(
@@ -199,7 +203,7 @@ export default class NeovimScreen {
         // Line height of <canvas> is fixed to 1.2 (normal).
         // If the specified line height is not 1.2, we should calculate
         // the difference of margin-bottom of text.
-        const margin = font_size * (this.store.line_height - 1.2) / 2;
+        const margin = (font_size * (this.store.line_height - 1.2) / 2);
         const y = line * draw_height + margin;
         this.ctx.fillText(text, x, y);
         if (underline) {
@@ -210,6 +214,7 @@ export default class NeovimScreen {
             this.ctx.moveTo(x, underline_y);
             this.ctx.lineTo(x + draw_width * text.length, underline_y);
             this.ctx.stroke();
+            console.log(`underline: (${x},${y}) -> (${x + draw_width * text.length},${y}): "${text}"`);
         }
         log.debug(`drawText(): (${x}, ${y})`, text, this.store.cursor);
     }

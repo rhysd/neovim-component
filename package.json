@@ -1,6 +1,6 @@
 {
   "name": "neovim-component",
-  "version": "0.3.5",
+  "version": "0.3.4",
   "description": "Polymer component for Neovim frontend",
   "main": "example/minimal/main.js",
   "bin": {
