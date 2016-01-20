@@ -172,14 +172,29 @@ export default class NeovimScreen {
 
     private drawText(chars: string[][]) {
         const {line, col} = this.store.cursor;
-        const {fg, bg, draw_width, draw_height, face, specified_px} = this.store.font_attr;
+        const {
+            fg, bg,
+            draw_width,
+            draw_height,
+            face,
+            specified_px,
+            bold,
+            italic,
+            underline,
+        } = this.store.font_attr;
 
         // Draw background
         this.drawBlock(line, col, 1, chars.length, bg);
         const font_size = specified_px * this.pixel_ratio;
 
-        // TODO: Consider font attributes (e.g. underline, bold, ...)
-        this.ctx.font = font_size + 'px ' + face;
+        let attrs = '';
+        if (bold) {
+            attrs += 'bold ';
+        }
+        if (italic) {
+            attrs += 'italic ';
+        }
+        this.ctx.font = attrs + font_size + 'px ' + face;
         this.ctx.textBaseline = 'top';
         this.ctx.fillStyle = fg;
         const text = chars.map(c => (c[0] || '')).join('');
@@ -188,11 +203,19 @@ export default class NeovimScreen {
         // Line height of <canvas> is fixed to 1.2 (normal).
         // If the specified line height is not 1.2, we should calculate
         // the difference of margin-bottom of text.
-        const y =
-            this.store.line_height === 1.2 ?
-                line * draw_height :
-                line * draw_height + (font_size * (this.store.line_height - 1.2) / 2);
+        const margin = (font_size * (this.store.line_height - 1.2) / 2);
+        const y = line * draw_height + margin;
         this.ctx.fillText(text, x, y);
+        if (underline) {
+            this.ctx.strokeStyle = fg;
+            this.ctx.lineWidth = 1 * this.pixel_ratio;
+            this.ctx.beginPath();
+            const underline_y = y + draw_height - 2 * this.pixel_ratio;
+            this.ctx.moveTo(x, underline_y);
+            this.ctx.lineTo(x + draw_width * text.length, underline_y);
+            this.ctx.stroke();
+            console.log(`underline: (${x},${y}) -> (${x + draw_width * text.length},${y}): "${text}"`);
+        }
         log.debug(`drawText(): (${x}, ${y})`, text, this.store.cursor);
     }
 
