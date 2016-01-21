@@ -29,6 +29,7 @@ Polymer({
         editor: Object,
         onProcessAttached: Object,
         onQuit: Object,
+        resizeHandler: Object,
     },
 
     ready: function() {
@@ -39,6 +40,7 @@ Polymer({
                 this.fontSize,
                 this.lineHeight
             );
+        this.resizeHandler = null;
 
         if (this.onQuit) {
             this.editor.on('quit', this.onQuit);
@@ -55,7 +57,16 @@ Polymer({
         const height = this.height || canvas.parentElement.offsetHeight;
         this.editor.attachCanvas(width, height, canvas);
         this.resize_listener = window.addEventListener('resize', () => {
-            this.editor.screen.checkShouldResize();
+            if (this.resizeHandler !== null) {
+                clearTimeout(this.resizeHandler);
+            }
+            this.resizeHandler = setTimeout(
+                    () => {
+                        this.editor.screen.checkShouldResize();
+                        this.resizeHandler = null;
+                    },
+                    100
+                );
         });
     },
 
