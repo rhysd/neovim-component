@@ -20,6 +20,7 @@
     "dep": "npm install && $(npm bin)/bower install && $(npm bin)/tsd install && mkdir -p $(npm prefix)/build",
     "example": "$(npm bin)/electron .",
     "lint": "$(npm bin)/tslint $(git ls-files | grep -E \"\\.ts$\")",
+    "watch": "guard --watchdir \"$(npm prefix)/src\" \"$(npm prefix)/test\"",
     "test": "$(npm bin)/mocha test/unit/ test/e2e/"
   },
   "keywords": [
