@@ -1,0 +1,10 @@
+{
+  "ambientDependencies": {
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#fa04c80f4a889613b96cb4f283848c61a9f64233",
+    "polymer": "github:DefinitelyTyped/DefinitelyTyped/polymer/polymer.d.ts#fa04c80f4a889613b96cb4f283848c61a9f64233",
+    "webcomponents.js": "github:DefinitelyTyped/DefinitelyTyped/webcomponents.js/webcomponents.js.d.ts#fa04c80f4a889613b96cb4f283848c61a9f64233",
+    "es6-promise": "github:DefinitelyTyped/DefinitelyTyped/es6-promise/es6-promise.d.ts#fa04c80f4a889613b96cb4f283848c61a9f64233",
+    "flux": "github:DefinitelyTyped/DefinitelyTyped/flux/flux.d.ts#ba424f7ee39717d51c17699a09ac8df312a7e9a1",
+    "loglevel": "github:DefinitelyTyped/DefinitelyTyped/loglevel/loglevel.d.ts#fb2b3b1e068c9ff7d8f9b0851c08d37d96c95c38"
+  }
+}
