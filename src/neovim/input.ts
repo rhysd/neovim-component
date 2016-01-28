@@ -265,7 +265,7 @@ export default class NeovimInput {
     inputToNeovim(input: string, event: Event) {
         this.store.dispatcher.dispatch(inputToNeovim(input));
 
-        log.info('Input to neovim:', JSON.stringify(input));
+        log.debug('Input to neovim:', JSON.stringify(input));
 
         event.preventDefault();
         event.stopPropagation();
