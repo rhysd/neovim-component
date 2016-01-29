@@ -14,14 +14,14 @@
     "url": "https://github.com/rhysd/neovim-component/issues"
   },
   "scripts": {
-    "all": "npm run dep && npm run build && npm run example",
-    "build": "$(npm bin)/tsc -p src && $(npm bin)/browserify -o build/index.js src/out/index.js",
-    "debug": "NODE_ENV=debug $(npm bin)/electron .",
-    "dep": "npm install && $(npm bin)/bower install && $(npm bin)/typings install && mkdir -p $(npm prefix)/build",
-    "example": "$(npm bin)/electron .",
-    "lint": "$(npm bin)/tslint $(git ls-files | grep -E \"\\.ts$\")",
-    "watch": "guard --watchdir \"$(npm prefix)/src\" \"$(npm prefix)/test\"",
-    "test": "$(npm bin)/mocha test/unit/ test/e2e/"
+    "all":     "npm run dep && npm run build && npm run example",
+    "build":   "tsc -p src && browserify -o build/index.js src/out/index.js",
+    "debug":   "NODE_ENV=debug electron .",
+    "dep":     "npm install && bower install && typings install && mkdir -p $(npm prefix)/build",
+    "example": "electron .",
+    "lint":    "tslint $(git ls-files | grep -E \"\\.ts$\")",
+    "watch":   "cd \"$(npm prefix)\" && guard --watchdir src test",
+    "test":    "cd \"$(npm prefix)\" && mocha test/unit/ test/e2e/"
   },
   "keywords": [
     "neovim",
