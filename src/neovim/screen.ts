@@ -213,13 +213,15 @@ export default class NeovimScreen {
         // If the specified line height is not 1.2, we should calculate
         // the difference of margin-bottom of text.
         const margin = font_size * (this.store.line_height - 1.2) / 2;
-        const y = line * draw_height + margin;
+        const y = Math.floor(line * draw_height + margin);
         this.ctx.fillText(text, x, y);
         if (underline) {
             this.ctx.strokeStyle = fg;
             this.ctx.lineWidth = 1 * this.pixel_ratio;
             this.ctx.beginPath();
-            const underline_y = y + draw_height - 2 * this.pixel_ratio;
+            // Note:
+            // 3 is set with considering the width of line.
+            const underline_y = y + draw_height - 3 * this.pixel_ratio;
             this.ctx.moveTo(x, underline_y);
             this.ctx.lineTo(x + draw_width * text.length, underline_y);
             this.ctx.stroke();
