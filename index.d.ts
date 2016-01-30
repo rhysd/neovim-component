@@ -350,4 +350,5 @@ export class NeovimElement extends HTMLElement {
     argv: string[];
     onProcessAttached: () => void;
     onQuit: () => void;
+    onError: (err: Error) => void;
 }

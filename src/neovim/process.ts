@@ -25,14 +25,31 @@ export default class NeovimProcess {
     client: NvimClient.Nvim;
     started: boolean;
 
-    constructor(private store: NeovimStore, public command: string, public argv: string[]) {
+    constructor(
+        private store: NeovimStore,
+        public command: string,
+        public argv: string[]
+    ) {
         this.started = false;
         this.argv.push('--embed');
     }
 
     attach(lines: number, columns: number) {
-        this.neovim_process = child_process.spawn(this.command, this.argv, {stdio: ['pipe', 'pipe', process.stderr]});
+        let err: Error = null;
         this.client = null;
+
+        this.neovim_process
+            = child_process.spawn(
+                this.command,
+                this.argv,
+                {stdio: ['pipe', 'pipe', process.stderr]}
+            );
+        this.neovim_process.on('error', (e: Error) => { err = e; });
+
+        if (err || this.neovim_process.pid === undefined) {
+            return Promise.reject(err || new Error('Failed to spawn process: ' + this.command));
+        }
+
         return attach(this.neovim_process.stdin, this.neovim_process.stdout)
             .then(nvim => {
                 this.client = nvim;
@@ -44,7 +61,7 @@ export default class NeovimProcess {
                 log.info(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
                 this.store.on('input', (i: string) => nvim.input(i));
                 this.store.on('update-screen-bounds', () => nvim.uiTryResize(this.store.size.cols, this.store.size.lines));
-            }).catch(err => log.error(err));
+            });
     }
 
     onRequested(method: string, args: RPCValue[], response: RPCValue) {

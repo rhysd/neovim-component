@@ -29,6 +29,7 @@ Polymer({
         editor: Object,
         onProcessAttached: Object,
         onQuit: Object,
+        onError: Object,
         resizeHandler: Object,
     },
 
@@ -41,6 +42,10 @@ Polymer({
                 this.lineHeight
             );
         this.resizeHandler = null;
+
+        if (this.onError) {
+            this.editor.on('error', this.onError);
+        }
 
         if (this.onQuit) {
             this.editor.on('quit', this.onQuit);

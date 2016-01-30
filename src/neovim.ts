@@ -36,7 +36,7 @@ export default class Neovim extends EventEmitter {
             .then(() => {
                 this.process.client.on('disconnect', () => this.emit('quit'));
                 this.emit('process-attached');
-            });
+            }).catch(err => this.emit('error', err));
     }
 
     quit() {

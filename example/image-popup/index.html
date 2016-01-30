@@ -35,6 +35,8 @@
     var remote = require('electron').remote;
     var tooltip = document.getElementById('tooltip');
 
+    editor.on('error', function(err){ alert(err.message); });
+
     // Note: Callback on Neovim process attached
     editor.on('process-attached', function() {
       if (remote.process.argv.length > 2) {

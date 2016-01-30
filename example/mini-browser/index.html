@@ -56,6 +56,8 @@
 
     browser.didShow = resize;
 
+    editor.on('error', function(err){ alert(err.message); });
+
     // Note: Callback on Neovim process attached
     editor.on('process-attached', function() {
       if (remote.process.argv.length > 2) {

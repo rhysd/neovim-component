@@ -28,6 +28,7 @@
     var electron = require('electron');
     var remote = electron.remote;
     var shell = electron.shell;
+    editor.on('error', function(err){ alert(err.message); });
     editor.on('process-attached', function() {
       if (remote.process.argv.length > 2) {
         editor.setArgv(remote.process.argv.slice(2)); // It is better to use 'argv' property.
