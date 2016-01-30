@@ -100,6 +100,7 @@ You can customize `<neovim-editor>` with its properties.
 | `nvim-cmd`    | Command to start Neovim.              | `"nvim"`      |
 | `argv`        | Arguments passed to Neovim command.   | `[]`          |
 | `on-quit`     | Callback function on Neovim quitting. | `null`        |
+| `on-error`    | Callback function on error in Neovim. | `null`        |
 
 
 ## `<neovim-editor>` APIs
@@ -185,6 +186,9 @@ neovim_element.editor.on('quit', () => console.log('Neovim process died'));
 
 // Called when <neovim-component> is detached
 neovim_element.editor.on('detach', () => console.log('Element does not exist in DOM.'));
+
+// Called when internal process causes some errors
+neovim_element.editor.on('error', err => alert(err.message));
 ```
 
 
