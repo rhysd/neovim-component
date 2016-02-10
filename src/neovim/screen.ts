@@ -3,6 +3,7 @@ import * as A from './actions';
 import Cursor from './cursor';
 import Input from './input';
 import log from '../log';
+import {checkHighSurrogate} from 'surrogate-pair';
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
@@ -179,6 +180,28 @@ export default class NeovimScreen {
         }
     }
 
+    private drawChars(x: number, y: number, chars: string, width: number) {
+        let i = 0;
+        const len = chars.length;
+        while (i < len) {
+            const char = chars[i];
+            const char_code = char.charCodeAt(0);
+            if (checkHighSurrogate(char_code)) {
+                // Note:
+                // Combine surrogate pair chars (e.g. 𠮟, 🐶)
+                const pair = char + chars[i + 1];
+                this.ctx.fillText(pair, x, y);
+                x += 2 * width;
+                i += 2;
+            } else {
+                this.ctx.fillText(char, x, y);
+                const char_len = char_code > 0xff ? 2 : 1;
+                x += char_len * width;
+                i += 1;
+            }
+        }
+    }
+
     private drawText(chars: string[][]) {
         const {line, col} = this.store.cursor;
         const {
@@ -207,14 +230,14 @@ export default class NeovimScreen {
         this.ctx.textBaseline = 'top';
         this.ctx.fillStyle = fg;
         const text = chars.map(c => (c[0] || '')).join('');
-        const x = col * draw_width;
         // Note:
         // Line height of <canvas> is fixed to 1.2 (normal).
         // If the specified line height is not 1.2, we should calculate
         // the difference of margin-bottom of text.
         const margin = font_size * (this.store.line_height - 1.2) / 2;
         const y = Math.floor(line * draw_height + margin);
-        this.ctx.fillText(text, x, y);
+        const x = col * draw_width;
+        this.drawChars(x, y, text, draw_width);
         if (underline) {
             this.ctx.strokeStyle = fg;
             this.ctx.lineWidth = 1 * this.pixel_ratio;

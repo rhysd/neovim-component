@@ -14,14 +14,14 @@
     "url": "https://github.com/rhysd/neovim-component/issues"
   },
   "scripts": {
-    "all":     "npm run dep && npm run build && npm run example",
-    "build":   "tsc -p src && browserify -o build/index.js src/out/index.js",
-    "debug":   "NODE_ENV=debug electron .",
-    "dep":     "npm install && bower install && typings install && mkdir -p $(npm prefix)/build",
+    "all": "npm run dep && npm run build && npm run example",
+    "build": "tsc -p src && browserify -o build/index.js src/out/index.js",
+    "debug": "NODE_ENV=debug electron .",
+    "dep": "npm install && bower install && typings install && mkdir -p $(npm prefix)/build",
     "example": "electron .",
-    "lint":    "tslint $(git ls-files | grep -E \"\\.ts$\")",
-    "watch":   "cd \"$(npm prefix)\" && guard --watchdir src test",
-    "test":    "cd \"$(npm prefix)\" && mocha test/unit/ test/e2e/"
+    "lint": "tslint $(git ls-files | grep -E \"\\.ts$\")",
+    "watch": "cd \"$(npm prefix)\" && guard --watchdir src test",
+    "test": "cd \"$(npm prefix)\" && mocha test/unit/ test/e2e/"
   },
   "keywords": [
     "neovim",
@@ -36,7 +36,8 @@
   "dependencies": {
     "flux": "^2.1.1",
     "loglevel": "^1.4.0",
-    "promised-neovim-client": "^1.0.0"
+    "promised-neovim-client": "^1.0.0",
+    "surrogate-pair": "^0.1.0"
   },
   "devDependencies": {
     "bower": "^1.7.1",
