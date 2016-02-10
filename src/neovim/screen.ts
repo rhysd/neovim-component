@@ -187,6 +187,10 @@ export default class NeovimScreen {
         }
     }
 
+    // TODO:
+    // I might check multibyte characters in text before rendering each characters.
+    // If there is no multibyte character, we can render the text at once with
+    // this.ctx.fillText().
     private drawChars(x: number, y: number, chars: string, width: number) {
         let i = 0;
         const len = chars.length;
