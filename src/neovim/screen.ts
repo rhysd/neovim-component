@@ -3,7 +3,14 @@ import * as A from './actions';
 import Cursor from './cursor';
 import Input from './input';
 import log from '../log';
-import {checkHighSurrogate} from 'surrogate-pair';
+
+// Note:
+// More functions are needed?
+// Try https://github.com/KengoTODA/surrogate-pair.js
+function high_surrogate_char(code: number): boolean {
+    'use strict';
+    return 0xD800 <= code && code <= 0xDBFF;
+}
 
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
@@ -186,7 +193,7 @@ export default class NeovimScreen {
         while (i < len) {
             const char = chars[i];
             const char_code = char.charCodeAt(0);
-            if (checkHighSurrogate(char_code)) {
+            if (high_surrogate_char(char_code)) {
                 // Note:
                 // Combine surrogate pair chars (e.g. 𠮟, 🐶)
                 const pair = char + chars[i + 1];

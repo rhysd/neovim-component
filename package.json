@@ -36,8 +36,7 @@
   "dependencies": {
     "flux": "^2.1.1",
     "loglevel": "^1.4.0",
-    "promised-neovim-client": "^1.0.0",
-    "surrogate-pair": "^0.1.0"
+    "promised-neovim-client": "^1.0.0"
   },
   "devDependencies": {
     "bower": "^1.7.1",

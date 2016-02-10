@@ -18,15 +18,3 @@ interface KeyboardEvent {
     code: string;
 }
 
-interface SurrogatePairStatic {
-    countCodePoints(str: string): number;
-    substr(s: string, startCodePoints: number, codePoints?: number): string;
-    findSurrogatePair(s: string): boolean;
-    checkHighSurrogate(charCode: number): boolean;
-    checkLowSurrogate(charCode: number): boolean;
-}
-
-declare module 'surrogate-pair' {
-    const sp: SurrogatePairStatic;
-    export = sp;
-}
