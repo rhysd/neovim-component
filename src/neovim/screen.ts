@@ -4,14 +4,6 @@ import Cursor from './cursor';
 import Input from './input';
 import log from '../log';
 
-// Note:
-// More functions are needed?
-// Try https://github.com/KengoTODA/surrogate-pair.js
-function high_surrogate_char(code: number): boolean {
-    'use strict';
-    return 0xD800 <= code && code <= 0xDBFF;
-}
-
 export default class NeovimScreen {
     ctx: CanvasRenderingContext2D;
     cursor: Cursor;
@@ -187,29 +179,18 @@ export default class NeovimScreen {
         }
     }
 
-    // TODO:
-    // I might check multibyte characters in text before rendering each characters.
-    // If there is no multibyte character, we can render the text at once with
-    // this.ctx.fillText().
-    private drawChars(x: number, y: number, chars: string, width: number) {
-        let i = 0;
-        const len = chars.length;
-        while (i < len) {
-            const char = chars[i];
-            const char_code = char.charCodeAt(0);
-            if (high_surrogate_char(char_code)) {
-                // Note:
-                // Combine surrogate pair chars (e.g. 𠮟, 🐶)
-                const pair = char + chars[i + 1];
-                this.ctx.fillText(pair, x, y);
-                x += 2 * width;
-                i += 2;
-            } else {
-                this.ctx.fillText(char, x, y);
-                const char_len = char_code > 0xff ? 2 : 1;
-                x += char_len * width;
-                i += 1;
+    // Note:
+    // About 'chars' parameter includes characters to render as array of strings
+    // which should be rendered at the cursor position.
+    // So we renders the strings with forwarding the start position incrementally.
+    private drawChars(x: number, y: number, chars: string[][], width: number) {
+        for (const char of chars) {
+            if (!char[0]) {
+                x += width;
+                continue;
             }
+            this.ctx.fillText(char.join(''), x, y);
+            x += width;
         }
     }
 
@@ -240,7 +221,6 @@ export default class NeovimScreen {
         this.ctx.font = attrs + font_size + 'px ' + face;
         this.ctx.textBaseline = 'top';
         this.ctx.fillStyle = fg;
-        const text = chars.map(c => (c[0] || '')).join('');
         // Note:
         // Line height of <canvas> is fixed to 1.2 (normal).
         // If the specified line height is not 1.2, we should calculate
@@ -248,7 +228,7 @@ export default class NeovimScreen {
         const margin = font_size * (this.store.line_height - 1.2) / 2;
         const y = Math.floor(line * draw_height + margin);
         const x = col * draw_width;
-        this.drawChars(x, y, text, draw_width);
+        this.drawChars(x, y, chars, draw_width);
         if (underline) {
             this.ctx.strokeStyle = fg;
             this.ctx.lineWidth = 1 * this.pixel_ratio;
@@ -257,10 +237,10 @@ export default class NeovimScreen {
             // 3 is set with considering the width of line.
             const underline_y = y + draw_height - 3 * this.pixel_ratio;
             this.ctx.moveTo(x, underline_y);
-            this.ctx.lineTo(x + draw_width * text.length, underline_y);
+            this.ctx.lineTo(x + draw_width * chars.length, underline_y);
             this.ctx.stroke();
         }
-        log.debug(`drawText(): (${x}, ${y})`, text, this.store.cursor);
+        log.debug(`drawText(): (${x}, ${y})`, chars, this.store.cursor);
     }
 
     private drawBlock(line: number, col: number, height: number, width: number, color: string) {
