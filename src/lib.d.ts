@@ -17,3 +17,4 @@ interface String {
 interface KeyboardEvent {
     code: string;
 }
+

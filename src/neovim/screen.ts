@@ -179,6 +179,38 @@ export default class NeovimScreen {
         }
     }
 
+    // Note:
+    // About 'chars' parameter includes characters to render as array of strings
+    // which should be rendered at the each cursor position.
+    // So we renders the strings with forwarding the start position incrementally.
+    // When chars[idx][0] is empty string, it means that 'no character to render,
+    // go ahead'.
+    private drawChars(x: number, y: number, chars: string[][], width: number) {
+        let includes_half_only = true;
+        for (const c of chars) {
+            if (!c[0]) {
+                includes_half_only = false;
+                break;
+            }
+        }
+        if (includes_half_only) {
+            // Note:
+            // If the text includes only half characters, we can render it at once.
+            const text = chars.map(c => (c[0] || '')).join('');
+            this.ctx.fillText(text, x, y);
+            return;
+        }
+
+        for (const char of chars) {
+            if (!char[0] || char[0] === ' ') {
+                x += width;
+                continue;
+            }
+            this.ctx.fillText(char.join(''), x, y);
+            x += width;
+        }
+    }
+
     private drawText(chars: string[][]) {
         const {line, col} = this.store.cursor;
         const {
@@ -206,15 +238,14 @@ export default class NeovimScreen {
         this.ctx.font = attrs + font_size + 'px ' + face;
         this.ctx.textBaseline = 'top';
         this.ctx.fillStyle = fg;
-        const text = chars.map(c => (c[0] || '')).join('');
-        const x = col * draw_width;
         // Note:
         // Line height of <canvas> is fixed to 1.2 (normal).
         // If the specified line height is not 1.2, we should calculate
         // the difference of margin-bottom of text.
         const margin = font_size * (this.store.line_height - 1.2) / 2;
         const y = Math.floor(line * draw_height + margin);
-        this.ctx.fillText(text, x, y);
+        const x = col * draw_width;
+        this.drawChars(x, y, chars, draw_width);
         if (underline) {
             this.ctx.strokeStyle = fg;
             this.ctx.lineWidth = 1 * this.pixel_ratio;
@@ -223,10 +254,10 @@ export default class NeovimScreen {
             // 3 is set with considering the width of line.
             const underline_y = y + draw_height - 3 * this.pixel_ratio;
             this.ctx.moveTo(x, underline_y);
-            this.ctx.lineTo(x + draw_width * text.length, underline_y);
+            this.ctx.lineTo(x + draw_width * chars.length, underline_y);
             this.ctx.stroke();
         }
-        log.debug(`drawText(): (${x}, ${y})`, text, this.store.cursor);
+        log.debug(`drawText(): (${x}, ${y})`, chars, this.store.cursor);
     }
 
     private drawBlock(line: number, col: number, height: number, width: number, color: string) {
