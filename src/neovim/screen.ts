@@ -181,11 +181,28 @@ export default class NeovimScreen {
 
     // Note:
     // About 'chars' parameter includes characters to render as array of strings
-    // which should be rendered at the cursor position.
+    // which should be rendered at the each cursor position.
     // So we renders the strings with forwarding the start position incrementally.
+    // When chars[idx][0] is empty string, it means that 'no character to render,
+    // go ahead'.
     private drawChars(x: number, y: number, chars: string[][], width: number) {
+        let includes_half_only = true;
+        for (const c of chars) {
+            if (!c[0]) {
+                includes_half_only = false;
+                break;
+            }
+        }
+        if (includes_half_only) {
+            // Note:
+            // If the text includes only half characters, we can render it at once.
+            const text = chars.map(c => (c[0] || '')).join('');
+            this.ctx.fillText(text, x, y);
+            return;
+        }
+
         for (const char of chars) {
-            if (!char[0]) {
+            if (!char[0] || char[0] === ' ') {
                 x += width;
                 continue;
             }
