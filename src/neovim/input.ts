@@ -181,8 +181,8 @@ export default class NeovimInput {
         this.element = document.querySelector('.neovim-input') as HTMLInputElement;
         this.element.addEventListener('compositionstart', this.startComposition.bind(this));
         this.element.addEventListener('compositionend', this.endComposition.bind(this));
-        this.element.addEventListener('keydown', this.onInsertControlChar.bind(this));
-        this.element.addEventListener('input', this.onInsertNormalChar.bind(this));
+        this.element.addEventListener('keydown', this.onInputNonText.bind(this));
+        this.element.addEventListener('textInput', this.onInputText.bind(this));
         this.element.addEventListener('blur', this.onBlur.bind(this));
         this.element.addEventListener('focus', this.onFocus.bind(this));
 
@@ -214,7 +214,7 @@ export default class NeovimInput {
 
     // Note:
     // Assumes keydown event is always fired before input event
-    onInsertControlChar(event: KeyboardEvent) {
+    onInputNonText(event: KeyboardEvent) {
         log.debug('Keydown event:', event);
         if (this.ime_running) {
             log.debug('IME is running.  Input canceled.');
@@ -236,7 +236,7 @@ export default class NeovimInput {
             //
             // In OS X, option + {key} sequences input special characters which can't be
             // input with keyboard normally.  (e.g. option+a -> å)
-            // MacVim accepts the special characters only in insert mode, otherwise <A-x>
+            // MacVim accepts the special characters only in insert mode, otherwise <A-{char}>
             // is emitted.
             //
             this.inputToNeovim(NeovimInput.getVimInputFromKeyCode(event), event);
@@ -273,7 +273,7 @@ export default class NeovimInput {
         t.value = '';
     }
 
-    onInsertNormalChar(event: KeyboardEvent) {
+    onInputText(event: KeyboardEvent) {
         log.debug('Input event:', event);
 
         if (this.ime_running) {
@@ -283,7 +283,7 @@ export default class NeovimInput {
 
         const t = event.target as HTMLInputElement;
         if (t.value === '') {
-            log.warn('onInsertNormalChar: Empty');
+            log.warn('onInputText: Empty');
             return;
         }
 

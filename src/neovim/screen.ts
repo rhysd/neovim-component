@@ -257,7 +257,7 @@ export default class NeovimScreen {
             this.ctx.lineTo(x + draw_width * chars.length, underline_y);
             this.ctx.stroke();
         }
-        log.debug(`drawText(): (${x}, ${y})`, chars, this.store.cursor);
+        log.debug(`drawText(): (${x}, ${y})`, chars.length, this.store.cursor);
     }
 
     private drawBlock(line: number, col: number, height: number, width: number, color: string) {
