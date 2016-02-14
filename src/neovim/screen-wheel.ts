@@ -25,12 +25,11 @@ export default class ScreenWheel {
     }
 
     handleEvent(e: WheelEvent) {
-        if (this.shift !== e.shiftKey || this.ctrl !== e.ctrlKey) {
-            this.x = 0;
-            this.y = 0;
-            this.shift = e.shiftKey;
-            this.ctrl = e.ctrlKey;
-            return '';
+        if ((this.shift === undefined && this.ctrl === undefined) ||
+            (this.shift !== e.shiftKey || this.ctrl !== e.ctrlKey)) {
+            // Note:
+            // Initialize at first or reset on modifier change
+            this.reset(e.shiftKey, e.ctrlKey);
         }
 
         this.x += e.deltaX;
@@ -50,11 +49,11 @@ export default class ScreenWheel {
         return input;
     }
 
-    private reset() {
+    private reset(shift: boolean = undefined, ctrl: boolean = undefined) {
         this.x = 0;
         this.y = 0;
-        this.shift = false;
-        this.ctrl = false;
+        this.shift = shift;
+        this.ctrl = ctrl;
     }
 
     private getDirection(scroll_x: number, scroll_y: number) {
