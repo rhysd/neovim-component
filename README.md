@@ -279,5 +279,6 @@ editor.focus();
 
 ## TODOs
 
-- [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/)). See #2.
+- [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/)). [#2](https://github.com/rhysd/neovim-component/issues/2)
+- [ ] Follow dynamic device pixel ratio change. [#18](https://github.com/rhysd/neovim-component/issues/18)
 
