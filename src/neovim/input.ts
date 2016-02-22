@@ -182,7 +182,7 @@ export default class NeovimInput {
         this.element.addEventListener('compositionstart', this.startComposition.bind(this));
         this.element.addEventListener('compositionend', this.endComposition.bind(this));
         this.element.addEventListener('keydown', this.onInputNonText.bind(this));
-        this.element.addEventListener('textInput', this.onInputText.bind(this));
+        this.element.addEventListener('input', this.onInputText.bind(this));
         this.element.addEventListener('blur', this.onBlur.bind(this));
         this.element.addEventListener('focus', this.onFocus.bind(this));
 
