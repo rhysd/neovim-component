@@ -30,7 +30,7 @@ function inputByKeydown(opts) {
 
 function dispatchInputEvent() {
     global.input_element.dispatchEvent(
-        new window.Event('textInput', {
+        new window.Event('input', {
             bubbles: true,
             cancelable: false
         })
@@ -147,7 +147,7 @@ describe('NeovimInput', () => {
         });
     });
 
-    context("on 'textInput' event", () => {
+    context("on 'input' event", () => {
         it('sends input character to Neovim', () => {
             assert.equal(catchInputOnInputEvent('a'), 'a');
             assert.equal(catchInputOnInputEvent('3'), '3');
