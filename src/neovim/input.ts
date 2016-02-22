@@ -205,11 +205,13 @@ export default class NeovimInput {
 
     onFocus() {
         this.store.dispatcher.dispatch(notifyFocusChanged(true));
+        this.store.dispatcher.dispatch(inputToNeovim('<FocusGained>'));
     }
 
     onBlur(e: Event) {
         e.preventDefault();
         this.store.dispatcher.dispatch(notifyFocusChanged(false));
+        this.store.dispatcher.dispatch(inputToNeovim('<FocusLost>'));
     }
 
     // Note:
