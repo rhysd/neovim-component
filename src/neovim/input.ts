@@ -205,12 +205,22 @@ export default class NeovimInput {
 
     onFocus() {
         this.store.dispatcher.dispatch(notifyFocusChanged(true));
+
+        // Note:
+        // Neovim frontend has responsiblity to emit 'FocusGained'.
+        // :execute 'normal!' "\<FocusGained>" is available.
+        // (it seems undocumented.)
         this.store.dispatcher.dispatch(inputToNeovim('<FocusGained>'));
     }
 
     onBlur(e: Event) {
         e.preventDefault();
         this.store.dispatcher.dispatch(notifyFocusChanged(false));
+
+        // Note:
+        // Neovim frontend has responsiblity to emit 'FocusLost'.
+        // :execute 'normal!' "\<FocusLost>" is available.
+        // (it seems undocumented.)
         this.store.dispatcher.dispatch(inputToNeovim('<FocusLost>'));
     }
 

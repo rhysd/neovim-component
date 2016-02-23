@@ -61,6 +61,10 @@ export default class NeovimProcess {
                 log.info(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
                 this.store.on('input', (i: string) => nvim.input(i));
                 this.store.on('update-screen-bounds', () => nvim.uiTryResize(this.store.size.cols, this.store.size.lines));
+
+                // Note:
+                // Neovim frontend has responsiblity to emit 'GUIEnter' on initialization.
+                this.client.command('doautocmd <nomodeline> GUIEnter');
             });
     }
 
