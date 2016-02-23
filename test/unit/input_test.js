@@ -161,5 +161,25 @@ describe('NeovimInput', () => {
             assert.equal(global.input_element.value, '');
         });
     });
+
+    context("on focus events", () => {
+        it('emits <FocusGained> on focused', () => {
+            const e = new window.Event('focus', {
+                bubbles: true,
+                cancelable: false
+            });
+            global.input_element.dispatchEvent(e);
+            assert.equal(global.last_input, '<FocusGained>');
+        });
+
+        it('emits <FocusLost> on focused', () => {
+            const e = new window.Event('blur', {
+                bubbles: true,
+                cancelable: false
+            });
+            global.input_element.dispatchEvent(e);
+            assert.equal(global.last_input, '<FocusLost>');
+        });
+    });
 });
 
