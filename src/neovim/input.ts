@@ -299,6 +299,7 @@ export default class NeovimInput {
             return;
         }
 
-        this.inputToNeovim(t.value, event);
+        let input = t.value.replace(/</g, "<LT>");
+        this.inputToNeovim(input, event);
     }
 }
