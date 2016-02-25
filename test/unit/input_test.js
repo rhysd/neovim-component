@@ -123,8 +123,8 @@ describe('NeovimInput', () => {
             assert.equal(inputByKeydown({key: 'ArrowLeft'}), '<Left>');
             assert.equal(inputByKeydown({key: 'ArrowLeft', altKey: true}), '<A-Left>');
             assert.equal(inputByKeydown({key: 'ArrowLeft', ctrlKey: true, shiftKey: true}), '<C-S-Left>');
-            assert.equal(inputByKeydown({key: '<', shiftKey: true}), '<LT>');
             assert.equal(inputByKeydown({key: '<', ctrlKey: true, shiftKey: true}), '<C-LT>');
+            assert.equal(inputByKeydown({key: '<', altKey: true, shiftKey: true}), '<A-LT>');
             assert.equal(inputByKeydown({key: '\0'}), '<Nul>');
         });
 
@@ -159,6 +159,10 @@ describe('NeovimInput', () => {
             global.input_element.value = 'a';
             dispatchInputEvent();
             assert.equal(global.input_element.value, '');
+        });
+
+        it("handles '<' edge case", () => {
+            assert.equal(catchInputOnInputEvent('<'), '<LT>');
         });
     });
 

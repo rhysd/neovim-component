@@ -66,9 +66,9 @@ export default class NeovimInput {
 
         if (key.length === 1) {
             switch (key) {
-                case '<':            return 'LT';
-                case '\0':           return 'Nul';
-                default:             return null;
+                case '<':  return event.ctrlKey || event.altKey ? 'LT' : null;
+                case '\0': return 'Nul';
+                default:   return null;
             }
         }
 
@@ -299,7 +299,7 @@ export default class NeovimInput {
             return;
         }
 
-        let input = t.value.replace(/</g, "<LT>");
+        const input = t.value !== '<' ? t.value : '<LT>';
         this.inputToNeovim(input, event);
     }
 }
