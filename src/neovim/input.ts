@@ -246,7 +246,7 @@ export default class NeovimInput {
             return;
         }
 
-        const should_osx_workaround = event.altKey && OnDarwin && this.store.mode === 'normal';
+        const should_osx_workaround = OnDarwin && event.altKey && !event.ctrlKey && this.store.mode === 'normal';
         if (this.store.alt_key_disabled && event.altKey) {
             // Note: Overwrite 'altKey' to false to disable alt key input.
             Object.defineProperty(event, 'altKey', {value: false});

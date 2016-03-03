@@ -104,13 +104,8 @@ describe('NeovimInput', () => {
         });
 
         it('accepts input with alt+ctrl keys', () => {
-            if (process.platform === 'darwin') {
-                assert.equal(inputByKeydown({key: 'a', ctrlKey: true, altKey: true}), '<C-A-a>');
-                assert.equal(inputByKeydown({key: 'o', ctrlKey: true, altKey: true}), '<C-A-o>');
-            } else {
-                assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true, altKey: true}), '<A-\u0001>');  // Ctrl is included in \u0001
-                assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true, altKey: true}), '<A-\u000f>');  // Ctrl is included in \u000f
-            }
+            assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true, altKey: true}), '<A-\u0001>');  // Ctrl is included in \u0001
+            assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true, altKey: true}), '<A-\u000f>');  // Ctrl is included in \u000f
         });
 
         it('accepts special keys', () => {
@@ -154,11 +149,8 @@ describe('NeovimInput', () => {
                 dispatchKeydown({key: 'a', altKey: true});
                 assert.equal(last_input, 'a');
 
-                dispatchKeydown({key: '3', altKey: true, ctrlKey: true});
-                assert.equal(last_input, '<C-3>');
-
-                dispatchKeydown({key: '[', altKey: true, ctrlKey: true, shiftKey: true});
-                assert.equal(last_input, '<C-S-[>');
+                assert.equal(inputByKeydown({key: '\u0001', altKey: true, ctrlKey: true}), '\u0001');  // <C-a>
+                assert.equal(inputByKeydown({key: '\u000f', altKey: true, shiftKey: true, ctrlKey: true}), '\u000f');  // <C-o>
             });
 
             it('does not ignore any other modifiers', () => {
