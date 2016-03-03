@@ -105,11 +105,11 @@ describe('NeovimInput', () => {
 
         it('accepts input with alt+ctrl keys', () => {
             if (process.platform === 'darwin') {
-                assert.equal(inputByKeydown({key: 'a', ctrlKey: true, altKey: 'true'}), '<C-A-a>');
-                assert.equal(inputByKeydown({key: 'o', ctrlKey: true, altKey: 'true'}), '<C-A-o>');
+                assert.equal(inputByKeydown({key: 'a', ctrlKey: true, altKey: true}), '<C-A-a>');
+                assert.equal(inputByKeydown({key: 'o', ctrlKey: true, altKey: true}), '<C-A-o>');
             } else {
-                assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true, altKey: 'true'}), '<A-\u0001>');  // Ctrl is included in \u0001
-                assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true, altKey: 'true'}), '<A-\u000f>');  // Ctrl is included in \u000f
+                assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true, altKey: true}), '<A-\u0001>');  // Ctrl is included in \u0001
+                assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true, altKey: true}), '<A-\u000f>');  // Ctrl is included in \u000f
             }
         });
 
@@ -144,6 +144,33 @@ describe('NeovimInput', () => {
             assert.equal(inputByKeydown({key: 'Tab', keyCode: 9}), '<Tab>');
             assert.equal(inputByKeydown({key: 'Tab', keyCode: 73, ctrlKey: true}), '<C-i>');
             assert.equal(inputByKeydown({key: 'Tab', keyCode: 9, ctrlKey: true}), '<C-Tab>');
+        });
+
+        context("when alt key is disabled", () => {
+            it('ignores event.altKey', () => {
+                global.input.store.alt_key_disabled = true;
+                global.last_input = '';
+
+                dispatchKeydown({key: 'a', altKey: true});
+                assert.equal(last_input, 'a');
+
+                dispatchKeydown({key: '3', altKey: true, shiftKey: true});
+                assert.equal(last_input, '<S-3>');
+
+                dispatchKeydown({key: '[', altKey: true, ctrlKey: true, shiftKey: true});
+                assert.equal(last_input, '<C-S-[>');
+            });
+
+            it('does not ignore any other modifiers', () => {
+                global.input.store.alt_key_disabled = true;
+                global.last_input = '';
+
+                dispatchKeydown({key: 'a'});
+                assert.equal(last_input, '');
+
+                assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true}), '\u0001');  // <C-a>
+                assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true}), '\u000f');  // <C-o>
+            });
         });
     });
 
