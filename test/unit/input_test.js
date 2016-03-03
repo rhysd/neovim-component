@@ -154,8 +154,8 @@ describe('NeovimInput', () => {
                 dispatchKeydown({key: 'a', altKey: true});
                 assert.equal(last_input, 'a');
 
-                dispatchKeydown({key: '3', altKey: true, shiftKey: true});
-                assert.equal(last_input, '<S-3>');
+                dispatchKeydown({key: '3', altKey: true, ctrlKey: true});
+                assert.equal(last_input, '<C-3>');
 
                 dispatchKeydown({key: '[', altKey: true, ctrlKey: true, shiftKey: true});
                 assert.equal(last_input, '<C-S-[>');
