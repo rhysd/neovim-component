@@ -32,34 +32,37 @@ export declare enum Kind {
     ClearEOL = 4,
     Cursor = 5,
     DisableMouse = 6,
-    DragEnd = 7,
-    DragStart = 8,
-    DragUpdate = 9,
-    EnableMouse = 10,
-    Highlight = 11,
-    Input = 12,
-    Mode = 13,
-    PutText = 14,
-    Resize = 15,
-    ScrollScreen = 16,
-    SetIcon = 17,
-    SetScrollRegion = 18,
-    SetTitle = 19,
-    UpdateBG = 20,
-    UpdateFG = 21,
-    UpdateFontFace = 22,
-    UpdateFontPx = 23,
-    UpdateFontSize = 24,
-    UpdateScreenBounds = 25,
-    UpdateScreenSize = 26,
-    WheelScroll = 27,
-    FocusChanged = 28,
+    DisableAltKey = 7,
+    DragEnd = 8,
+    DragStart = 9,
+    DragUpdate = 10,
+    EnableMouse = 11,
+    Highlight = 12,
+    Input = 13,
+    Mode = 14,
+    PutText = 15,
+    Resize = 16,
+    ScrollScreen = 17,
+    SetIcon = 18,
+    SetScrollRegion = 19,
+    SetTitle = 20,
+    UpdateBG = 21,
+    UpdateFG = 22,
+    UpdateFontFace = 23,
+    updateLineHeight = 24,
+    UpdateFontPx = 25,
+    UpdateFontSize = 26,
+    UpdateScreenBounds = 27,
+    UpdateScreenSize = 28,
+    WheelScroll = 29,
+    FocusChanged = 30,
 }
 export interface ActionType {
     type: Kind;
     col?: number;
     color?: number;
     cols?: number;
+    disabled?: boolean;
     draw_width?: number;
     draw_height?: number;
     event?: MouseEvent | WheelEvent;
@@ -196,6 +199,10 @@ export declare function notifyFocusChanged(focused: boolean): {
     type: Kind;
     focused: boolean;
 };
+export declare function disableAltKey(disabled: boolean): {
+    type: Kind;
+    disabled: boolean;
+}
 
 export class NeovimCursor {
     element: HTMLDivElement;
@@ -340,6 +347,7 @@ export class Neovim extends EventEmitter {
 }
 
 export class NeovimElement extends HTMLElement {
+    disableAltKey: boolean;
     editor: Neovim;
     width: number;
     height: number;

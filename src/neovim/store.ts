@@ -71,6 +71,7 @@ export default class NeovimStore extends EventEmitter {
     dispatcher: Dispatcher<ActionType>;
     focused: boolean;
     line_height: number;
+    alt_key_disabled: boolean;
 
     constructor() {
         super();
@@ -114,6 +115,7 @@ export default class NeovimStore extends EventEmitter {
         };
         this.focused = true;
         this.line_height = 1.2;
+        this.alt_key_disabled = false;
         this.dispatch_token = this.dispatcher.register(this.receiveAction.bind(this));
     }
 
@@ -327,6 +329,12 @@ export default class NeovimStore extends EventEmitter {
                     this.emit('line-height-changed');
                     log.info(`Line height is changed to '${this.line_height}'`);
                 }
+                break;
+            }
+            case Kind.DisableAltKey: {
+                this.alt_key_disabled = action.disabled;
+                this.emit('alt-key-disabled');
+                log.info('Alt key disabled: ' + action.disabled);
                 break;
             }
             default: {

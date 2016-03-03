@@ -26,6 +26,10 @@ Polymer({
             type: Array,
             value: () => [] as string[],
         },
+        disableAltKey: {
+            type: Boolean,
+            value: false,
+        },
         editor: Object,
         onProcessAttached: Object,
         onQuit: Object,
@@ -39,7 +43,8 @@ Polymer({
                 this.argv,
                 this.font,
                 this.fontSize,
-                this.lineHeight
+                this.lineHeight,
+                this.disableAltKey
             );
         this.resizeHandler = null;
 

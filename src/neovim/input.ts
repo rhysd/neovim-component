@@ -160,18 +160,21 @@ export default class NeovimInput {
     }
 
     static getVimInputFromKeyCode(event: KeyboardEvent) {
-        let vim_input = '<';
+        let modifiers = '';
         if (event.ctrlKey) {
-            vim_input += 'C-';
+            modifiers += 'C-';
         }
         if (event.altKey) {
-            vim_input += 'A-';
+            modifiers += 'A-';
         }
         // Note: <LT> is a special case where shift should not be handled.
         if (event.shiftKey) {
-            vim_input += 'S-';
+            modifiers += 'S-';
         }
-        vim_input += String.fromCharCode(event.keyCode).toLowerCase() + '>';
+        let vim_input = String.fromCharCode(event.keyCode).toLowerCase();
+        if (modifiers !== '') {
+            vim_input = `<${modifiers}${vim_input}>`;
+        }
         return vim_input;
     }
 
@@ -243,7 +246,13 @@ export default class NeovimInput {
             return;
         }
 
-        if (event.altKey && OnDarwin && this.store.mode === 'normal') {
+        const should_osx_workaround = event.altKey && OnDarwin && this.store.mode === 'normal';
+        if (this.store.alt_key_disabled && event.altKey) {
+            // Note: Overwrite 'altKey' to false to disable alt key input.
+            Object.defineProperty(event, 'altKey', {value: false});
+        }
+
+        if (should_osx_workaround) {
             // Note:
             //
             // In OS X, option + {key} sequences input special characters which can't be

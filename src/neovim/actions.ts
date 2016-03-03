@@ -25,6 +25,7 @@ export enum Kind {
     ClearEOL,
     Cursor,
     DisableMouse,
+    DisableAltKey,
     DragEnd,
     DragStart,
     DragUpdate,
@@ -55,6 +56,7 @@ export interface ActionType {
     col?: number;
     color?: number;
     cols?: number;
+    disabled?: boolean;
     draw_width?: number;
     draw_height?: number;
     event?: MouseEvent | WheelEvent;
@@ -315,3 +317,10 @@ export function updateLineHeight(line_height: number) {
     };
 }
 
+export function disableAltKey(disabled: boolean) {
+    'use strict';
+    return {
+        type: Kind.DisableAltKey,
+        disabled,
+    };
+}
