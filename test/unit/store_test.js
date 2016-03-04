@@ -49,6 +49,8 @@ describe('NeovimStore', () => {
             });
             assert.isTrue(s.focused);
             assert.equal(s.line_height, 1.2);
+            assert.equal(s.alt_key_disabled, false);
+            assert.equal(s.cursor_draw_delay, 10);
         });
     });
 
@@ -576,5 +578,26 @@ describe('NeovimStore', () => {
             assert.equal(s.line_height, 1.5);
         });
 
+        it('accepts disabling alt key event', () => {
+            const s = new NeovimStore();
+            var flag = false;
+            s.on('alt-key-disabled', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.disableAltKey(true));
+            assert.isTrue(flag, 'alt-key-disabled event was not fired');
+            assert.equal(s.alt_key_disabled, true);
+        });
+
+        it('accepts cursor draw delay change event', () => {
+            const s = new NeovimStore();
+            var flag = false;
+            s.on('cursor-draw-delay-changed', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.changeCursorDrawDelay(0));
+            assert.isTrue(flag, 'cursor-draw-delay-changed event was not fired');
+            assert.equal(s.cursor_draw_delay, 0);
+        });
     });
 });

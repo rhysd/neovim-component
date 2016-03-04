@@ -117,7 +117,7 @@ export default class NeovimStore extends EventEmitter {
         this.focused = true;
         this.line_height = 1.2;
         this.alt_key_disabled = false;
-        this.cursor_draw_delay = 20;
+        this.cursor_draw_delay = 10;
         this.dispatch_token = this.dispatcher.register(this.receiveAction.bind(this));
     }
 

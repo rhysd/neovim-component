@@ -204,5 +204,19 @@ describe('NeovimInput', () => {
             assert.equal(global.last_input, '<FocusLost>');
         });
     });
+
+    it('moves <input> element following cursor', () => {
+        const store = input.store;
+        store.cursor = {
+            line: 12,
+            col: 24
+        };
+        store.font_attr.width = 4;
+        store.font_attr.height = 8;
+
+        store.emit('cursor');
+        assert.equal(input_element.style.left, store.cursor.col * store.font_attr.width + 'px');
+        assert.equal(input_element.style.top, store.cursor.line * store.font_attr.height + 'px');
+    });
 });
 
