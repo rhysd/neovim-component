@@ -12,8 +12,6 @@ function invertColor(image: ImageData) {
     return image;
 }
 
-const DRAW_DELAY = 20; // millisec
-
 export default class NeovimCursor {
     private element: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -59,7 +57,7 @@ export default class NeovimCursor {
             const y = this.store.cursor.line * this.store.font_attr.draw_height;
             const captured = this.screen_ctx.getImageData(x, y, cursor_width, cursor_height);
             this.ctx.putImageData(invertColor(captured), 0, 0);
-        }, DRAW_DELAY);
+        }, this.store.cursor_draw_delay);
     }
 
     updateCursorPos() {

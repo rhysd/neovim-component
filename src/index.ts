@@ -30,6 +30,10 @@ Polymer({
             type: Boolean,
             value: false,
         },
+        cursorDrawDelay: {
+            type: Number,
+            value: 10,
+        },
         editor: Object,
         onProcessAttached: Object,
         onQuit: Object,
@@ -44,7 +48,8 @@ Polymer({
                 this.font,
                 this.fontSize,
                 this.lineHeight,
-                this.disableAltKey
+                this.disableAltKey,
+                this.cursorDrawDelay
             );
         this.resizeHandler = null;
 

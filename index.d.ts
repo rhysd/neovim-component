@@ -28,40 +28,42 @@ export declare enum Kind {
     Bell = 0,
     BusyStart = 1,
     BusyStop = 2,
-    ClearAll = 3,
-    ClearEOL = 4,
-    Cursor = 5,
-    DisableMouse = 6,
-    DisableAltKey = 7,
-    DragEnd = 8,
-    DragStart = 9,
-    DragUpdate = 10,
-    EnableMouse = 11,
-    Highlight = 12,
-    Input = 13,
-    Mode = 14,
-    PutText = 15,
-    Resize = 16,
-    ScrollScreen = 17,
-    SetIcon = 18,
-    SetScrollRegion = 19,
-    SetTitle = 20,
-    UpdateBG = 21,
-    UpdateFG = 22,
-    UpdateFontFace = 23,
-    updateLineHeight = 24,
-    UpdateFontPx = 25,
-    UpdateFontSize = 26,
-    UpdateScreenBounds = 27,
-    UpdateScreenSize = 28,
-    WheelScroll = 29,
-    FocusChanged = 30,
+    ChangeCursorDrawDelay = 3,
+    ClearAll = 4,
+    ClearEOL = 5,
+    Cursor = 6,
+    DisableMouse = 7,
+    DisableAltKey = 8,
+    DragEnd = 9,
+    DragStart = 10,
+    DragUpdate = 11,
+    EnableMouse = 12,
+    Highlight = 13,
+    Input = 14,
+    Mode = 15,
+    PutText = 16,
+    Resize = 17,
+    ScrollScreen = 18,
+    SetIcon = 19,
+    SetScrollRegion = 20,
+    SetTitle = 21,
+    UpdateBG = 22,
+    UpdateFG = 23,
+    UpdateFontFace = 24,
+    updateLineHeight = 25,
+    UpdateFontPx = 26,
+    UpdateFontSize = 27,
+    UpdateScreenBounds = 28,
+    UpdateScreenSize = 29,
+    WheelScroll = 30,
+    FocusChanged = 31,
 }
 export interface ActionType {
     type: Kind;
     col?: number;
     color?: number;
     cols?: number;
+    delay?: number;
     disabled?: boolean;
     draw_width?: number;
     draw_height?: number;
@@ -203,6 +205,10 @@ export declare function disableAltKey(disabled: boolean): {
     type: Kind;
     disabled: boolean;
 }
+export declare function changeCursorDrawDelay(delay: number): {
+    type: Kind;
+    delay: number;
+}
 
 export class NeovimCursor {
     constructor(store: NeovimStore, screen_ctx: CanvasRenderingContext2D);
@@ -314,6 +320,7 @@ export interface FontAttributes {
 }
 export declare type DispatcherType = Dispatcher<ActionType>;
 export class NeovimStore extends EventEmitter {
+    cursor_draw_delay: number;
     dispatch_token: string;
     size: Size;
     focused: boolean;
@@ -347,6 +354,7 @@ export class Neovim extends EventEmitter {
 
 export class NeovimElement extends HTMLElement {
     disableAltKey: boolean;
+    drawDelay: number;
     editor: Neovim;
     width: number;
     height: number;

@@ -21,6 +21,7 @@ export enum Kind {
     Bell,
     BusyStart,
     BusyStop,
+    ChangeCursorDrawDelay,
     ClearAll,
     ClearEOL,
     Cursor,
@@ -56,6 +57,7 @@ export interface ActionType {
     col?: number;
     color?: number;
     cols?: number;
+    delay?: number;
     disabled?: boolean;
     draw_width?: number;
     draw_height?: number;
@@ -322,5 +324,13 @@ export function disableAltKey(disabled: boolean) {
     return {
         type: Kind.DisableAltKey,
         disabled,
+    };
+}
+
+export function changeCursorDrawDelay(delay: number) {
+    'use strict';
+    return {
+        type: Kind.ChangeCursorDrawDelay,
+        delay,
     };
 }
