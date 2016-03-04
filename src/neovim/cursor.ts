@@ -15,7 +15,7 @@ function invertColor(image: ImageData) {
 export default class NeovimCursor {
     private element: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    private timer_id: NodeJS.Timer;
+    private timer_id: number;
 
     constructor(private store: NeovimStore, private screen_ctx: CanvasRenderingContext2D) {
         this.timer_id = null;
@@ -44,20 +44,16 @@ export default class NeovimCursor {
     }
 
     redraw() {
+        if (this.store.cursor_draw_delay <= 0) {
+            this.redrawImpl();
+            return;
+        }
         if (this.timer_id !== null) {
             clearTimeout(this.timer_id);
         } else {
             this.ctx.clearRect(0, 0, this.element.width, this.element.height);
         }
-        this.timer_id = setTimeout(() => {
-            this.timer_id = null;
-            const cursor_width = this.store.mode === 'insert' ? (window.devicePixelRatio || 1) : this.store.font_attr.draw_width;
-            const cursor_height = this.store.font_attr.draw_height;
-            const x = this.store.cursor.col * this.store.font_attr.draw_width;
-            const y = this.store.cursor.line * this.store.font_attr.draw_height;
-            const captured = this.screen_ctx.getImageData(x, y, cursor_width, cursor_height);
-            this.ctx.putImageData(invertColor(captured), 0, 0);
-        }, this.store.cursor_draw_delay);
+        this.timer_id = setTimeout(this.redrawImpl.bind(this), this.store.cursor_draw_delay);
     }
 
     updateCursorPos() {
@@ -72,4 +68,15 @@ export default class NeovimCursor {
         log.debug(`Cursor is moved to (${x}, ${y})`);
         this.redraw();
     }
+
+    private redrawImpl() {
+        this.timer_id = null;
+        const cursor_width = this.store.mode === 'insert' ? (window.devicePixelRatio || 1) : this.store.font_attr.draw_width;
+        const cursor_height = this.store.font_attr.draw_height;
+        const x = this.store.cursor.col * this.store.font_attr.draw_width;
+        const y = this.store.cursor.line * this.store.font_attr.draw_height;
+        const captured = this.screen_ctx.getImageData(x, y, cursor_width, cursor_height);
+        this.ctx.putImageData(invertColor(captured), 0, 0);
+    }
+
 }
