@@ -188,6 +188,7 @@ export default class NeovimInput {
         this.element.addEventListener('input', this.onInputText.bind(this));
         this.element.addEventListener('blur', this.onBlur.bind(this));
         this.element.addEventListener('focus', this.onFocus.bind(this));
+        this.store.on('cursor', this.updateElementPos.bind(this));
 
         this.focus();
     }
@@ -310,5 +311,16 @@ export default class NeovimInput {
 
         const input = t.value !== '<' ? t.value : '<LT>';
         this.inputToNeovim(input, event);
+    }
+
+    updateElementPos() {
+        const {line, col} = this.store.cursor;
+        const {width, height} = this.store.font_attr;
+
+        const x = col * width;
+        const y = line * height;
+
+        this.element.style.left = x + 'px';
+        this.element.style.top = y + 'px';
     }
 }

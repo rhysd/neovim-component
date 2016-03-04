@@ -2,15 +2,25 @@ import NeovimStore from './store';
 import log from '../log';
 import {dragEnd} from './actions';
 
-export default class NeovimCursor {
-    element: HTMLDivElement;
+function invertColor(image: ImageData) {
+    'use strict';
+    for (let i = 0; i < image.data.length; i += 4) {
+        image.data[i] = 255 - image.data[i];     // Red
+        image.data[i + 1] = 255 - image.data[i + 1]; // Green
+        image.data[i + 2] = 255 - image.data[i + 2]; // Blue
+    }
+    return image;
+}
 
-    constructor(private store: NeovimStore) {
-        this.element = document.querySelector('.neovim-cursor') as HTMLDivElement;
-        this.element.style.borderColor = 'white';
+export default class NeovimCursor {
+    private element: HTMLCanvasElement;
+    private ctx: CanvasRenderingContext2D;
+
+    constructor(private store: NeovimStore, private screen_ctx: CanvasRenderingContext2D) {
+        this.element = document.querySelector('.neovim-cursor') as HTMLCanvasElement;
         this.element.style.top = '0px';
         this.element.style.left = '0px';
-        this.element.classList.add(store.mode + '-mode');
+        this.ctx = this.element.getContext('2d');
         this.updateSize();
 
         this.element.addEventListener('mouseup', (e: MouseEvent) => {
@@ -18,40 +28,27 @@ export default class NeovimCursor {
         });
 
         this.store.on('cursor', this.updateCursorPos.bind(this));
-        this.store.on('mode', this.onModeChanged.bind(this));
-        this.store.on('update-fg', this.updateColor.bind(this));
+        this.store.on('update-fg', this.redraw.bind(this));
         this.store.on('font-size-changed', this.updateSize.bind(this));
     }
 
     updateSize() {
-        this.element.style.width = this.store.font_attr.width + 'px';
-        this.element.style.height = this.store.font_attr.height + 'px';
+        const f = this.store.font_attr;
+        this.element.style.width = f.width + 'px';
+        this.element.style.height = f.height + 'px';
+        this.element.width = f.draw_width;
+        this.element.height = f.draw_height;
+        this.redraw();
     }
 
-    updateColor() {
-        log.info('changed cursor color: ', this.store.fg_color);
-        this.element.style.borderColor = this.store.fg_color;
-    }
-
-    onModeChanged() {
-        switch (this.store.mode) {
-            case 'insert': {
-                this.element.style.width = '1px';
-                const l = this.element.classList;
-                l.remove('normal-mode');
-                l.add('insert-mode');
-                break;
-            }
-            case 'normal': {
-                this.element.style.width = this.store.font_attr.width + 'px';
-                const l = this.element.classList;
-                l.remove('insert-mode');
-                l.add('normal-mode');
-                break;
-            }
-            default:
-                break;
-        }
+    redraw() {
+        this.ctx.clearRect(0, 0, this.element.width, this.element.height);
+        const cursor_width = this.store.mode === 'insert' ? (window.devicePixelRatio || 1) : this.store.font_attr.draw_width;
+        const cursor_height = this.store.font_attr.draw_height;
+        const x = this.store.cursor.col * this.store.font_attr.draw_width;
+        const y = this.store.cursor.line * this.store.font_attr.draw_height;
+        const captured = this.screen_ctx.getImageData(x, y, cursor_width, cursor_height);
+        this.ctx.putImageData(invertColor(captured), 0, 0);
     }
 
     updateCursorPos() {
@@ -63,7 +60,7 @@ export default class NeovimCursor {
 
         this.element.style.left = x + 'px';
         this.element.style.top = y + 'px';
-
         log.debug(`Cursor is moved to (${x}, ${y})`);
+        this.redraw();
     }
 }

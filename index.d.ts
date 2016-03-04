@@ -205,10 +205,9 @@ export declare function disableAltKey(disabled: boolean): {
 }
 
 export class NeovimCursor {
-    element: HTMLDivElement;
-    constructor(store: NeovimStore);
+    constructor(store: NeovimStore, screen_ctx: CanvasRenderingContext2D);
     updateSize(): void;
-    updateColor(): void;
+    redraw(): void;
     onModeChanged(): void;
     updateCursorPos(): void;
 }
