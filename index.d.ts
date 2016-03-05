@@ -47,16 +47,18 @@ export declare enum Kind {
     SetIcon = 19,
     SetScrollRegion = 20,
     SetTitle = 21,
-    UpdateBG = 22,
-    UpdateFG = 23,
-    UpdateFontFace = 24,
-    updateLineHeight = 25,
-    UpdateFontPx = 26,
-    UpdateFontSize = 27,
-    UpdateScreenBounds = 28,
-    UpdateScreenSize = 29,
-    WheelScroll = 30,
-    FocusChanged = 31,
+    StartBlinkCursor = 22,
+    StopBlinkCursor = 23,
+    UpdateBG = 24,
+    UpdateFG = 25,
+    UpdateFontFace = 26,
+    updateLineHeight = 27,
+    UpdateFontPx = 28,
+    UpdateFontSize = 29,
+    UpdateScreenBounds = 30,
+    UpdateScreenSize = 31,
+    WheelScroll = 32,
+    FocusChanged = 33,
 }
 export interface ActionType {
     type: Kind;
@@ -209,6 +211,12 @@ export declare function changeCursorDrawDelay(delay: number): {
     type: Kind;
     delay: number;
 }
+export declare function startBlinkCursor(): {
+    type: Kind;
+}
+export declare function stopBlinkCursor(): {
+    type: Kind;
+}
 
 export class NeovimCursor {
     constructor(store: NeovimStore, screen_ctx: CanvasRenderingContext2D);
@@ -320,6 +328,7 @@ export interface FontAttributes {
 }
 export declare type DispatcherType = Dispatcher<ActionType>;
 export class NeovimStore extends EventEmitter {
+    blink_cursor: boolean;
     cursor_draw_delay: number;
     dispatch_token: string;
     size: Size;
@@ -344,7 +353,7 @@ export class Neovim extends EventEmitter {
     process: NeovimProcess;
     screen: NeovimScreen;
     store: NeovimStore;
-    constructor(command: string, argv: string[], font: string, font_size: number, line_height: number);
+    constructor(command: string, argv: string[], font: string, font_size: number, line_height: number, blink_cursor: boolean);
     attachCanvas(width: number, height: number, canvas: HTMLCanvasElement): void;
     quit(): void;
     getClient(): Nvim;
@@ -361,6 +370,7 @@ export class NeovimElement extends HTMLElement {
     fontSize: number;
     font: string;
     lineHeight: number;
+    blinkCursor: boolean;
     nvimCmd: string;
     argv: string[];
     onProcessAttached: () => void;

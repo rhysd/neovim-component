@@ -9,6 +9,7 @@ import {
     updateLineHeight,
     disableAltKey,
     changeCursorDrawDelay,
+    startBlinkCursor,
 } from './neovim/actions';
 import {Nvim} from 'promised-neovim-client';
 
@@ -24,7 +25,8 @@ export default class Neovim extends EventEmitter {
             font_size: number,
             line_height: number,
             disable_alt_key: boolean,
-            draw_delay: number
+            draw_delay: number,
+            blink_cursor: boolean
     ) {
         super();
 
@@ -36,6 +38,9 @@ export default class Neovim extends EventEmitter {
             this.store.dispatcher.dispatch(disableAltKey(true));
         }
         this.store.dispatcher.dispatch(changeCursorDrawDelay(draw_delay));
+        if (blink_cursor) {
+            this.store.dispatcher.dispatch(startBlinkCursor());
+        }
 
         this.process = new Process(this.store, command, argv);
     }

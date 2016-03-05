@@ -73,6 +73,7 @@ export default class NeovimStore extends EventEmitter {
     line_height: number;
     alt_key_disabled: boolean;
     cursor_draw_delay: number;
+    blink_cursor: boolean;
 
     constructor() {
         super();
@@ -118,6 +119,7 @@ export default class NeovimStore extends EventEmitter {
         this.line_height = 1.2;
         this.alt_key_disabled = false;
         this.cursor_draw_delay = 10;
+        this.blink_cursor = true;
         this.dispatch_token = this.dispatcher.register(this.receiveAction.bind(this));
     }
 
@@ -343,6 +345,22 @@ export default class NeovimStore extends EventEmitter {
                 this.cursor_draw_delay = action.delay;
                 this.emit('cursor-draw-delay-changed');
                 log.info('Drawing cursor is delayed by ' + action.delay + 'ms');
+                break;
+            }
+            case Kind.StartBlinkCursor: {
+                const changed = this.blink_cursor === false;
+                this.blink_cursor = true;
+                if (changed) {
+                    this.emit('blink-cursor-started');
+                }
+                break;
+            }
+            case Kind.StopBlinkCursor: {
+                const changed = this.blink_cursor === true;
+                this.blink_cursor = false;
+                if (changed) {
+                    this.emit('blink-cursor-stopped');
+                }
                 break;
             }
             default: {

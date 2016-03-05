@@ -1,3 +1,4 @@
+import {EventEmitter} from 'events';
 import NeovimStore from './store';
 import log from '../log';
 import {dragEnd} from './actions';
@@ -12,26 +13,94 @@ function invertColor(image: ImageData) {
     return image;
 }
 
+class CursorBlinkTimer extends EventEmitter {
+    enabled: boolean;
+    private token: number;
+    private callback: () => void;
+    private shown: boolean;
+
+    constructor(public interval: number = 1000) {
+        super();
+        this.token = null;
+        this.enabled = false;
+        this.shown = true;
+        this.callback = this._callback.bind(this);
+    }
+
+    start() {
+        if (this.enabled) {
+            return;
+        }
+        this.shown = true;
+        this.token = window.setTimeout(this.callback, this.interval);
+        this.enabled = true;
+    }
+
+    stop() {
+        if (!this.enabled) {
+            return;
+        }
+        if (this.token !== null) {
+            window.clearTimeout(this.token);
+            this.token = null;
+        }
+        this.enabled = false;
+    }
+
+    reset() {
+        this.stop();
+        this.start();
+    }
+
+    private _callback() {
+        this.shown = !this.shown;
+        this.emit('tick', this.shown);
+        this.token = window.setTimeout(this.callback, this.interval);
+    }
+}
+
 export default class NeovimCursor {
     private element: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
-    private timer_id: number;
+    private delay_timer: number;
+    private blink_timer: CursorBlinkTimer;
 
     constructor(private store: NeovimStore, private screen_ctx: CanvasRenderingContext2D) {
-        this.timer_id = null;
+        this.delay_timer = null;
+        this.blink_timer = new CursorBlinkTimer();
         this.element = document.querySelector('.neovim-cursor') as HTMLCanvasElement;
         this.element.style.top = '0px';
         this.element.style.left = '0px';
         this.ctx = this.element.getContext('2d');
         this.updateSize();
+        this.blink_timer.on('tick', (shown: boolean) => {
+            if (shown) {
+                this.redraw();
+            } else {
+                this.dismiss();
+            }
+        });
+        if (this.store.blink_cursor) {
+            this.blink_timer.start();
+        }
 
         this.element.addEventListener('mouseup', (e: MouseEvent) => {
             this.store.dispatcher.dispatch(dragEnd(e));
         });
 
         this.store.on('cursor', this.updateCursorPos.bind(this));
-        this.store.on('update-fg', this.redraw.bind(this));
+        this.store.on('update-fg', () => this.redraw());
         this.store.on('font-size-changed', this.updateSize.bind(this));
+        this.store.on('blink-cursor-started', () => this.blink_timer.start());
+        this.store.on('blink-cursor-stopped', () => this.blink_timer.stop());
+        this.store.on('busy', () => {
+            if (this.store.busy) {
+                this.blink_timer.stop();
+                this.dismiss();
+            } else {
+                this.blink_timer.start();
+            }
+        });
     }
 
     updateSize() {
@@ -43,17 +112,21 @@ export default class NeovimCursor {
         this.redraw();
     }
 
+    dismiss() {
+        this.ctx.clearRect(0, 0, this.element.width, this.element.height);
+    }
+
     redraw() {
         if (this.store.cursor_draw_delay <= 0) {
             this.redrawImpl();
             return;
         }
-        if (this.timer_id !== null) {
-            clearTimeout(this.timer_id);
+        if (this.delay_timer !== null) {
+            clearTimeout(this.delay_timer);
         } else {
             this.ctx.clearRect(0, 0, this.element.width, this.element.height);
         }
-        this.timer_id = setTimeout(this.redrawImpl.bind(this), this.store.cursor_draw_delay);
+        this.delay_timer = setTimeout(this.redrawImpl.bind(this), this.store.cursor_draw_delay);
     }
 
     updateCursorPos() {
@@ -67,10 +140,11 @@ export default class NeovimCursor {
         this.element.style.top = y + 'px';
         log.debug(`Cursor is moved to (${x}, ${y})`);
         this.redraw();
+        this.blink_timer.reset();
     }
 
     private redrawImpl() {
-        this.timer_id = null;
+        this.delay_timer = null;
         const cursor_width = this.store.mode === 'insert' ? (window.devicePixelRatio || 1) : this.store.font_attr.draw_width;
         const cursor_height = this.store.font_attr.draw_height;
         const x = this.store.cursor.col * this.store.font_attr.draw_width;
