@@ -13,14 +13,9 @@
         height: 100%;
       }
       .neovim-cursor {
-        color: transparent;
-        background-color: transparent;
         padding: 0px;
         margin: 0px;
-        border-width: 1px;
-        border-style: solid;
         position: absolute;
-        box-sizing: border-box;
       }
       .neovim-input {
         width: 1px;
@@ -30,13 +25,16 @@
         border: 0px;
         outline: none;
         vertical-align: middle;
+        position: absolute;
+        top: 0px;
+        left: 0px;
       }
     </style>
     <div class="neovim-wrapper">
       <canvas class="neovim-canvas" width$="[[width]]" height$="[[height]]"></canvas>
-      <div class="neovim-cursor">
-        <input class="neovim-input" autocomplete="off" autofocus />
-      </div>
+      <canvas class="neovim-cursor">
+      </canvas>
+      <input class="neovim-input" autocomplete="off" autofocus />
     </div>
   </template>
 </dom-module>

@@ -1,6 +1,7 @@
 `<neovim-editor>` Web Component
 ===============================
-[![Build Status](https://api.travis-ci.org/rhysd/neovim-component.svg)](https://travis-ci.org/rhysd/neovim-component)
+[![Build Status](https://travis-ci.org/rhysd/neovim-component.svg?branch=master)](https://travis-ci.org/rhysd/neovim-component)
+
 
 This component provides `<neovim-editor>` HTML custom element built on [Polymer](https://github.com/Polymer/polymer) and [flux](https://github.com/facebook/flux).
 It provides a frontend of [Neovim editor](https://github.com/neovim/neovim) using Neovim's MessagePack API and you can embed Neovim editor easily to your application.
@@ -90,18 +91,20 @@ Vim has very powerful features for editing.  But Vim is an editor (see `:help de
 
 You can customize `<neovim-editor>` with its properties.
 
-| Name              | Description                           | Default       |
-| ----------------- | ------------------------------------- | ------------- |
-| `width`           | Width of editor in pixel.             | `null`        |
-| `height`          | Height of editor in pixel.            | `null`        |
-| `font`            | Face name of font.                    | `"monospace"` |
-| `font-size`       | Font size in pixel.                   | `12`          |
-| `line-height`     | Line height rate against font size.   | `1.3`         |
-| `nvim-cmd`        | Command to start Neovim.              | `"nvim"`      |
-| `argv`            | Arguments passed to Neovim command.   | `[]`          |
-| `on-quit`         | Callback function on Neovim quitting. | `null`        |
-| `on-error`        | Callback function on error in Neovim. | `null`        |
-| `disable-alt-key` | Input `{char}` on `<A-{char}>`        | `false`       |
+| Name                | Description                              | Default       |
+| ------------------- | ---------------------------------------- | ------------- |
+| `width`             | Width of editor in pixel.                | `null`        |
+| `height`            | Height of editor in pixel.               | `null`        |
+| `font`              | Face name of font.                       | `"monospace"` |
+| `font-size`         | Font size in pixel.                      | `12`          |
+| `line-height`       | Line height rate against font size.      | `1.3`         |
+| `nvim-cmd`          | Command to start Neovim.                 | `"nvim"`      |
+| `argv`              | Arguments passed to Neovim command.      | `[]`          |
+| `on-quit`           | Callback function on Neovim quitting.    | `null`        |
+| `on-error`          | Callback function on error in Neovim.    | `null`        |
+| `disable-alt-key`   | Input `{char}` on `<A-{char}>`.          | `false`       |
+| `cursor-draw-delay` | Delay in millisec before drawing cursor. | `10`          |
+| `blink-cursor`      | Blink cursor or not.                     | `true`        |
 
 
 ## `<neovim-editor>` APIs

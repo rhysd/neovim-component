@@ -33,7 +33,7 @@ export default class NeovimScreen {
         canvas.addEventListener('mousemove', this.mouseMove.bind(this));
         canvas.addEventListener('wheel', this.wheel.bind(this));
 
-        this.cursor = new Cursor(this.store);
+        this.cursor = new Cursor(this.store, this.ctx);
         this.input = new Input(this.store);
     }
 

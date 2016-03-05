@@ -1,5 +1,8 @@
 language: node_js
 
+# https://docs.travis-ci.com/user/trusty-ci-environment/
+dist: trusty
+
 # https://github.com/travis-ci/apt-source-whitelist/pull/208
 sudo: required
 
@@ -8,7 +11,7 @@ node_js:
 install:
     - sudo add-apt-repository --yes ppa:neovim-ppa/unstable
     - sudo apt-get -qq update
-    - sudo apt-get install neovim xvfb
+    - sudo apt-get -qq install neovim xvfb libcairo2-dev libgif-dev
     - npm install -g bower
     - npm run dep
     - export DISPLAY=':99.0'

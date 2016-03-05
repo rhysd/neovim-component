@@ -49,6 +49,10 @@ describe('NeovimStore', () => {
             });
             assert.isTrue(s.focused);
             assert.equal(s.line_height, 1.2);
+            assert.equal(s.alt_key_disabled, false);
+            assert.equal(s.cursor_draw_delay, 10);
+            assert.equal(s.blink_cursor, true);
+            assert.equal(s.cursor_blink_interval, 1000);
         });
     });
 
@@ -576,5 +580,50 @@ describe('NeovimStore', () => {
             assert.equal(s.line_height, 1.5);
         });
 
+        it('accepts disabling alt key event', () => {
+            const s = new NeovimStore();
+            var flag = false;
+            s.on('alt-key-disabled', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.disableAltKey(true));
+            assert.isTrue(flag, 'alt-key-disabled event was not fired');
+            assert.equal(s.alt_key_disabled, true);
+        });
+
+        it('accepts cursor draw delay change event', () => {
+            const s = new NeovimStore();
+            var flag = false;
+            s.on('cursor-draw-delay-changed', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.changeCursorDrawDelay(0));
+            assert.isTrue(flag, 'cursor-draw-delay-changed event was not fired');
+            assert.equal(s.cursor_draw_delay, 0);
+        });
+
+        it('accepts cursor blinking event', () => {
+            const s = new NeovimStore();
+            var flag = false;
+
+            s.on('blink-cursor-stopped', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.stopBlinkCursor());
+            assert.isTrue(flag, 'blink-cursor-stopped event was not fired');
+            flag = false;
+            s.dispatcher.dispatch(A.stopBlinkCursor());
+            assert.isFalse(flag, 'blink-cursor-stopped event was incorrectly fired because cursor blinking state did not change');
+
+            flag = false;
+            s.on('blink-cursor-started', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.startBlinkCursor());
+            assert.isTrue(flag, 'blink-cursor-started event was not fired');
+            flag = false;
+            s.dispatcher.dispatch(A.startBlinkCursor());
+            assert.isFalse(flag, 'blink-cursor-started event was incorrectly fired because cursor blinking state did not change');
+        });
     });
 });

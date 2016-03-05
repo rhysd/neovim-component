@@ -21,6 +21,7 @@ export enum Kind {
     Bell,
     BusyStart,
     BusyStop,
+    ChangeCursorDrawDelay,
     ClearAll,
     ClearEOL,
     Cursor,
@@ -39,6 +40,8 @@ export enum Kind {
     SetIcon,
     SetScrollRegion,
     SetTitle,
+    StartBlinkCursor,
+    StopBlinkCursor,
     UpdateBG,
     UpdateFG,
     UpdateFontFace,
@@ -56,6 +59,7 @@ export interface ActionType {
     col?: number;
     color?: number;
     cols?: number;
+    delay?: number;
     disabled?: boolean;
     draw_width?: number;
     draw_height?: number;
@@ -105,14 +109,14 @@ export function highlight(highlight: HighlightSet) {
 export function clearAll() {
     'use strict';
     return {
-        type: Kind.ClearAll
+        type: Kind.ClearAll,
     };
 }
 
 export function clearEndOfLine() {
     'use strict';
     return {
-        type: Kind.ClearEOL
+        type: Kind.ClearEOL,
     };
 }
 
@@ -151,14 +155,14 @@ export function changeMode(mode: string) {
 export function startBusy() {
     'use strict';
     return {
-        type: Kind.BusyStart
+        type: Kind.BusyStart,
     };
 }
 
 export function stopBusy() {
     'use strict';
     return {
-        type: Kind.BusyStop
+        type: Kind.BusyStop,
     };
 }
 
@@ -218,14 +222,14 @@ export function updateScreenBounds(lines: number, cols: number) {
 export function enableMouse() {
     'use strict';
     return {
-        type: Kind.EnableMouse
+        type: Kind.EnableMouse,
     };
 }
 
 export function disableMouse() {
     'use strict';
     return {
-        type: Kind.DisableMouse
+        type: Kind.DisableMouse,
     };
 }
 
@@ -322,5 +326,26 @@ export function disableAltKey(disabled: boolean) {
     return {
         type: Kind.DisableAltKey,
         disabled,
+    };
+}
+
+export function changeCursorDrawDelay(delay: number) {
+    'use strict';
+    return {
+        type: Kind.ChangeCursorDrawDelay,
+        delay,
+    };
+}
+
+export function startBlinkCursor() {
+    'use strict';
+    return {
+        type: Kind.StartBlinkCursor,
+    };
+}
+export function stopBlinkCursor() {
+    'use strict';
+    return {
+        type: Kind.StopBlinkCursor,
     };
 }
