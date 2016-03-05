@@ -19,7 +19,7 @@ class CursorBlinkTimer extends EventEmitter {
     private token: number;
     private callback: () => void;
 
-    constructor(public interval: number = 1000) {
+    constructor(public interval: number) {
         super();
         this.token = null;
         this.enabled = false;
@@ -48,8 +48,10 @@ class CursorBlinkTimer extends EventEmitter {
     }
 
     reset() {
-        this.stop();
-        this.start();
+        if (this.enabled) {
+            this.stop();
+            this.start();
+        }
     }
 
     private _callback() {
@@ -67,7 +69,7 @@ export default class NeovimCursor {
 
     constructor(private store: NeovimStore, private screen_ctx: CanvasRenderingContext2D) {
         this.delay_timer = null;
-        this.blink_timer = new CursorBlinkTimer();
+        this.blink_timer = new CursorBlinkTimer(this.store.cursor_blink_interval);
         this.element = document.querySelector('.neovim-cursor') as HTMLCanvasElement;
         this.element.style.top = '0px';
         this.element.style.left = '0px';
@@ -145,9 +147,7 @@ export default class NeovimCursor {
         this.element.style.top = y + 'px';
         log.debug(`Cursor is moved to (${x}, ${y})`);
         this.redraw();
-        if (this.store.blink_cursor && this.blink_timer.enabled) {
-            this.blink_timer.reset();
-        }
+        this.blink_timer.reset();
     }
 
     private redrawImpl() {

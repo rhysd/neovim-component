@@ -74,6 +74,7 @@ export default class NeovimStore extends EventEmitter {
     alt_key_disabled: boolean;
     cursor_draw_delay: number;
     blink_cursor: boolean;
+    cursor_blink_interval: number;
 
     constructor() {
         super();
@@ -120,6 +121,7 @@ export default class NeovimStore extends EventEmitter {
         this.alt_key_disabled = false;
         this.cursor_draw_delay = 10;
         this.blink_cursor = true;
+        this.cursor_blink_interval = 1000;
         this.dispatch_token = this.dispatcher.register(this.receiveAction.bind(this));
     }
 

@@ -329,6 +329,7 @@ export interface FontAttributes {
 export declare type DispatcherType = Dispatcher<ActionType>;
 export class NeovimStore extends EventEmitter {
     blink_cursor: boolean;
+    cursor_blink_interval: number;
     cursor_draw_delay: number;
     dispatch_token: string;
     size: Size;
