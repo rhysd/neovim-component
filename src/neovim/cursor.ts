@@ -5,10 +5,11 @@ import {dragEnd} from './actions';
 
 function invertColor(image: ImageData) {
     'use strict';
-    for (let i = 0; i < image.data.length; i+=4) {
-        image.data[i] = 255 - image.data[i];     // Red
-        image.data[i+1] = 255 - image.data[i+1]; // Green
-        image.data[i+2] = 255 - image.data[i+2]; // Blue
+    const d = image.data;
+    for (let i = 0; i < d.length; i+=4) {
+        d[i] = 255 - d[i];     // Red
+        d[i+1] = 255 - d[i+1]; // Green
+        d[i+2] = 255 - d[i+2]; // Blue
     }
     return image;
 }
@@ -88,6 +89,13 @@ export default class NeovimCursor {
 
         this.element.addEventListener('mouseup', (e: MouseEvent) => {
             this.store.dispatcher.dispatch(dragEnd(e));
+        });
+        this.element.addEventListener('click', (e: MouseEvent) => {
+            e.preventDefault();
+            const i = document.querySelector('.neovim-input') as HTMLInputElement;
+            if (i) {
+                i.focus();
+            }
         });
 
         this.store.on('cursor', this.updateCursorPos.bind(this));
