@@ -15,9 +15,9 @@ function invertColor(image: ImageData) {
 
 class CursorBlinkTimer extends EventEmitter {
     enabled: boolean;
+    shown: boolean;
     private token: number;
     private callback: () => void;
-    private shown: boolean;
 
     constructor(public interval: number = 1000) {
         super();
@@ -95,12 +95,17 @@ export default class NeovimCursor {
         this.store.on('blink-cursor-stopped', () => this.blink_timer.stop());
         this.store.on('busy', () => {
             if (this.store.busy) {
-                this.blink_timer.stop();
                 this.dismiss();
+                this.blink_timer.stop();
             } else {
-                this.blink_timer.start();
+                this.redraw();
+                if (this.store.blink_cursor) {
+                    this.blink_timer.start();
+                }
             }
         });
+        this.store.on('focus-changed', () => this.updateCursorBlinking(this.store.focused));
+        this.store.on('mode', () => this.updateCursorBlinking(this.store.mode !== 'insert'));
     }
 
     updateSize() {
@@ -140,7 +145,9 @@ export default class NeovimCursor {
         this.element.style.top = y + 'px';
         log.debug(`Cursor is moved to (${x}, ${y})`);
         this.redraw();
-        this.blink_timer.reset();
+        if (this.store.blink_cursor && this.blink_timer.enabled) {
+            this.blink_timer.reset();
+        }
     }
 
     private redrawImpl() {
@@ -153,4 +160,16 @@ export default class NeovimCursor {
         this.ctx.putImageData(invertColor(captured), 0, 0);
     }
 
+    private updateCursorBlinking(should_blink: boolean) {
+        if (should_blink) {
+            if (this.store.blink_cursor) {
+                this.blink_timer.start();
+            }
+        } else {
+            this.blink_timer.stop();
+            if (!this.blink_timer.shown) {
+                this.redraw();
+            }
+        }
+    }
 }
