@@ -21,7 +21,7 @@
     "example": "electron .",
     "lint": "tslint $(git ls-files | grep -E \"\\.ts$\")",
     "watch": "cd \"$(npm prefix)\" && guard --watchdir src test",
-    "test": "cd \"$(npm prefix)\" && mocha test/unit/ test/e2e/"
+    "test": "cd \"$(npm prefix)\" && mocha test/unit/"
   },
   "keywords": [
     "neovim",

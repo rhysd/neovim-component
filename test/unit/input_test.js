@@ -4,6 +4,9 @@ const jsdom = require('jsdom').jsdom;
 const NeovimStore = require('../../src/out/neovim/store').default;
 const NeovimInput = require('../../src/out/neovim/input').default;
 
+(function(){
+var window;
+
 function keydownEvent(opts) {
     const o = opts || {};
     if (o.keyCode) {
@@ -52,7 +55,7 @@ describe('NeovimInput', () => {
         global.document = jsdom('<body><input class="neovim-input"/></body>');
         global.input_element = document.querySelector('.neovim-input');
         input_element.value = '';
-        global.window = document.defaultView;
+        window = document.defaultView;
         const s = new NeovimStore();
         /* eslint no-unused-vars:0 */
         global.input = new NeovimInput(s);
@@ -64,7 +67,6 @@ describe('NeovimInput', () => {
 
     after(() => {
         delete global.document;
-        delete global.window;
         delete global.input;
         delete global.input_element;
     });
@@ -219,4 +221,4 @@ describe('NeovimInput', () => {
         assert.equal(input_element.style.top, store.cursor.line * store.font_attr.height + 'px');
     });
 });
-
+})();
