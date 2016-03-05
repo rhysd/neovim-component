@@ -1,4 +1,5 @@
 global.require = require;
+global.window = global;
 const assert = require('chai').assert;
 const jsdom = require('jsdom').jsdom;
 const A = require('../../src/out/neovim/actions');
