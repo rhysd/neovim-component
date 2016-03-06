@@ -40,7 +40,6 @@ export type DispatcherType = Dispatcher<ActionType>;
 
 // Note: 0x001203 -> '#001203'
 function colorString(new_color: number, fallback: string) {
-    'use strict';
     if (typeof new_color !== 'number' || new_color < 0) {
         return fallback;
     }

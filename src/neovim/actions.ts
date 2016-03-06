@@ -83,7 +83,6 @@ export interface ActionType {
 }
 
 export function putText(text: string[][]) {
-    'use strict';
     return {
         type: Kind.PutText,
         text,
@@ -91,7 +90,6 @@ export function putText(text: string[][]) {
 }
 
 export function cursor(line: number, col: number) {
-    'use strict';
     return {
         type: Kind.Cursor,
         line, col,
@@ -99,7 +97,6 @@ export function cursor(line: number, col: number) {
 }
 
 export function highlight(highlight: HighlightSet) {
-    'use strict';
     return {
         type: Kind.Highlight,
         highlight,
@@ -107,21 +104,18 @@ export function highlight(highlight: HighlightSet) {
 }
 
 export function clearAll() {
-    'use strict';
     return {
         type: Kind.ClearAll,
     };
 }
 
 export function clearEndOfLine() {
-    'use strict';
     return {
         type: Kind.ClearEOL,
     };
 }
 
 export function resize(lines: number, cols: number) {
-    'use strict';
     return {
         type: Kind.Resize,
         lines, cols,
@@ -129,7 +123,6 @@ export function resize(lines: number, cols: number) {
 }
 
 export function updateForeground(color: number) {
-    'use strict';
     return {
         type: Kind.UpdateFG,
         color,
@@ -137,7 +130,6 @@ export function updateForeground(color: number) {
 }
 
 export function updateBackground(color: number) {
-    'use strict';
     return {
         type: Kind.UpdateBG,
         color,
@@ -145,7 +137,6 @@ export function updateBackground(color: number) {
 }
 
 export function changeMode(mode: string) {
-    'use strict';
     return {
         type: Kind.Mode,
         mode,
@@ -153,21 +144,18 @@ export function changeMode(mode: string) {
 }
 
 export function startBusy() {
-    'use strict';
     return {
         type: Kind.BusyStart,
     };
 }
 
 export function stopBusy() {
-    'use strict';
     return {
         type: Kind.BusyStop,
     };
 }
 
 export function updateFontSize(draw_width: number, draw_height: number, width: number, height: number) {
-    'use strict';
     return {
         type: Kind.UpdateFontSize,
         draw_width, draw_height,
@@ -176,7 +164,6 @@ export function updateFontSize(draw_width: number, draw_height: number, width: n
 }
 
 export function inputToNeovim(input: string) {
-    'use strict';
     return {
         type: Kind.Input,
         input,
@@ -184,7 +171,6 @@ export function inputToNeovim(input: string) {
 }
 
 export function updateFontPx(font_px: number) {
-    'use strict';
     return {
         type: Kind.UpdateFontPx,
         font_px,
@@ -192,7 +178,6 @@ export function updateFontPx(font_px: number) {
 }
 
 export function updateFontFace(font_face: string) {
-    'use strict';
     return {
         type: Kind.UpdateFontFace,
         font_face,
@@ -200,7 +185,6 @@ export function updateFontFace(font_face: string) {
 }
 
 export function updateScreenSize(width: number, height: number) {
-    'use strict';
     return {
         type: Kind.UpdateScreenSize,
         width, height,
@@ -212,7 +196,6 @@ export function updateScreenSize(width: number, height: number) {
 // for neovim's UI event and this function is used to change screen bounds
 // via NeovimScreen's API.
 export function updateScreenBounds(lines: number, cols: number) {
-    'use strict';
     return {
         type: Kind.UpdateScreenBounds,
         lines, cols,
@@ -220,21 +203,18 @@ export function updateScreenBounds(lines: number, cols: number) {
 }
 
 export function enableMouse() {
-    'use strict';
     return {
         type: Kind.EnableMouse,
     };
 }
 
 export function disableMouse() {
-    'use strict';
     return {
         type: Kind.DisableMouse,
     };
 }
 
 export function dragStart(event: MouseEvent) {
-    'use strict';
     return {
         type: Kind.DragStart,
         event,
@@ -242,7 +222,6 @@ export function dragStart(event: MouseEvent) {
 }
 
 export function dragUpdate(event: MouseEvent) {
-    'use strict';
     return {
         type: Kind.DragUpdate,
         event,
@@ -250,7 +229,6 @@ export function dragUpdate(event: MouseEvent) {
 }
 
 export function dragEnd(event: MouseEvent) {
-    'use strict';
     return {
         type: Kind.DragEnd,
         event,
@@ -258,7 +236,6 @@ export function dragEnd(event: MouseEvent) {
 }
 
 export function bell(visual: boolean) {
-    'use strict';
     return {
         type: Kind.Bell,
         visual,
@@ -266,7 +243,6 @@ export function bell(visual: boolean) {
 }
 
 export function setTitle(title: string) {
-    'use strict';
     return {
         type: Kind.SetTitle,
         title,
@@ -274,7 +250,6 @@ export function setTitle(title: string) {
 }
 
 export function setIcon(icon_path: string) {
-    'use strict';
     return {
         type: Kind.SetIcon,
         icon_path,
@@ -282,7 +257,6 @@ export function setIcon(icon_path: string) {
 }
 
 export function wheelScroll(event: WheelEvent) {
-    'use strict';
     return {
         type: Kind.WheelScroll,
         event,
@@ -290,7 +264,6 @@ export function wheelScroll(event: WheelEvent) {
 }
 
 export function scrollScreen(cols: number) {
-    'use strict';
     return {
         type: Kind.ScrollScreen,
         cols,
@@ -298,7 +271,6 @@ export function scrollScreen(cols: number) {
 }
 
 export function setScrollRegion(region: Region) {
-    'use strict';
     return {
         type: Kind.SetScrollRegion,
         region,
@@ -306,7 +278,6 @@ export function setScrollRegion(region: Region) {
 }
 
 export function notifyFocusChanged(focused: boolean) {
-    'use strict';
     return {
         type: Kind.FocusChanged,
         focused,
@@ -314,7 +285,6 @@ export function notifyFocusChanged(focused: boolean) {
 }
 
 export function updateLineHeight(line_height: number) {
-    'use strict';
     return {
         type: Kind.UpdateLineHeight,
         line_height,
@@ -322,7 +292,6 @@ export function updateLineHeight(line_height: number) {
 }
 
 export function disableAltKey(disabled: boolean) {
-    'use strict';
     return {
         type: Kind.DisableAltKey,
         disabled,
@@ -330,7 +299,6 @@ export function disableAltKey(disabled: boolean) {
 }
 
 export function changeCursorDrawDelay(delay: number) {
-    'use strict';
     return {
         type: Kind.ChangeCursorDrawDelay,
         delay,
@@ -338,13 +306,11 @@ export function changeCursorDrawDelay(delay: number) {
 }
 
 export function startBlinkCursor() {
-    'use strict';
     return {
         type: Kind.StartBlinkCursor,
     };
 }
 export function stopBlinkCursor() {
-    'use strict';
     return {
         type: Kind.StopBlinkCursor,
     };

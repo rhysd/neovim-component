@@ -4,7 +4,6 @@ import log from '../log';
 import {dragEnd} from './actions';
 
 function invertColor(image: ImageData) {
-    'use strict';
     const d = image.data;
     for (let i = 0; i < d.length; i+=4) {
         d[i] = 255 - d[i];     // Red
