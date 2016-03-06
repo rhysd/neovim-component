@@ -3,14 +3,67 @@ import NeovimStore from './store';
 import log from '../log';
 import {dragEnd} from './actions';
 
-function invertColor(image: ImageData) {
+function guessColors(image: ImageData) {
     'use strict';
     const d = image.data;
+    const colors = [] as [number, number[]][];
+
+    LOOP:
     for (let i = 0; i < d.length; i+=4) {
-        d[i] = 255 - d[i];     // Red
-        d[i+1] = 255 - d[i+1]; // Green
-        d[i+2] = 255 - d[i+2]; // Blue
+        const r = d[0], g = d[1], b = d[2];
+        for (let idx in colors) {
+            const c = colors[idx][1];
+            if (c[0] === r && c[1] === g && c[2] === b) {
+                colors[idx][0] += 1;
+                continue LOOP;
+            }
+        }
+        colors.push([1, [r, g, b]]);
     }
+
+    return colors
+        .sort((l, r) => l[0] - r[0])
+        .slice(colors.length - 2)
+        .map(c => c[1]);
+}
+
+function maskFgBg(image: ImageData) {
+    'use strict';
+    const d = image.data;
+    const guessed = guessColors(image);
+    if (guessed.length === 1) {
+        // Note: Fall back
+        guessed.push([
+            255 - guessed[0][0],
+            255 - guessed[0][1],
+            255 - guessed[0][2],
+        ]);
+    }
+
+    for (let i = 0; i < d.length; i+=4) {
+        const r = d[i], g = d[i+1], b = d[i+2];
+
+        if (guessed[0][0] === r &&
+            guessed[0][1] === g &&
+            guessed[0][2] === b) {
+
+            d[i] = guessed[1][0];
+            d[i+1] = guessed[1][1];
+            d[i+2] = guessed[1][2];
+
+        } else {
+
+            // Note:
+            // guessed[0] appears more frequently than guessed[1].
+            // So we should guess guessed[0] is a backgroundcolor.
+
+            d[i] = guessed[0][0];
+            d[i+1] = guessed[0][1];
+            d[i+2] = guessed[0][2];
+
+        }
+    }
+
     return image;
 }
 
@@ -160,12 +213,17 @@ export default class NeovimCursor {
 
     private redrawImpl() {
         this.delay_timer = null;
-        const cursor_width = this.store.mode === 'insert' ? (window.devicePixelRatio || 1) : this.store.font_attr.draw_width;
-        const cursor_height = this.store.font_attr.draw_height;
-        const x = this.store.cursor.col * this.store.font_attr.draw_width;
-        const y = this.store.cursor.line * this.store.font_attr.draw_height;
-        const captured = this.screen_ctx.getImageData(x, y, cursor_width, cursor_height);
-        this.ctx.putImageData(invertColor(captured), 0, 0);
+        if (this.store.mode === 'insert') {
+            this.ctx.fillStyle = this.store.fg_color;
+            this.ctx.fillRect(0, 0, window.devicePixelRatio || 1, this.store.font_attr.draw_height);
+        } else {
+            const cursor_width = this.store.font_attr.draw_width;
+            const cursor_height = this.store.font_attr.draw_height;
+            const x = this.store.cursor.col * this.store.font_attr.draw_width;
+            const y = this.store.cursor.line * this.store.font_attr.draw_height;
+            const captured = this.screen_ctx.getImageData(x, y, cursor_width, cursor_height);
+            this.ctx.putImageData(maskFgBg(captured), 0, 0);
+        }
     }
 
     private updateCursorBlinking(should_blink: boolean) {
