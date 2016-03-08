@@ -1,13 +1,13 @@
 global.require = require;
 const assert = require('chai').assert;
 const jsdom = require('jsdom').jsdom;
-const createEvent = jsdom().createEvent;
+const document = jsdom();
 const ScreenDrag = require('../../src/out/neovim/screen-drag').default;
 const NeovimStore = require('../../src/out/neovim/store').default;
 
 function eventFactory(kind) {
     return function (opts) {
-        var e = createEvent('UIEvents');
+        var e = document.createEvent('UIEvents');
         e.initEvent('mouse' + kind, true, false);
         if (opts) {
             for (var k in opts) {

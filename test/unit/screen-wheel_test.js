@@ -1,13 +1,13 @@
 global.require = require;
 const assert = require('chai').assert;
 const jsdom = require('jsdom').jsdom;
-const createEvent = jsdom().createEvent;
+const document = jsdom();
 const ScreenWheel = require('../../src/out/neovim/screen-wheel').default;
 const NeovimStore = require('../../src/out/neovim/store').default;
 
 
 function wheelEvent(x, y, opts) {
-    var e = createEvent('UIEvents');
+    var e = document.createEvent('UIEvents');
     e.initEvent('wheel', true, false);
     if (opts) {
         for (var k in opts) {
