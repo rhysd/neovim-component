@@ -116,6 +116,12 @@ export default class NeovimInput {
                     // Note:
                     // When <C-m> is input (77 is key code of 'm')
                     return 'm';
+                } else if (ctrl && key_code === 67) {
+                    // XXX:
+                    // This is workaround for a bug of Chromium.  Ctrl+c emits wrong KeyboardEvent.key.
+                    // (It should be "\uxxxx" but actually "Enter")
+                    // https://github.com/rhysd/NyaoVim/issues/37
+                    return 'c';
                 } else {
                     return 'CR';
                 }
