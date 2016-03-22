@@ -92,11 +92,7 @@ export default class NeovimScreen {
         // On the other hand, line-height is managed by us completely.  So
         // we can use Math.ceil(font_height) at this point and it resolves
         // some rendering issues (see #12).
-        const font_height = Math.ceil(
-            this.store.line_height === 1.2 ?
-                font_width * 2 :
-                drawn_px * this.store.line_height
-        );
+        const font_height = drawn_px;
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
         this.store.dispatcher.dispatch(
             A.updateFontSize(
@@ -242,7 +238,7 @@ export default class NeovimScreen {
         // Line height of <canvas> is fixed to 1.2 (normal).
         // If the specified line height is not 1.2, we should calculate
         // the difference of margin-bottom of text.
-        const margin = font_size * (this.store.line_height - 1.2) / 2;
+        const margin = (draw_height - font_size) / 2;
         const y = Math.floor(line * draw_height + margin);
         const x = col * draw_width;
         this.drawChars(x, y, chars, draw_width);
