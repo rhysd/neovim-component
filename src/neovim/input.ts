@@ -143,7 +143,10 @@ export default class NeovimInput {
     }
 
     static getVimSpecialCharInput(event: KeyboardEvent) {
-        const special_char = event.key === undefined ?
+        const should_fallback =
+            (event.key === undefined) ||
+            (event.key === '\0' && event.keyCode !== 0);
+        const special_char = should_fallback ?
                         NeovimInput.getVimSpecialCharFromKeyCode(event.keyCode, event.shiftKey) :
                         NeovimInput.getVimSpecialCharFromKey(event);
         if (!special_char) {
