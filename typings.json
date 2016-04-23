@@ -1,11 +1,12 @@
 {
   "ambientDependencies": {
-    "es6-promise": "github:DefinitelyTyped/DefinitelyTyped/es6-promise/es6-promise.d.ts#fa04c80f4a889613b96cb4f283848c61a9f64233",
-    "flux": "github:DefinitelyTyped/DefinitelyTyped/flux/flux.d.ts#ba424f7ee39717d51c17699a09ac8df312a7e9a1",
-    "github-electron": "github:DefinitelyTyped/DefinitelyTyped/github-electron/github-electron.d.ts#88cc695e1f75df3c2da8a0c68e535f35ee806638",
-    "loglevel": "github:DefinitelyTyped/DefinitelyTyped/loglevel/loglevel.d.ts#fb2b3b1e068c9ff7d8f9b0851c08d37d96c95c38",
-    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#fa04c80f4a889613b96cb4f283848c61a9f64233",
-    "polymer": "github:DefinitelyTyped/DefinitelyTyped/polymer/polymer.d.ts#fa04c80f4a889613b96cb4f283848c61a9f64233",
-    "webcomponents.js": "github:DefinitelyTyped/DefinitelyTyped/webcomponents.js/webcomponents.js.d.ts#fa04c80f4a889613b96cb4f283848c61a9f64233"
+    "es6-promise": "registry:dt/es6-promise#0.0.0+20160317120654",
+    "flux": "registry:dt/flux#0.0.0+20160317120654",
+    "github-electron": "registry:dt/github-electron#0.37.6+20160417155838",
+    "loglevel": "registry:dt/loglevel#1.4.0+20160412141402",
+    "node": "registry:dt/node#4.0.0+20160412142033",
+    "polymer": "registry:dt/polymer#1.1.6+20160317120654",
+    "react": "registry:dt/react#0.14.0+20160412154040",
+    "webcomponents.js": "registry:dt/webcomponents.js#0.6.0+20160317120654"
   }
 }
