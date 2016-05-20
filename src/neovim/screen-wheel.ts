@@ -82,7 +82,7 @@ export default class ScreenWheel {
             seq += 'S-';
         }
         seq += `ScrollWheel${this.getDirection(scroll_x, scroll_y)}>`;
-        seq += `<${this.col},${this.line}>`; // This is really needed?
+        seq += `<${this.col},${this.line}>`;
         return seq;
     }
 }
