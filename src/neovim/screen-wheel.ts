@@ -47,7 +47,6 @@ export default class ScreenWheel {
 
         this.line = Math.floor(e.y / this.store.font_attr.height);
         this.col  = Math.floor(e.x / this.store.font_attr.width);
-        let pos = e as any;
 
         const input = this.getInput(scroll_x, scroll_y);
         log.debug(`Scroll (${scroll_x}, ${scroll_y})`);
