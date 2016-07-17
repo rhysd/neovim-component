@@ -276,15 +276,22 @@ export default class NeovimInput {
 
         if (event.key) {
             if (event.key.length === 1) {
-                let input = event.key;
-                if (event.altKey) {
-                    // Note:
-                    // KeyboardEvent.key considers Ctrl key and Shift key because
-                    // they're reflected to key code value.  But Alt key is not considered.
-                    // So we should care.
-                    input = `<A-${input}>`;
+                let input = '<';
+                if (event.ctrlKey) {
+                    input += 'C-';
                 }
-                this.inputToNeovim(input, event);
+                if (event.altKey) {
+                    input += 'A-';
+                }
+                if (event.shiftKey) {
+                    input += 'S-';
+                }
+                if (input === '<') {
+                    // Note: No modifier was pressed
+                    this.inputToNeovim(event.key, event);
+                } else {
+                    this.inputToNeovim(input + event.key + '>', event);
+                }
             } else {
                 log.warn("Invalid key input on 'keydown': ", event.key);
             }
@@ -301,7 +308,9 @@ export default class NeovimInput {
         event.preventDefault();
         event.stopPropagation();
         const t = event.target as HTMLInputElement;
-        t.value = '';
+        if (t.value) {
+            t.value = '';
+        }
     }
 
     onInputText(event: KeyboardEvent) {
