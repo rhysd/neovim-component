@@ -93,10 +93,9 @@ describe('NeovimInput', () => {
         });
 
         it('accepts input with ctrl key', () => {
-            assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true}), '\u0001');  // <C-a>
-            assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true}), '\u000f');  // <C-o>
-            // Note: Ctrl key input is omitted in many Ctrl+{number} or Ctrl+{sign} sequences.
-            assert.equal(inputByKeydown({key: '3', ctrlKey: true}), '3');
+            assert.equal(inputByKeydown({key: 'a', ctrlKey: true}), '<C-a>');
+            assert.equal(inputByKeydown({key: 'o', ctrlKey: true}), '<C-o>');
+            assert.equal(inputByKeydown({key: '3', ctrlKey: true}), '<C-3>');
         });
 
         it('accepts input with alt key', () => {
@@ -106,8 +105,8 @@ describe('NeovimInput', () => {
         });
 
         it('accepts input with alt+ctrl keys', () => {
-            assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true, altKey: true}), '<A-\u0001>');  // Ctrl is included in \u0001
-            assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true, altKey: true}), '<A-\u000f>');  // Ctrl is included in \u000f
+            assert.equal(inputByKeydown({key: 'a', ctrlKey: true, altKey: true}), '<C-A-a>');  // Ctrl is included in \u0001
+            assert.equal(inputByKeydown({key: 'o', ctrlKey: true, altKey: true}), '<C-A-o>');  // Ctrl is included in \u000f
         });
 
         it('accepts special keys', () => {
@@ -151,8 +150,8 @@ describe('NeovimInput', () => {
                 dispatchKeydown({key: 'a', altKey: true});
                 assert.equal(last_input, 'a');
 
-                assert.equal(inputByKeydown({key: '\u0001', altKey: true, ctrlKey: true}), '\u0001');  // <C-a>
-                assert.equal(inputByKeydown({key: '\u000f', altKey: true, shiftKey: true, ctrlKey: true}), '\u000f');  // <C-o>
+                assert.equal(inputByKeydown({key: 'a', altKey: true, ctrlKey: true}), '<C-a>');
+                assert.equal(inputByKeydown({key: 'o', altKey: true, shiftKey: true, ctrlKey: true}), '<C-S-o>');
             });
 
             it('does not ignore any other modifiers', () => {
@@ -162,8 +161,8 @@ describe('NeovimInput', () => {
                 dispatchKeydown({key: 'a'});
                 assert.equal(last_input, '');
 
-                assert.equal(inputByKeydown({key: '\u0001', ctrlKey: true}), '\u0001');  // <C-a>
-                assert.equal(inputByKeydown({key: '\u000f', ctrlKey: true}), '\u000f');  // <C-o>
+                assert.equal(inputByKeydown({key: 'a', ctrlKey: true}), '<C-a>');
+                assert.equal(inputByKeydown({key: 'o', ctrlKey: true, shiftKey: true}), '<C-S-o>');
             });
         });
     });
