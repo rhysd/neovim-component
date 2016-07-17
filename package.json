@@ -1,6 +1,6 @@
 {
   "name": "neovim-component",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "Polymer component for Neovim frontend",
   "main": "example/minimal/main.js",
   "bin": {
@@ -14,14 +14,14 @@
     "url": "https://github.com/rhysd/neovim-component/issues"
   },
   "scripts": {
-    "all": "npm run dep && npm run build && npm run example",
+    "start": "npm run dep && npm run build && npm run example",
     "build": "tsc --pretty -p src && browserify -o build/index.js src/out/index.js",
     "debug": "NODE_ENV=debug electron .",
-    "dep": "npm install && bower install && typings install && mkdir -p $(npm prefix)/build",
+    "dep": "npm install && bower install && typings install && mkdir -p build",
     "example": "electron .",
     "lint": "tslint $(git ls-files | grep -E \"\\.ts$\")",
-    "watch": "cd \"$(npm prefix)\" && guard --watchdir src test",
-    "test": "cd \"$(npm prefix)\" && mocha test/unit/"
+    "watch": "guard --watchdir src test",
+    "test": "mocha test/unit/"
   },
   "keywords": [
     "neovim",

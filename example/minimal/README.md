@@ -2,5 +2,5 @@ This is minimal usage of `<neovim-editor>`.  You can easily try this using `npm 
 
 ```sh
 $ cd /path/to/neovim-component
-$ npm run all # Install dependencies, build source and run this example
+$ npm start # Install dependencies, build source and run this example
 ```
