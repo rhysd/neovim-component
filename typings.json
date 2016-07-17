@@ -10,6 +10,7 @@
     "loglevel": "registry:dt/loglevel#1.4.0+20160412141402",
     "node": "registry:dt/node#6.0.0+20160709114037",
     "polymer": "registry:dt/polymer#1.1.6+20160317120654",
+    "react": "registry:dt/react#0.14.0+20160630100702",
     "webcomponents.js": "registry:dt/webcomponents.js#0.6.0+20160317120654"
   }
 }
