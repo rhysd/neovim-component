@@ -202,12 +202,12 @@ export default class NeovimInput {
         this.focus();
     }
 
-    startComposition(event: Event) {
+    startComposition(_: Event) {
         log.debug('start composition');
         this.ime_running = true;
     }
 
-    endComposition(event: Event) {
+    endComposition(_: Event) {
         log.debug('end composition');
         this.ime_running = false;
     }

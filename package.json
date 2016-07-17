@@ -49,7 +49,7 @@
     "mocha-generators": "^1.2.0",
     "nightmare": "https://github.com/rhysd/nightmare.git#custom-electron-path",
     "tslint": "^3.13.0",
-    "typescript": "^1.8.10",
+    "typescript": "^2.0.0",
     "typings": "^1.3.1"
   }
 }
