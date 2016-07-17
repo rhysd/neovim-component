@@ -42,7 +42,7 @@
       });
     });
     editor.on('quit', function() {
-      remote.require('app').quit();
+      remote.app.quit();
     });
     editor.store.on('beep', function() {
       shell.beep();
