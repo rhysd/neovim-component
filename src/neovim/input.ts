@@ -3,6 +3,7 @@ import {inputToNeovim, notifyFocusChanged} from './actions';
 import log from '../log';
 
 const OnDarwin = global.process.platform === 'darwin';
+const IsAlpha = /^[a-zA-Z]$/;
 
 export default class NeovimInput {
     element: HTMLInputElement;
@@ -283,7 +284,13 @@ export default class NeovimInput {
                 if (event.altKey) {
                     input += 'A-';
                 }
-                if (event.shiftKey) {
+                if (event.shiftKey && IsAlpha.test(event.key)) {
+                    // Note:
+                    // If input is not an alphabetical character,  it already considers
+                    // Shift modifier.
+                    //  e.g. Ctrl+Shift+2 -> event.key == '@'
+                    // But for alphabets, Vim ignores the case.  For example <C-s> is
+                    // equivalent to <C-S>.  So we need to specify <C-S-s> or <C-S-S>.
                     input += 'S-';
                 }
                 if (input === '<') {

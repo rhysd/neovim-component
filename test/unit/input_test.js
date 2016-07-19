@@ -65,6 +65,10 @@ describe('NeovimInput', () => {
         });
     });
 
+    beforeEach(() => {
+        global.input.store.alt_key_disabled = false;
+    });
+
     after(() => {
         delete global.document;
         delete global.input;
@@ -142,7 +146,7 @@ describe('NeovimInput', () => {
             assert.equal(inputByKeydown({key: 'Tab', keyCode: 9, ctrlKey: true}), '<C-Tab>');
         });
 
-        context("when alt key is disabled", () => {
+        context('when alt key is disabled', () => {
             it('ignores event.altKey', () => {
                 global.input.store.alt_key_disabled = true;
                 global.last_input = '';
@@ -163,6 +167,20 @@ describe('NeovimInput', () => {
 
                 assert.equal(inputByKeydown({key: 'a', ctrlKey: true}), '<C-a>');
                 assert.equal(inputByKeydown({key: 'o', ctrlKey: true, shiftKey: true}), '<C-S-o>');
+            });
+        });
+
+        context('when shift key is pressed', () => {
+            it('considers shift key on alphabetical key input', () => {
+                assert.equal(inputByKeydown({key: 'a', shiftKey: true, ctrlKey: true}), '<C-S-a>');
+                assert.equal(inputByKeydown({key: 'P', shiftKey: true, ctrlKey: true}), '<C-S-P>');
+                assert.equal(inputByKeydown({key: 'q', shiftKey: true, altKey: true}), '<A-S-q>');
+            });
+
+            it('does not consider shift key on non-slphabetical key input', () => {
+                assert.equal(inputByKeydown({key: '@', shiftKey: true, ctrlKey: true}), '<C-@>');
+                assert.equal(inputByKeydown({key: '{', shiftKey: true, ctrlKey: true}), '<C-{>');
+                assert.equal(inputByKeydown({key: ']', shiftKey: true, ctrlKey: true}), '<C-]>');
             });
         });
     });
