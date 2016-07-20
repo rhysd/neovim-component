@@ -17,6 +17,8 @@ import log from '../log';
 export default class ScreenWheel {
     x: number;
     y: number;
+    line: number;
+    col: number;
     shift: boolean;
     ctrl: boolean;
 
@@ -42,6 +44,9 @@ export default class ScreenWheel {
             // Note: At least 3 lines or 6 columns are needed to scroll screen
             return '';
         }
+
+        this.line = Math.floor(e.y / this.store.font_attr.height);
+        this.col  = Math.floor(e.x / this.store.font_attr.width);
 
         const input = this.getInput(scroll_x, scroll_y);
         log.debug(`Scroll (${scroll_x}, ${scroll_y})`);
@@ -77,7 +82,7 @@ export default class ScreenWheel {
             seq += 'S-';
         }
         seq += `ScrollWheel${this.getDirection(scroll_x, scroll_y)}>`;
-        seq += `<${scroll_x},${scroll_y}>`; // This is really needed?
+        seq += `<${this.col},${this.line}>`;
         return seq;
     }
 }
