@@ -17,8 +17,6 @@ import log from '../log';
 export default class ScreenWheel {
     x: number;
     y: number;
-    line: number;
-    col: number;
     shift: boolean;
     ctrl: boolean;
 
@@ -45,44 +43,44 @@ export default class ScreenWheel {
             return '';
         }
 
-        this.line = Math.floor(e.y / this.store.font_attr.height);
-        this.col  = Math.floor(e.x / this.store.font_attr.width);
+        const col  = Math.floor(e.offsetX / this.store.font_attr.width);
+        const line = Math.floor(e.offsetY / this.store.font_attr.height);
 
-        const input = this.getInput(scroll_x, scroll_y);
-        log.debug(`Scroll (${scroll_x}, ${scroll_y})`);
+        const input = this.getInput(scroll_x, scroll_y, line, col);
+        log.debug(`Scroll (${scroll_x}, ${scroll_y}) at (${line}, ${col}): ${input}`);
         this.reset();
         return input;
     }
 
-    private reset(shift: boolean = undefined, ctrl: boolean = undefined) {
+    private reset(shift?: boolean, ctrl?: boolean) {
         this.x = 0;
         this.y = 0;
         this.shift = shift;
         this.ctrl = ctrl;
     }
 
-    private getDirection(scroll_x: number, scroll_y: number) {
-        if (scroll_y !== 0) {
-            return scroll_y > 0 ? 'Down' : 'Up';
-        } else if (scroll_x !== 0) {
-            return scroll_x > 0 ? 'Left' : 'Right';
-        } else {
-            // Note: Never reach here
-            log.error('Null scrolling');
-            return '';
-        }
-    }
-
-    private getInput(scroll_x: number, scroll_y: number) {
-        let seq = '<';
+    private getInput(scroll_x: number, scroll_y: number, line: number, col: number) {
+        const pos = `<${col},${line}>`;
+        let modifier = '<';
         if (this.ctrl) {
-            seq += 'C-';
+            modifier += 'C-';
         }
         if (this.shift) {
-            seq += 'S-';
+            modifier += 'S-';
         }
-        seq += `ScrollWheel${this.getDirection(scroll_x, scroll_y)}>`;
-        seq += `<${this.col},${this.line}>`;
+
+        let seq = '';
+
+        const y_dir = scroll_y > 0 ? 'Down' : 'Up';
+        for (let _ = 0; _ < Math.abs(scroll_y); ++_) {
+            seq += `${modifier}ScrollWheel${y_dir}>${pos}`;
+        }
+
+        const x_dir = scroll_x > 0 ? 'Left' : 'Right';
+        for (let _ = 0; _ < Math.abs(scroll_x); ++_) {
+            seq += `${modifier}ScrollWheel${x_dir}>${pos}`;
+        }
+
         return seq;
     }
 }
