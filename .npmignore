@@ -1,7 +1,4 @@
 /Guardfile
-/Rakefile
-/bower.json
-/tsd.json
 /typings
 /src/out
 /bower_components
