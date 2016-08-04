@@ -43,7 +43,7 @@ Each example only takes 100~300 lines.
 </html>
 ```
 
-Minimal [Electron](https://github.com/atom/electron) app can be found in the [example directory](/example/minimal).
+Minimal [Electron](https://github.com/atom/electron) app can be found in the [example directory](/example/minimal).  This is a good start point to use this package and it shows how the component works.
 
 ![main screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/main.gif)
 
