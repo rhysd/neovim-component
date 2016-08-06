@@ -214,7 +214,7 @@ export default class NeovimScreen {
     private drawText(chars: string[][]) {
         const {line, col} = this.store.cursor;
         const {
-            fg, bg,
+            fg, bg, sp,
             draw_width,
             draw_height,
             face,
@@ -222,6 +222,7 @@ export default class NeovimScreen {
             bold,
             italic,
             underline,
+            undercurl,
         } = this.store.font_attr;
 
         // Draw background
@@ -246,7 +247,16 @@ export default class NeovimScreen {
         const y = Math.floor(line * draw_height + margin);
         const x = col * draw_width;
         this.drawChars(x, y, chars, draw_width);
-        if (underline) {
+        if (undercurl) {
+            this.ctx.strokeStyle = sp || this.store.sp_color || fg; // Note: Fallback for Neovim 0.1.4 or earlier.
+            this.ctx.lineWidth = 1 * this.pixel_ratio;
+            this.ctx.setLineDash([draw_width / 3, draw_width / 3]);
+            this.ctx.beginPath();
+            const curl_y = y + draw_height - 3 * this.pixel_ratio;
+            this.ctx.moveTo(x, curl_y);
+            this.ctx.lineTo(x + draw_width * chars.length, curl_y);
+            this.ctx.stroke();
+        } else if (underline) {
             this.ctx.strokeStyle = fg;
             this.ctx.lineWidth = 1 * this.pixel_ratio;
             this.ctx.beginPath();

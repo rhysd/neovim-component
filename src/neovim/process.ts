@@ -153,6 +153,9 @@ export default class NeovimProcess {
                 case 'update_bg':
                     d.dispatch(Action.updateBackground(args[0] as number));
                     break;
+                case 'update_sp':
+                    d.dispatch(Action.updateSpecialColor(args[0] as number));
+                    break;
                 case 'mode_change':
                     d.dispatch(Action.changeMode(args[0] as string));
                     break;

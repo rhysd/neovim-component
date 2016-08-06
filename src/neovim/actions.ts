@@ -6,6 +6,7 @@ export interface HighlightSet {
     foreground?: number;
     italic?: boolean;
     reverse?: boolean;
+    special?: number;
     undercurl?: boolean;
     underline?: boolean;
 }
@@ -44,6 +45,7 @@ export enum Kind {
     StopBlinkCursor,
     UpdateBG,
     UpdateFG,
+    UpdateSP,
     UpdateFontFace,
     UpdateFontPx,
     UpdateFontSize,
@@ -132,6 +134,13 @@ export function updateForeground(color: number) {
 export function updateBackground(color: number) {
     return {
         type: Kind.UpdateBG,
+        color,
+    };
+}
+
+export function updateSpecialColor(color: number) {
+    return {
+        type: Kind.UpdateSP,
         color,
     };
 }

@@ -12,6 +12,7 @@ export interface HighlightSet {
     bg?: string;
     bold?: boolean;
     fg?: string;
+    special?: string;
     foreground?: number;
     italic?: boolean;
     reverse?: boolean;
@@ -51,14 +52,15 @@ export declare enum Kind {
     StopBlinkCursor = 23,
     UpdateBG = 24,
     UpdateFG = 25,
-    UpdateFontFace = 26,
-    updateLineHeight = 27,
-    UpdateFontPx = 28,
-    UpdateFontSize = 29,
-    UpdateScreenBounds = 30,
-    UpdateScreenSize = 31,
-    WheelScroll = 32,
-    FocusChanged = 33,
+    UpdateSP = 26,
+    UpdateFontFace = 27,
+    updateLineHeight = 28,
+    UpdateFontPx = 29,
+    UpdateFontSize = 30,
+    UpdateScreenBounds = 31,
+    UpdateScreenSize = 32,
+    WheelScroll = 33,
+    FocusChanged = 34,
 }
 export interface ActionType {
     type: Kind;
@@ -115,6 +117,10 @@ export declare function updateForeground(color: number): {
     color: number;
 };
 export declare function updateBackground(color: number): {
+    type: Kind;
+    color: number;
+};
+export declare function updateSpecialColor(color: number): {
     type: Kind;
     color: number;
 };
@@ -315,6 +321,7 @@ export interface Cursor {
 export interface FontAttributes {
     fg: string;
     bg: string;
+    sp: string;
     bold: boolean;
     italic: boolean;
     underline: boolean;
