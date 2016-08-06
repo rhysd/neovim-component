@@ -20,6 +20,7 @@ describe('NeovimStore', () => {
             assert.deepEqual(s.font_attr, {
                 fg: 'white',
                 bg: 'black',
+                sp: null,
                 bold: false,
                 italic: false,
                 underline: false,
@@ -104,6 +105,7 @@ describe('NeovimStore', () => {
                 bg: 'white',
                 bold: false,
                 fg: 'black',
+                special: 0x111111,
                 foreground: 0x333333,
                 italic: true,
                 reverse: false,
@@ -118,6 +120,7 @@ describe('NeovimStore', () => {
             assert.isFalse(f.underline, 'underline');
             assert.equal(f.bg, '#ffffff');
             assert.equal(f.fg, '#333333');
+            assert.equal(f.sp, '#111111');
 
             const hl2 = {
                 background: 0xffffff,
@@ -131,6 +134,7 @@ describe('NeovimStore', () => {
             assert.isUndefined(f.undercurl, 'undercurl');
             assert.isUndefined(f.underline, 'underline');
             assert.equal(f.bg, '#333333');
+            assert.equal(f.fg, '#ffffff');
             assert.equal(f.fg, '#ffffff');
         });
 
@@ -249,6 +253,17 @@ describe('NeovimStore', () => {
             s.dispatcher.dispatch(A.updateBackground(0x123456));
             assert.isTrue(flag, 'update-bg event was not fired');
             assert.equal(s.bg_color, '#123456');
+        });
+
+        it('handles update-sp event', () => {
+            const s = new NeovimStore();
+            var flag = false;
+            s.on('update-sp-color', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.updateSpecialColor(0x123456));
+            assert.isTrue(flag, 'update-sp event was not fired');
+            assert.equal(s.sp_color, '#123456');
         });
 
         it('handles mode event', () => {
