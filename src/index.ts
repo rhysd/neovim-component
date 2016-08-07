@@ -34,9 +34,9 @@ Polymer({
             type: Number,
             value: 10,
         },
-        blinkCursor: {
+        noBlinkCursor: {
             type: Boolean,
-            value: true,
+            value: false,
         },
         editor: Object,
         onProcessAttached: Object,
@@ -54,7 +54,7 @@ Polymer({
                 this.lineHeight,
                 this.disableAltKey,
                 this.cursorDrawDelay,
-                this.blinkCursor
+                !this.noBlinkCursor
             );
         this.resizeHandler = null;
 

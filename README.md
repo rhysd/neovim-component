@@ -107,7 +107,7 @@ You can customize `<neovim-editor>` with the following properties:
 | `on-error`          | Callback function for Neovim errors.       | `null`        |
 | `disable-alt-key`   | Input `{char}` on `<A-{char}>`.            | `false`       |
 | `cursor-draw-delay` | Delay in millisec before drawing cursor.   | `10`          |
-| `blink-cursor`      | Blink cursor or not.                       | `true`        |
+| `no-blink-cursor`   | Blink cursor or not.                       | `false`       |
 
 
 ## `<neovim-editor>` APIs

@@ -53,7 +53,7 @@ describe('NeovimStore', () => {
             assert.equal(s.line_height, 1.2);
             assert.equal(s.alt_key_disabled, false);
             assert.equal(s.cursor_draw_delay, 10);
-            assert.equal(s.blink_cursor, true);
+            assert.equal(s.blink_cursor, false);
             assert.equal(s.cursor_blink_interval, 1000);
         });
     });
@@ -625,6 +625,7 @@ describe('NeovimStore', () => {
             s.on('blink-cursor-stopped', () => {
                 flag = true;
             });
+            s.dispatcher.dispatch(A.startBlinkCursor());
             s.dispatcher.dispatch(A.stopBlinkCursor());
             assert.isTrue(flag, 'blink-cursor-stopped event was not fired');
             flag = false;
