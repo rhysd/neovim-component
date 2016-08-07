@@ -4,6 +4,7 @@ const assert = require('chai').assert;
 const jsdom = require('jsdom').jsdom;
 const NeovimStore = require('../../src/out/neovim/store').default;
 const Cursor = require('../../src/out/neovim/cursor').default;
+const A = require('../../src/out/neovim/actions');
 
 describe('Cursor', () => {
     beforeEach(() => {
@@ -62,6 +63,10 @@ describe('Cursor', () => {
     });
 
     context('on cursor blinking', () => {
+        beforeEach(() => {
+            global.store.dispatcher.dispatch(A.startBlinkCursor());
+        });
+
         it('starts blink timer at start', () => {
             assert.isTrue(cursor.blink_timer.enabled, 'Blink timer did not start');
         });
