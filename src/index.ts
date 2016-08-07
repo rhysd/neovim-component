@@ -38,6 +38,10 @@ Polymer({
             type: Boolean,
             value: false,
         },
+        windowTitle: {
+            type: String,
+            value: "Neovim",
+        },
         editor: Object,
         onProcessAttached: Object,
         onQuit: Object,
@@ -54,7 +58,8 @@ Polymer({
                 this.lineHeight,
                 this.disableAltKey,
                 this.cursorDrawDelay,
-                !this.noBlinkCursor
+                !this.noBlinkCursor,
+                this.windowTitle,
             );
         this.resizeHandler = null;
 

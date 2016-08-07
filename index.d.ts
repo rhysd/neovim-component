@@ -361,7 +361,15 @@ export class Neovim extends EventEmitter {
     process: NeovimProcess;
     screen: NeovimScreen;
     store: NeovimStore;
-    constructor(command: string, argv: string[], font: string, font_size: number, line_height: number, blink_cursor: boolean);
+    constructor(
+        command: string,
+        argv: string[],
+        font: string,
+        font_size: number,
+        line_height: number,
+        blink_cursor: boolean,
+        window_title: string,
+    );
     attachCanvas(width: number, height: number, canvas: HTMLCanvasElement): void;
     quit(): void;
     getClient(): Nvim;
@@ -378,7 +386,8 @@ export class NeovimElement extends HTMLElement {
     fontSize: number;
     font: string;
     lineHeight: number;
-    blinkCursor: boolean;
+    noBlinkCursor: boolean;
+    windowTitle: string;
     nvimCmd: string;
     argv: string[];
     onProcessAttached: () => void;

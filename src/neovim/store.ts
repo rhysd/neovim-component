@@ -7,7 +7,7 @@ import {Dispatcher} from 'flux';
 
 // TODO:
 // Debug log should be implemented as the subscriber of store
-// and be controlled by registering it or not watching NODE_ENV variable.
+// and be controlled by registering it or not, watching NODE_ENV variable.
 
 export interface Size {
     lines: number;
@@ -109,7 +109,7 @@ export default class NeovimStore extends EventEmitter {
         this.busy = false;
         this.mouse_enabled = true;
         this.dragging = null;
-        this.title = 'Neovim';  // TODO: This should be set by API.  I must implement it after making store non-singleton
+        this.title = '';
         this.icon_path = '';
         this.wheel_scrolling = new ScreenWheel(this);
         this.scroll_region = {

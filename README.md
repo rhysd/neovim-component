@@ -108,6 +108,7 @@ You can customize `<neovim-editor>` with the following properties:
 | `disable-alt-key`   | Input `{char}` on `<A-{char}>`.            | `false`       |
 | `cursor-draw-delay` | Delay in millisec before drawing cursor.   | `10`          |
 | `no-blink-cursor`   | Blink cursor or not.                       | `false`       |
+| `window-title`      | Specify first window title.                | `"Neovim"`    |
 
 
 ## `<neovim-editor>` APIs
