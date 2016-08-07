@@ -259,6 +259,7 @@ export default class NeovimScreen {
         } else if (underline) {
             this.ctx.strokeStyle = fg;
             this.ctx.lineWidth = 1 * this.pixel_ratio;
+            this.ctx.setLineDash([]);
             this.ctx.beginPath();
             // Note:
             // 3 is set with considering the width of line.
