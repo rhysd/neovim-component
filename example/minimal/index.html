@@ -23,11 +23,12 @@
     <neovim-editor id="neovim" font="Monaco,Meiryo,monospace" font-size="14"></neovim-editor>
   </body>
   <script>
-    var neovim_element = document.getElementById('neovim');
-    var editor = neovim_element.editor;
-    var electron = require('electron');
-    var remote = electron.remote;
-    var shell = electron.shell;
+    'use strict';
+    const neovim_element = document.getElementById('neovim');
+    const editor = neovim_element.editor;
+    const electron = require('electron');
+    const remote = electron.remote;
+    const shell = electron.shell;
     editor.on('error', function(err){ alert(err.message); });
     editor.on('process-attached', function() {
       if (remote.process.argv.length > 2) {
@@ -35,22 +36,18 @@
       }
       neovim_element.addEventListener('drop', function(e) {
         e.preventDefault();
-        var f = e.dataTransfer.files[0];
+        const f = e.dataTransfer.files[0];
         if (f) {
           editor.getClient().command('e! ' + f.path);  // 'path' member is Electron extension
         }
       });
     });
-    editor.on('quit', function() {
-      remote.app.quit();
-    });
-    editor.store.on('beep', function() {
-      shell.beep();
-    });
-    editor.store.on('title-changed', function() {
+    editor.on('quit', () => remote.app.quit());
+    editor.store.on('beep', () => shell.beep());
+    editor.store.on('title-changed', () => {
       document.title = editor.store.title;
     });
-    editor.store.on('icon-changed', function() {
+    editor.store.on('icon-changed', () => {
       var icon = editor.store.icon_path;
       if (icon === '') {
         return;
@@ -59,6 +56,6 @@
         remote.getCurrentWindow().setRepresentedFilename(icon);
       }
     });
-    neovim_element.addEventListener('dragover', function(e) { e.preventDefault(); });
+    neovim_element.addEventListener('dragover', e => e.preventDefault());
   </script>
 </html>

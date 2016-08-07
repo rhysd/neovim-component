@@ -40,7 +40,7 @@ describe('NeovimStore', () => {
             assert.isFalse(s.busy);
             assert.isTrue(s.mouse_enabled);
             assert.isNull(s.dragging);
-            assert.equal(s.title, 'Neovim');
+            assert.equal(s.title, '');
             assert.equal(s.icon_path, '');
             assert.deepEqual(s.wheel_scrolling, new ScreenWheel(s));
             assert.deepEqual(s.scroll_region, {
@@ -528,7 +528,7 @@ describe('NeovimStore', () => {
             assert.isTrue(flag, 'visual-beep event was not fired');
         });
 
-        it('handles beep event', () => {
+        it('handles title-changed event', () => {
             const s = new NeovimStore();
 
             var flag = false;
