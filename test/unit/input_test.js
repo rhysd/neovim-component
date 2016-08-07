@@ -113,6 +113,12 @@ describe('NeovimInput', () => {
             assert.equal(inputByKeydown({key: 'o', ctrlKey: true, altKey: true}), '<C-A-o>');  // Ctrl is included in \u000f
         });
 
+        it('accepts input with command keys', () => {
+            assert.equal(inputByKeydown({key: 'a', metaKey: true}), '<D-a>');
+            assert.equal(inputByKeydown({key: 'a', metaKey: true, ctrlKey: true}), '<C-D-a>');
+            assert.equal(inputByKeydown({key: 'a', metaKey: true, shiftKey: true}), '<D-S-a>');
+        });
+
         it('accepts special keys', () => {
             assert.equal(inputByKeydown({key: 'Tab'}), '<Tab>');
             assert.equal(inputByKeydown({key: 'Tab', altKey: true}), '<A-Tab>');
