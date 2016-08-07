@@ -40,7 +40,7 @@ Polymer({
         },
         windowTitle: {
             type: String,
-            value: "Neovim",
+            value: 'Neovim',
         },
         editor: Object,
         onProcessAttached: Object,

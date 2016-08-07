@@ -17,7 +17,7 @@
   "main": "neovim-component.html",
   "license": "MIT",
   "devDependencies": {
-    "polymer": "^1.6.0",
+    "polymer": "^1.6.1",
     "webcomponentsjs": "^0.7.22"
   }
 }
