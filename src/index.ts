@@ -30,6 +30,10 @@ Polymer({
             type: Boolean,
             value: false,
         },
+        disableMetaKey: {
+            type: Boolean,
+            value: false,
+        },
         cursorDrawDelay: {
             type: Number,
             value: 10,
@@ -57,6 +61,7 @@ Polymer({
                 this.fontSize,
                 this.lineHeight,
                 this.disableAltKey,
+                this.disableMetaKey,
                 this.cursorDrawDelay,
                 !this.noBlinkCursor,
                 this.windowTitle,

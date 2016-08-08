@@ -269,6 +269,9 @@ export default class NeovimInput {
             // Note: Overwrite 'altKey' to false to disable alt key input.
             Object.defineProperty(event, 'altKey', {value: false});
         }
+        if (this.store.meta_key_disabled && event.metaKey) {
+            Object.defineProperty(event, 'metaKey', {value: false});
+        }
 
         if (should_osx_workaround) {
             // Note:

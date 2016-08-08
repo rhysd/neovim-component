@@ -35,32 +35,33 @@ export declare enum Kind {
     Cursor = 6,
     DisableMouse = 7,
     DisableAltKey = 8,
-    DragEnd = 9,
-    DragStart = 10,
-    DragUpdate = 11,
-    EnableMouse = 12,
-    Highlight = 13,
-    Input = 14,
-    Mode = 15,
-    PutText = 16,
-    Resize = 17,
-    ScrollScreen = 18,
-    SetIcon = 19,
-    SetScrollRegion = 20,
-    SetTitle = 21,
-    StartBlinkCursor = 22,
-    StopBlinkCursor = 23,
-    UpdateBG = 24,
-    UpdateFG = 25,
-    UpdateSP = 26,
-    UpdateFontFace = 27,
-    updateLineHeight = 28,
-    UpdateFontPx = 29,
-    UpdateFontSize = 30,
-    UpdateScreenBounds = 31,
-    UpdateScreenSize = 32,
-    WheelScroll = 33,
-    FocusChanged = 34,
+    DisableMetaKey = 9,
+    DragEnd = 10,
+    DragStart = 11,
+    DragUpdate = 12,
+    EnableMouse = 13,
+    Highlight = 14,
+    Input = 15,
+    Mode = 16,
+    PutText = 17,
+    Resize = 18,
+    ScrollScreen = 19,
+    SetIcon = 20,
+    SetScrollRegion = 21,
+    SetTitle = 22,
+    StartBlinkCursor = 23,
+    StopBlinkCursor = 24,
+    UpdateBG = 25,
+    UpdateFG = 26,
+    UpdateSP = 27,
+    UpdateFontFace = 28,
+    updateLineHeight = 29,
+    UpdateFontPx = 30,
+    UpdateFontSize = 31,
+    UpdateScreenBounds = 32,
+    UpdateScreenSize = 33,
+    WheelScroll = 34,
+    FocusChanged = 35,
 }
 export interface ActionType {
     type: Kind;
@@ -210,6 +211,10 @@ export declare function notifyFocusChanged(focused: boolean): {
     focused: boolean;
 };
 export declare function disableAltKey(disabled: boolean): {
+    type: Kind;
+    disabled: boolean;
+}
+export declare function disableMetaKey(disabled: boolean): {
     type: Kind;
     disabled: boolean;
 }

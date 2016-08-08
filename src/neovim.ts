@@ -8,6 +8,7 @@ import {
     updateScreenSize,
     updateLineHeight,
     disableAltKey,
+    disableMetaKey,
     changeCursorDrawDelay,
     startBlinkCursor,
     setTitle,
@@ -26,6 +27,7 @@ export default class Neovim extends EventEmitter {
             font_size: number,
             line_height: number,
             disable_alt_key: boolean,
+            disable_meta_key: boolean,
             draw_delay: number,
             blink_cursor: boolean,
             window_title: string,
@@ -38,6 +40,9 @@ export default class Neovim extends EventEmitter {
         this.store.dispatcher.dispatch(updateFontPx(font_size));
         if (disable_alt_key) {
             this.store.dispatcher.dispatch(disableAltKey(true));
+        }
+        if (disable_meta_key) {
+            this.store.dispatcher.dispatch(disableMetaKey(true));
         }
         this.store.dispatcher.dispatch(changeCursorDrawDelay(draw_delay));
         if (blink_cursor) {

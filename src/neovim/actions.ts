@@ -28,6 +28,7 @@ export enum Kind {
     Cursor,
     DisableMouse,
     DisableAltKey,
+    DisableMetaKey,
     DragEnd,
     DragStart,
     DragUpdate,
@@ -303,6 +304,13 @@ export function updateLineHeight(line_height: number) {
 export function disableAltKey(disabled: boolean) {
     return {
         type: Kind.DisableAltKey,
+        disabled,
+    };
+}
+
+export function disableMetaKey(disabled: boolean) {
+    return {
+        type: Kind.DisableMetaKey,
         disabled,
     };
 }

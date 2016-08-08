@@ -73,6 +73,7 @@ export default class NeovimStore extends EventEmitter {
     focused: boolean;
     line_height: number;
     alt_key_disabled: boolean;
+    meta_key_disabled: boolean;
     cursor_draw_delay: number;
     blink_cursor: boolean;
     cursor_blink_interval: number;
@@ -121,6 +122,7 @@ export default class NeovimStore extends EventEmitter {
         this.focused = true;
         this.line_height = 1.2;
         this.alt_key_disabled = false;
+        this.meta_key_disabled = false;
         this.cursor_draw_delay = 10;
         this.blink_cursor = false;
         this.cursor_blink_interval = 1000;
@@ -350,6 +352,12 @@ export default class NeovimStore extends EventEmitter {
                 this.alt_key_disabled = action.disabled;
                 this.emit('alt-key-disabled');
                 log.info('Alt key disabled: ' + action.disabled);
+                break;
+            }
+            case Kind.DisableMetaKey: {
+                this.meta_key_disabled = action.disabled;
+                this.emit('meta-key-disabled');
+                log.info('Meta key disabled: ' + action.disabled);
                 break;
             }
             case Kind.ChangeCursorDrawDelay: {

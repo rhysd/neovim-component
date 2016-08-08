@@ -105,7 +105,8 @@ You can customize `<neovim-editor>` with the following properties:
 | `argv`              | Arguments passed with the Neovim command.  | `[]`          |
 | `on-quit`           | Callback function to run when Neovim quits.| `null`        |
 | `on-error`          | Callback function for Neovim errors.       | `null`        |
-| `disable-alt-key`   | Input `{char}` on `<A-{char}>`.            | `false`       |
+| `disable-alt-key`   | Do not send alt key input to Neovim.       | `false`       |
+| `disable-meta-key`  | Do not send meta key input to Neovim.      | `false`       |
 | `cursor-draw-delay` | Delay in millisec before drawing cursor.   | `10`          |
 | `no-blink-cursor`   | Blink cursor or not.                       | `false`       |
 | `window-title`      | Specify first window title.                | `"Neovim"`    |

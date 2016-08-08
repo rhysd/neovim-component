@@ -52,6 +52,7 @@ describe('NeovimStore', () => {
             assert.isTrue(s.focused);
             assert.equal(s.line_height, 1.2);
             assert.equal(s.alt_key_disabled, false);
+            assert.equal(s.meta_key_disabled, false);
             assert.equal(s.cursor_draw_delay, 10);
             assert.equal(s.blink_cursor, false);
             assert.equal(s.cursor_blink_interval, 1000);
@@ -605,6 +606,19 @@ describe('NeovimStore', () => {
             s.dispatcher.dispatch(A.disableAltKey(true));
             assert.isTrue(flag, 'alt-key-disabled event was not fired');
             assert.equal(s.alt_key_disabled, true);
+        });
+
+        it('switches to disable/enable meta key', () => {
+            const s = new NeovimStore();
+            var flag = false;
+            s.on('meta-key-disabled', () => {
+                flag = true;
+            });
+            s.dispatcher.dispatch(A.disableMetaKey(true));
+            assert.isTrue(flag, 'meta-key-disabled event was not fired');
+            assert.equal(s.meta_key_disabled, true);
+            s.dispatcher.dispatch(A.disableMetaKey(false));
+            assert.equal(s.meta_key_disabled, false);
         });
 
         it('accepts cursor draw delay change event', () => {

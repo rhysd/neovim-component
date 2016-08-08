@@ -67,6 +67,7 @@ describe('NeovimInput', () => {
 
     beforeEach(() => {
         global.input.store.alt_key_disabled = false;
+        global.input.store.meta_key_disabled = false;
     });
 
     after(() => {
@@ -173,6 +174,30 @@ describe('NeovimInput', () => {
 
                 assert.equal(inputByKeydown({key: 'a', ctrlKey: true}), '<C-a>');
                 assert.equal(inputByKeydown({key: 'o', ctrlKey: true, shiftKey: true}), '<C-S-o>');
+            });
+        });
+
+        context('when meta key is disabled', () => {
+            it('ignores event.metaKey', () => {
+                global.input.store.meta_key_disabled = true;
+                global.last_input = '';
+
+                dispatchKeydown({key: 'a', metaKey: true});
+                assert.equal(last_input, 'a');
+
+                assert.equal(inputByKeydown({key: 'a', metaKey: true, altKey: true, ctrlKey: true}), '<C-A-a>');
+                assert.equal(inputByKeydown({key: 'o', metaKey: true, altKey: true, shiftKey: true, ctrlKey: true}), '<C-A-S-o>');
+            });
+
+            it('does not ignore any other modifiers', () => {
+                global.input.store.meta_key_disabled = true;
+                global.last_input = '';
+
+                dispatchKeydown({key: 'a'});
+                assert.equal(last_input, '');
+
+                assert.equal(inputByKeydown({key: 'Enter', ctrlKey: true}), '<C-CR>');
+                assert.equal(inputByKeydown({key: 'o', altKey: true, ctrlKey: true, shiftKey: true}), '<C-A-S-o>');
             });
         });
 
