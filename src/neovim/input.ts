@@ -10,11 +10,12 @@ export default class NeovimInput {
     ime_running: boolean;      // XXX: Local state!
 
     static shouldIgnoreOnKeydown(event: KeyboardEvent) {
-        const {ctrlKey, shiftKey, altKey, keyCode} = event;
-        return !ctrlKey && !altKey ||
+        const {ctrlKey, shiftKey, altKey, keyCode, metaKey} = event;
+        return !ctrlKey && !altKey && !metaKey ||
                shiftKey && keyCode === 16 ||
                ctrlKey && keyCode === 17 ||
-               altKey && keyCode === 18;
+               altKey && keyCode === 18 ||
+               metaKey && keyCode === 91;
     }
 
     // Note:
@@ -158,6 +159,9 @@ export default class NeovimInput {
         if (event.ctrlKey) {
             vim_input += 'C-';
         }
+        if (event.metaKey) {
+            vim_input += 'D-';
+        }
         if (event.altKey) {
             vim_input += 'A-';
         }
@@ -173,6 +177,9 @@ export default class NeovimInput {
         let modifiers = '';
         if (event.ctrlKey) {
             modifiers += 'C-';
+        }
+        if (event.metaKey) {
+            modifiers += 'D-';
         }
         if (event.altKey) {
             modifiers += 'A-';
@@ -280,6 +287,9 @@ export default class NeovimInput {
                 let input = '<';
                 if (event.ctrlKey) {
                     input += 'C-';
+                }
+                if (event.metaKey) {
+                    input += 'D-';
                 }
                 if (event.altKey) {
                     input += 'A-';
