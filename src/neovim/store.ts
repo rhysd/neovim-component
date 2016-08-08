@@ -169,7 +169,7 @@ export default class NeovimStore extends EventEmitter {
             case Kind.FocusChanged: {
                 this.focused = action.focused;
                 this.emit('focus-changed');
-                log.debug('Focus changed: ' + this.focused);
+                log.debug('Focus changed: ', this.focused);
                 break;
             }
             case Kind.ClearEOL: {
@@ -204,19 +204,19 @@ export default class NeovimStore extends EventEmitter {
             case Kind.UpdateFG: {
                 this.fg_color = colorString(action.color, this.font_attr.fg);
                 this.emit('update-fg');
-                log.debug('Foreground color is updated: ' + this.fg_color);
+                log.debug('Foreground color is updated: ', this.fg_color);
                 break;
             }
             case Kind.UpdateBG: {
                 this.bg_color = colorString(action.color, this.font_attr.bg);
                 this.emit('update-bg');
-                log.debug('Background color is updated: ' + this.bg_color);
+                log.debug('Background color is updated: ', this.bg_color);
                 break;
             }
             case Kind.UpdateSP: {
                 this.sp_color = colorString(action.color, this.fg_color);
                 this.emit('update-sp-color');
-                log.debug('Special color is updated: ' + this.sp_color);
+                log.debug('Special color is updated: ', this.sp_color);
                 break;
             }
             case Kind.Mode: {
@@ -239,7 +239,7 @@ export default class NeovimStore extends EventEmitter {
                 this.font_attr.draw_height = action.draw_height;
                 this.font_attr.width = action.width;
                 this.font_attr.height = action.height;
-                log.debug(`Actual font size is updated: ${action.width}:${action.height}`);
+                log.debug('Actual font size is updated: ', action.width, action.height);
                 this.emit('font-size-changed');
                 break;
             }
@@ -261,7 +261,7 @@ export default class NeovimStore extends EventEmitter {
                 this.size.width = action.width;
                 this.size.height = action.height;
                 this.emit('update-screen-size');
-                log.debug(`Screen size is updated: (${action.width}px, ${action.height}px)`);
+                log.debug('Screen size is updated: ', action.width, action.height);
                 break;
             }
             case Kind.UpdateScreenBounds: {
@@ -331,39 +331,39 @@ export default class NeovimStore extends EventEmitter {
             case Kind.SetTitle: {
                 this.title = action.title;
                 this.emit('title-changed');
-                log.info(`Title is set to '${this.title}'`);
+                log.info('Title is set to ', this.title);
                 break;
             }
             case Kind.SetIcon: {
                 this.icon_path = action.icon_path;
                 this.emit('icon-changed');
-                log.info(`Icon is set to '${this.icon_path}'`);
+                log.info('Icon is set to ', this.icon_path);
                 break;
             }
             case Kind.UpdateLineHeight: {
                 if (this.line_height !== action.line_height) {
                     this.line_height = action.line_height;
                     this.emit('line-height-changed');
-                    log.info(`Line height is changed to '${this.line_height}'`);
+                    log.info('Line height is changed to ', this.line_height);
                 }
                 break;
             }
             case Kind.DisableAltKey: {
                 this.alt_key_disabled = action.disabled;
                 this.emit('alt-key-disabled');
-                log.info('Alt key disabled: ' + action.disabled);
+                log.info('Alt key disabled: ', action.disabled);
                 break;
             }
             case Kind.DisableMetaKey: {
                 this.meta_key_disabled = action.disabled;
                 this.emit('meta-key-disabled');
-                log.info('Meta key disabled: ' + action.disabled);
+                log.info('Meta key disabled: ', action.disabled);
                 break;
             }
             case Kind.ChangeCursorDrawDelay: {
                 this.cursor_draw_delay = action.delay;
                 this.emit('cursor-draw-delay-changed');
-                log.info('Drawing cursor is delayed by ' + action.delay + 'ms');
+                log.info(`Drawing cursor is delayed by ${action.delay}ms`);
                 break;
             }
             case Kind.StartBlinkCursor: {
