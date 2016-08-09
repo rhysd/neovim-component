@@ -56,7 +56,7 @@ export default class NeovimProcess {
                 nvim.on('request', this.onRequested.bind(this));
                 nvim.on('notification', this.onNotified.bind(this));
                 nvim.on('disconnect', this.onDisconnected.bind(this));
-                nvim.uiAttach(columns, lines, true);
+                nvim.uiAttach(columns, lines, true, true /*notify*/);
                 this.started = true;
                 log.info(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
                 this.store.on('input', (i: string) => nvim.input(i));
@@ -91,9 +91,10 @@ export default class NeovimProcess {
     }
 
     finalize() {
-        this.client.uiDetach();
-        this.client.quit();
-        this.started = false;
+        return this.client.uiDetach().then(() => {
+            this.client.quit();
+            this.started = false;
+        });
     }
 
     private redraw(events: RPCValue[][]) {

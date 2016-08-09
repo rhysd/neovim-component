@@ -262,7 +262,7 @@ export class NeovimProcess {
     onRequested(method: string, args: RPCValue[], response: RPCValue): void;
     onNotified(method: string, args: RPCValue[]): void;
     onDisconnected(): void;
-    finalize(): void;
+    finalize(): Promise<void>;
 }
 
 export class ScreenDrag {
