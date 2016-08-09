@@ -1,6 +1,6 @@
 {
   "name": "neovim-component",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Polymer component for Neovim frontend",
   "main": "example/minimal/main.js",
   "bin": {
@@ -36,7 +36,7 @@
   "dependencies": {
     "flux": "^2.1.1",
     "loglevel": "^1.4.1",
-    "promised-neovim-client": "^1.1.0"
+    "promised-neovim-client": "^1.1.1"
   },
   "devDependencies": {
     "bower": "^1.7.9",
