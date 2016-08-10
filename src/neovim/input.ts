@@ -261,6 +261,12 @@ export default class NeovimInput {
         }
 
         if (NeovimInput.shouldIgnoreOnKeydown(event)) {
+            if (event.altKey && event.keyCode === 18) {
+                // Note:
+                // Squash Alt key only input because it toggles menu unexpectedly.
+                // https://github.com/rhysd/NyaoVim/issues/59
+                event.preventDefault();
+            }
             return;
         }
 
