@@ -47,12 +47,12 @@ Minimal [Electron](https://github.com/atom/electron) app can be found in the [ex
 
 ![main screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/main.gif)
 
-
-The `neovim-component` package also has an example executable.
+How to run minimal example is:
 
 ```sh
-$ npm install -g neovim-component electron-prebuilt
-$ simple-neovim-gui
+$ git clone https://github.com/rhysd/neovim-component.git
+$ cd neovim-component
+$ npm start
 ```
 
 ### [Markdown Editor Example](/example/markdown)
