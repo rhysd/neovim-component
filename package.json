@@ -1,11 +1,8 @@
 {
   "name": "neovim-component",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Polymer component for Neovim frontend",
   "main": "example/minimal/main.js",
-  "bin": {
-    "neovim-component-example": "./example/minimal/cli.js"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/rhysd/neovim-component.git"
