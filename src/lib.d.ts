@@ -14,7 +14,3 @@ interface String {
     repeat(n: number): string;
 }
 
-interface KeyboardEvent {
-    code: string;
-}
-
