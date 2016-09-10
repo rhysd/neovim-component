@@ -21,6 +21,8 @@ You can install this component as an [npm package](https://www.npmjs.com/package
 $ npm install neovim-component
 ```
 
+Current supported `nvim` version is v0.1.6 or later.
+
 
 ## Examples
 
