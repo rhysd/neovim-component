@@ -73,7 +73,7 @@ export default class NeovimCursor {
         this.element = document.querySelector('.neovim-cursor') as HTMLCanvasElement;
         this.element.style.top = '0px';
         this.element.style.left = '0px';
-        this.ctx = this.element.getContext('2d');
+        this.ctx = this.element.getContext('2d', {alpha: false});
         this.updateSize();
         this.blink_timer.on('tick', (shown: boolean) => {
             if (shown) {
