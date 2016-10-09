@@ -66,7 +66,7 @@ export default class NeovimInput {
     static getVimSpecialCharFromKey(event: KeyboardEvent) {
         const key = event.key;
 
-        if (key.length === 1) {
+        if (key.length === 1 && key !== ' ') {
             switch (key) {
                 case '<':  return event.ctrlKey || event.altKey ? 'LT' : null;
                 case '\0': return 'Nul';
@@ -139,6 +139,7 @@ export default class NeovimInput {
             case 'Insert':       return 'Insert';
             case 'Delete':       return 'Del';
             case 'Help':         return 'Help';
+            case ' ':            return 'Space';
             case 'Unidentified': return null;
             default:             return null;
         }
