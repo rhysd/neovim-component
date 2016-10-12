@@ -173,6 +173,24 @@ export default class NeovimInput {
         return vim_input;
     }
 
+    static replaceKeyToAvoidCtrlShiftSpecial(ctrl: boolean, shift: boolean, key: string) {
+        if (!ctrl || shift) {
+            return key;
+        }
+
+        // Note:
+        // These characters are especially replaced in Vim frontend.
+        //     https://github.com/vim/vim/blob/d58b0f982ad758c59abe47627216a15497e9c3c1/src/gui_w32.c#L1956-L1989
+        // Issue:
+        //     https://github.com/rhysd/NyaoVim/issues/87
+        switch (key) {
+            case '6': return '^';
+            case '-': return '_';
+            case '2': return '@';
+            default:  return key;
+        }
+    }
+
     static getVimInputFromKeyCode(event: KeyboardEvent) {
         let modifiers = '';
         if (event.ctrlKey) {
@@ -188,7 +206,12 @@ export default class NeovimInput {
         if (event.shiftKey) {
             modifiers += 'S-';
         }
-        let vim_input = String.fromCharCode(event.keyCode).toLowerCase();
+        let vim_input =
+            NeovimInput.replaceKeyToAvoidCtrlShiftSpecial(
+                event.ctrlKey,
+                event.shiftKey,
+                String.fromCharCode(event.keyCode).toLowerCase(),
+            );
         if (modifiers !== '') {
             vim_input = `<${modifiers}${vim_input}>`;
         }
@@ -310,7 +333,8 @@ export default class NeovimInput {
                     // Note: No modifier was pressed
                     this.inputToNeovim(event.key, event);
                 } else {
-                    this.inputToNeovim(input + event.key + '>', event);
+                    const key = NeovimInput.replaceKeyToAvoidCtrlShiftSpecial(event.ctrlKey, event.shiftKey, event.key);
+                    this.inputToNeovim(input + key + '>', event);
                 }
             } else {
                 log.warn("Invalid key input on 'keydown': ", event.key);
