@@ -153,6 +153,12 @@ describe('NeovimInput', () => {
             assert.equal(inputByKeydown({key: 'Tab', keyCode: 9, ctrlKey: true}), '<C-Tab>');
         });
 
+        it('replaces some special Ctrl+Shift characters following gVim behavior (issue #87)', () => {
+            assert.equal(inputByKeydown({key: '2', keyCode: 50, ctrlKey: true}), '<C-@>');
+            assert.equal(inputByKeydown({key: '6', keyCode: 54, ctrlKey: true}), '<C-^>');
+            assert.equal(inputByKeydown({key: '-', keyCode: 189, ctrlKey: true}), '<C-_>');
+        });
+
         context('when alt key is disabled', () => {
             it('ignores event.altKey', () => {
                 global.input.store.alt_key_disabled = true;
