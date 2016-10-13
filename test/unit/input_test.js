@@ -159,6 +159,12 @@ describe('NeovimInput', () => {
             assert.equal(inputByKeydown({key: '-', keyCode: 189, ctrlKey: true}), '<C-_>');
         });
 
+        it("handles ' ' edge case", () => {
+            assert.equal(inputByKeydown({key: ' ', keyCode: 32}), '<Space>');
+            assert.equal(inputByKeydown({key: ' ', keyCode: 32, ctrlKey: true}), '<C-Space>');
+            assert.equal(inputByKeydown({key: ' ', keyCode: 32, shiftKey: true}), '<S-Space>');
+        });
+
         context('when alt key is disabled', () => {
             it('ignores event.altKey', () => {
                 global.input.store.alt_key_disabled = true;
