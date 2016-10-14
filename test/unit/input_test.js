@@ -195,10 +195,9 @@ describe('NeovimInput', () => {
                 global.last_input = '';
 
                 dispatchKeydown({key: 'a', metaKey: true});
-                assert.equal(last_input, 'a');
-
-                assert.equal(inputByKeydown({key: 'a', metaKey: true, altKey: true, ctrlKey: true}), '<C-A-a>');
-                assert.equal(inputByKeydown({key: 'o', metaKey: true, altKey: true, shiftKey: true, ctrlKey: true}), '<C-A-S-o>');
+                assert.equal(last_input, '');
+                dispatchKeydown({key: 'a', altKey: true, shiftKey: true, ctrlKey: true, metaKey: true});
+                assert.equal(last_input, '');
             });
 
             it('does not ignore any other modifiers', () => {

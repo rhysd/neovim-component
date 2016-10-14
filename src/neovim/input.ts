@@ -294,7 +294,10 @@ export default class NeovimInput {
             Object.defineProperty(event, 'altKey', {value: false});
         }
         if (this.store.meta_key_disabled && event.metaKey) {
-            Object.defineProperty(event, 'metaKey', {value: false});
+            // Note:
+            // Simply ignore input with metakey if metakey is disabled.  This aims to delegate the key input
+            // to menu items on OS X.
+            return;
         }
 
         if (should_osx_workaround) {
