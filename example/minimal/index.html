@@ -20,7 +20,7 @@
     </style>
   </head>
   <body>
-    <neovim-editor id="neovim" font="Monaco,Meiryo,monospace" font-size="14" disable-meta-key></neovim-editor>
+    <neovim-editor id="neovim" font="Monaco,Meiryo,monospace" font-size="14"></neovim-editor>
   </body>
   <script>
     'use strict';
@@ -32,7 +32,8 @@
     editor.on('error', function(err){ alert(err.message); });
     editor.on('process-attached', function() {
       if (remote.process.argv.length > 2) {
-        editor.setArgv(remote.process.argv.slice(2)); // It is better to use 'argv' property.
+        // It is better to use 'argv' property of <neovim-editor>.
+        editor.setArgv(remote.process.argv.slice(2));
       }
       neovim_element.addEventListener('drop', function(e) {
         e.preventDefault();
