@@ -31,7 +31,7 @@ export default class NeovimProcess {
         public argv: string[]
     ) {
         this.started = false;
-        this.argv.push('--embed');
+        this.argv.unshift('--embed');
     }
 
     attach(lines: number, columns: number) {
