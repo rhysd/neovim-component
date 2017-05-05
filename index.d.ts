@@ -213,21 +213,21 @@ export declare function notifyFocusChanged(focused: boolean): {
 export declare function disableAltKey(disabled: boolean): {
     type: Kind;
     disabled: boolean;
-}
+};
 export declare function disableMetaKey(disabled: boolean): {
     type: Kind;
     disabled: boolean;
-}
+};
 export declare function changeCursorDrawDelay(delay: number): {
     type: Kind;
     delay: number;
-}
+};
 export declare function startBlinkCursor(): {
     type: Kind;
-}
+};
 export declare function stopBlinkCursor(): {
     type: Kind;
-}
+};
 
 export class NeovimCursor {
     constructor(store: NeovimStore, screen_ctx: CanvasRenderingContext2D);

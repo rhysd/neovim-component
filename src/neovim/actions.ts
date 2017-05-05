@@ -55,7 +55,7 @@ export enum Kind {
     UpdateScreenSize,
     WheelScroll,
     FocusChanged,
-};
+}
 
 export interface ActionType {
     type: Kind;

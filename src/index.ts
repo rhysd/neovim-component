@@ -95,7 +95,7 @@ Polymer({
                         this.editor.screen.checkShouldResize();
                         this.resizeHandler = null;
                     },
-                    100
+                    100,
                 );
         });
     },
