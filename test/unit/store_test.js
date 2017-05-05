@@ -1,11 +1,11 @@
 global.require = require;
 global.window = global;
 const assert = require('chai').assert;
-const jsdom = require('jsdom').jsdom;
+const jsdom = require('jsdom');
 const A = require('../../src/out/neovim/actions');
 const NeovimStore = require('../../src/out/neovim/store').default;
 const ScreenWheel = require('../../src/out/neovim/screen-wheel').default;
-const document = jsdom();
+const document = new jsdom.JSDOM().window.document;
 
 describe('NeovimStore', () => {
     context('initialization', () => {

@@ -1,6 +1,6 @@
 global.require = require;
 const assert = require('chai').assert;
-const jsdom = require('jsdom').jsdom;
+const jsdom = require('jsdom');
 const NeovimStore = require('../../src/out/neovim/store').default;
 const NeovimInput = require('../../src/out/neovim/input').default;
 
@@ -52,7 +52,7 @@ function catchInputOnInputEvent(i) {
 describe('NeovimInput', () => {
     before(() => {
         /* global document input_element window input last_input */
-        global.document = jsdom('<body><input class="neovim-input"/></body>');
+        global.document = new jsdom.JSDOM('<body><input class="neovim-input"/></body>').window.document;
         global.input_element = document.querySelector('.neovim-input');
         input_element.value = '';
         window = document.defaultView;

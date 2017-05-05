@@ -20,7 +20,7 @@ export default class NeovimScreen {
         this.store.on('screen-scrolled', this.scroll.bind(this));
         this.store.on(
             'line-height-changed',
-            () => this.changeFontSize(this.store.font_attr.specified_px)
+            () => this.changeFontSize(this.store.font_attr.specified_px),
         );
 
         this.changeFontSize(this.store.font_attr.specified_px);
@@ -60,7 +60,7 @@ export default class NeovimScreen {
                 Math.floor(h / this.store.font_attr.draw_height),
                 Math.floor(w / this.store.font_attr.draw_width),
                 w,
-                h
+                h,
             );
     }
 
@@ -69,7 +69,7 @@ export default class NeovimScreen {
                 lines,
                 cols,
                 this.store.font_attr.draw_width * cols,
-                this.store.font_attr.draw_height * lines
+                this.store.font_attr.draw_height * lines,
             );
     }
 
@@ -93,7 +93,7 @@ export default class NeovimScreen {
         const font_height = Math.ceil(
             this.store.line_height === 1.2 ?
                 font_width * 2 :
-                drawn_px * this.store.line_height
+                drawn_px * this.store.line_height,
         );
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
         this.store.dispatcher.dispatch(
@@ -102,7 +102,7 @@ export default class NeovimScreen {
                 font_height,
                 font_width / (window.devicePixelRatio || 1),
                 font_height / (window.devicePixelRatio),
-            )
+            ),
         );
         const {width, height} = this.store.size;
         this.resizeWithPixels(width, height);
@@ -279,7 +279,7 @@ export default class NeovimScreen {
                 Math.floor(col * draw_width),
                 line * draw_height,
                 Math.ceil(width * draw_width),
-                height * draw_height
+                height * draw_height,
             );
     }
 
@@ -291,12 +291,12 @@ export default class NeovimScreen {
                 left * draw_width,
                 top * draw_height,
                 (right - left + 1) * draw_width,
-                height * draw_height
+                height * draw_height,
             );
         this.ctx.putImageData(
             captured,
             left * draw_width,
-            dst_top * draw_height
+            dst_top * draw_height,
         );
     }
 
@@ -305,14 +305,14 @@ export default class NeovimScreen {
         this.slideVertical(
             top + cols_up,
             bottom - (top + cols_up) + 1,
-            top
+            top,
         );
         this.drawBlock(
             bottom - cols_up + 1,
             left,
             cols_up,
             right - left + 1,
-            this.store.bg_color
+            this.store.bg_color,
         );
         log.debug('Scroll up: ' + cols_up, this.store.scroll_region);
     }
@@ -322,14 +322,14 @@ export default class NeovimScreen {
         this.slideVertical(
             top,
             bottom - (top + cols_down) + 1,
-            top + cols_down
+            top + cols_down,
         );
         this.drawBlock(
             top,
             left,
             cols_down,
             right - left + 1,
-            this.store.bg_color
+            this.store.bg_color,
         );
         log.debug('Scroll down: ' + cols_down, this.store.scroll_region);
     }

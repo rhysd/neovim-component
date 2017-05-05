@@ -28,7 +28,7 @@ export default class NeovimProcess {
     constructor(
         private store: NeovimStore,
         public command: string,
-        public argv: string[]
+        public argv: string[],
     ) {
         this.started = false;
         this.argv.unshift('--embed');
@@ -42,7 +42,7 @@ export default class NeovimProcess {
             = child_process.spawn(
                 this.command,
                 this.argv,
-                {stdio: ['pipe', 'pipe', process.stderr]}
+                {stdio: ['pipe', 'pipe', process.stderr]},
             );
         this.neovim_process.on('error', (e: Error) => { err = e; });
 

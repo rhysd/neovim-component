@@ -104,7 +104,7 @@ export default class NeovimInput {
                 } else {
                     return 'BS';
                 }
-            };
+            }
             case 'Tab': {
                 if (ctrl && key_code === 73) {
                     // Note:
@@ -113,7 +113,7 @@ export default class NeovimInput {
                 } else {
                     return 'Tab';
                 }
-            };
+            }
             case 'Enter': {  // Note: Should consider <NL>?
                 if (ctrl && key_code === 77) {
                     // Note:
@@ -128,7 +128,7 @@ export default class NeovimInput {
                 } else {
                     return 'CR';
                 }
-            };
+            }
             case 'PageUp':       return 'PageUp';
             case 'PageDown':     return 'PageDown';
             case 'End':          return 'End';
