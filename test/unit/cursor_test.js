@@ -1,5 +1,4 @@
 global.require = require;
-global.window = global;
 const assert = require('chai').assert;
 const jsdom = require('jsdom');
 const NeovimStore = require('../../src/out/neovim/store').default;
