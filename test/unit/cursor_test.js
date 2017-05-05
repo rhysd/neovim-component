@@ -1,7 +1,7 @@
 global.require = require;
 global.window = global;
 const assert = require('chai').assert;
-const jsdom = require('jsdom').jsdom;
+const jsdom = require('jsdom');
 const NeovimStore = require('../../src/out/neovim/store').default;
 const Cursor = require('../../src/out/neovim/cursor').default;
 const A = require('../../src/out/neovim/actions');
@@ -9,13 +9,13 @@ const A = require('../../src/out/neovim/actions');
 describe('Cursor', () => {
     beforeEach(() => {
         /* global document */
-        global.document = jsdom(`
+        global.document = new jsdom.JSDOM(`
             <body>
                 <canvas class="neovim-screen"></canvas>
                 <canvas class="neovim-cursor"></canvas>
                 <input class="neovim-input"/>
             </body>
-        `);
+        `).window.document;
         /* global store */
         global.store = new NeovimStore();
         store.font_attr.width = 7;
