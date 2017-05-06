@@ -10,5 +10,6 @@ interface ObjectConstructor {
 
 interface String {
     repeat(n: number): string;
+    endsWith(s: string): boolean;
 }
 
