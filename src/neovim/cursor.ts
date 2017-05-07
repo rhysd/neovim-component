@@ -74,7 +74,7 @@ export default class NeovimCursor {
         this.element.style.top = '0px';
         this.element.style.left = '0px';
         this.ctx = this.element.getContext('2d', {alpha: false});
-        this.updateFontSize();
+        this.onFontSizeUpdated();
         this.blink_timer.on('tick', (shown: boolean) => {
             if (shown) {
                 this.redraw();
@@ -99,7 +99,7 @@ export default class NeovimCursor {
 
         this.store.on('cursor', this.updateCursorPos.bind(this));
         this.store.on('update-fg', () => this.redraw());
-        this.store.on('font-size-changed', this.updateFontSize.bind(this));
+        this.store.on('font-size-changed', this.onFontSizeUpdated.bind(this));
         this.store.on('blink-cursor-started', () => this.blink_timer.start());
         this.store.on('blink-cursor-stopped', () => this.blink_timer.stop());
         this.store.on('busy', () => {
@@ -117,7 +117,7 @@ export default class NeovimCursor {
         this.store.on('mode', () => this.updateCursorBlinking(this.store.mode !== 'insert'));
     }
 
-    updateFontSize() {
+    onFontSizeUpdated() {
         const f = this.store.font_attr;
         this.element.style.width = f.width + 'px';
         this.element.style.height = f.height + 'px';
