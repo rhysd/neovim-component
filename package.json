@@ -33,8 +33,7 @@
   "dependencies": {
     "flux": "^3.1.2",
     "loglevel": "^1.4.1",
-    "promised-neovim-client": "^2.0.2",
-    "react": "^15.5.4"
+    "promised-neovim-client": "^2.0.2"
   },
   "devDependencies": {
     "@types/electron": "^1.4.37",
@@ -50,7 +49,7 @@
     "browserify": "^14.3.0",
     "canvas": "^1.6.5",
     "chai": "^3.5.0",
-    "electron": "^1.6.6",
+    "electron": "~1.4",
     "jsdom": "^10.1.0",
     "mocha": "^3.3.0",
     "mocha-generators": "^2.0.0",
