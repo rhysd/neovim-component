@@ -11,6 +11,20 @@ export interface HighlightSet {
     underline?: boolean;
 }
 
+export type ModeInfoSet = { [key: string]: ModeInfo };
+export interface ModeInfo {
+    blinkoff?: number;
+    blinkon?: number;
+    blinkwait?: number;
+    cell_percentage?: number;
+    cursor_shape?: string;
+    hl_id?: number;
+    id_lm?: number;
+    mouse_shape: number;
+    name: string;
+    short_name: string;
+}
+
 export interface Region {
     top: number;
     left: number;
@@ -36,6 +50,7 @@ export enum Kind {
     Highlight,
     Input,
     Mode,
+    ModeInfo,
     PutText,
     Resize,
     ScrollScreen,
@@ -77,6 +92,7 @@ export interface ActionType {
     line?: number;
     line_height?: number;
     lines?: number;
+    modeInfo?: ModeInfoSet;
     mode?: string;
     region?: Region;
     text?: string[][];
@@ -143,6 +159,13 @@ export function updateSpecialColor(color: number) {
     return {
         type: Kind.UpdateSP,
         color,
+    };
+}
+
+export function modeInfo(modeInfo: ModeInfoSet) {
+    return {
+        type: Kind.ModeInfo,
+        modeInfo,
     };
 }
 
