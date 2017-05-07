@@ -6,5 +6,5 @@ argv.unshift(__dirname);
 if (!process.env['NODE_ENV']) {
     process.env['NODE_ENV'] = 'production';
 }
-require('child_process').spawn(require('electron-prebuilt'), argv, { stdio: 'inherit' });
+require('child_process').spawn(require('electron'), argv, { stdio: 'inherit' });
 
