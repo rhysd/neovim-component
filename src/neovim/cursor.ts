@@ -159,7 +159,7 @@ export default class NeovimCursor {
 
     private redrawImpl() {
         this.delay_timer = null;
-        const cursor_width = this.store.mode === 'insert' ? (window.devicePixelRatio || 1) : this.store.font_attr.draw_width;
+        const cursor_width = this.store.mode.endsWith('insert') ? (window.devicePixelRatio || 1) : this.store.font_attr.draw_width;
         const cursor_height = this.store.font_attr.draw_height;
         const x = this.store.cursor.col * this.store.font_attr.draw_width;
         const y = this.store.cursor.line * this.store.font_attr.draw_height;
