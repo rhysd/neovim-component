@@ -239,8 +239,9 @@ export default class NeovimInput {
         this.ime_running = true;
     }
 
-    endComposition(_: Event) {
+    endComposition(event: CompositionEvent) {
         log.debug('end composition');
+        this.inputToNeovim(event.data, event);
         this.ime_running = false;
     }
 
