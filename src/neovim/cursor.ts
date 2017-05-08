@@ -74,7 +74,7 @@ export default class NeovimCursor {
         this.element.style.top = '0px';
         this.element.style.left = '0px';
         this.ctx = this.element.getContext('2d', {alpha: false});
-        this.updateSize();
+        this.onFontSizeUpdated();
         this.blink_timer.on('tick', (shown: boolean) => {
             if (shown) {
                 this.redraw();
@@ -99,7 +99,7 @@ export default class NeovimCursor {
 
         this.store.on('cursor', this.updateCursorPos.bind(this));
         this.store.on('update-fg', () => this.redraw());
-        this.store.on('font-size-changed', this.updateSize.bind(this));
+        this.store.on('font-size-changed', this.onFontSizeUpdated.bind(this));
         this.store.on('blink-cursor-started', () => this.blink_timer.start());
         this.store.on('blink-cursor-stopped', () => this.blink_timer.stop());
         this.store.on('busy', () => {
@@ -117,7 +117,7 @@ export default class NeovimCursor {
         this.store.on('mode', () => this.updateCursorBlinking(this.store.mode !== 'insert'));
     }
 
-    updateSize() {
+    onFontSizeUpdated() {
         const f = this.store.font_attr;
         this.element.style.width = f.width + 'px';
         this.element.style.height = f.height + 'px';
@@ -157,17 +157,51 @@ export default class NeovimCursor {
         this.blink_timer.reset();
     }
 
+    updateCursorSize() {
+        const info = this.store.modeInfo[this.store.mode];
+        if (!info) {
+            return;
+        }
+        const {cursor_shape, cell_percentage} = info;
+        if (!cursor_shape) {
+            return;
+        }
+        const {width, height} = this.store.font_attr;
+        switch (cursor_shape) {
+            case 'horizontal': {
+                const top = height * (1 - cell_percentage / 100);
+                const right = width;
+                const bottom = height;
+                const left = 0;
+                this.element.style.clip = `rect(${top}px ${right}px ${bottom}px ${left}px)`;
+                break;
+            }
+            case 'vertical': {
+                const top = 0;
+                const right = width * (cell_percentage / 100);
+                const bottom = height;
+                const left = 0;
+                this.element.style.clip = `rect(${top}px ${right}px ${bottom}px ${left}px)`;
+                break;
+            }
+            default: {
+                this.element.style.clip = 'auto';
+                break;
+            }
+        }
+    }
+
     private redrawImpl() {
         this.delay_timer = null;
-        const cursor_width = this.store.mode.endsWith('insert') ? (window.devicePixelRatio || 1) : this.store.font_attr.draw_width;
-        const cursor_height = this.store.font_attr.draw_height;
-        const x = this.store.cursor.col * this.store.font_attr.draw_width;
-        const y = this.store.cursor.line * this.store.font_attr.draw_height;
-        const captured = this.screen_ctx.getImageData(x, y, cursor_width, cursor_height);
+        const {draw_width, draw_height} = this.store.font_attr;
+        const x = this.store.cursor.col * draw_width;
+        const y = this.store.cursor.line * draw_height;
+        const captured = this.screen_ctx.getImageData(x, y, draw_width, draw_height);
         this.ctx.putImageData(invertColor(captured), 0, 0);
     }
 
     private updateCursorBlinking(should_blink: boolean) {
+        this.updateCursorSize();
         if (should_blink) {
             if (this.store.blink_cursor) {
                 this.blink_timer.start();

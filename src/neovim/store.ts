@@ -1,5 +1,5 @@
 import {EventEmitter} from 'events';
-import {Kind, ActionType, Region} from './actions';
+import {Kind, ActionType, Region, ModeInfoSet} from './actions';
 import log from '../log';
 import ScreenDrag from './screen-drag';
 import ScreenWheel from './screen-wheel';
@@ -61,6 +61,7 @@ export default class NeovimStore extends EventEmitter {
     bg_color: string;
     sp_color: string;
     cursor: Cursor;
+    modeInfo: ModeInfoSet;
     mode: string;
     busy: boolean;
     mouse_enabled: boolean;
@@ -106,6 +107,7 @@ export default class NeovimStore extends EventEmitter {
             line: 0,
             col: 0,
         };
+        this.modeInfo = {};
         this.mode = 'normal';
         this.busy = false;
         this.mouse_enabled = true;
@@ -217,6 +219,11 @@ export default class NeovimStore extends EventEmitter {
                 this.sp_color = colorString(action.color, this.fg_color);
                 this.emit('update-sp-color');
                 log.debug('Special color is updated: ', this.sp_color);
+                break;
+            }
+            case Kind.ModeInfo: {
+                this.modeInfo = action.modeInfo;
+                this.emit('mode-info', this.modeInfo);
                 break;
             }
             case Kind.Mode: {

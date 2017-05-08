@@ -157,6 +157,21 @@ export default class NeovimProcess {
                 case 'update_sp':
                     d.dispatch(Action.updateSpecialColor(args[0] as number));
                     break;
+                case 'mode_info_set':
+                    // Note:
+                    // [{mode_info_set}, {mode_info_set}]
+                    //   -> { [mode_name]: {mode_info_set} }
+                    const modeInfo = args[1] as Action.ModeInfo[];
+
+                    d.dispatch(
+                        Action.modeInfo(
+                            modeInfo.reduce((set, info) => {
+                                set[info.name] = info;
+                                return set;
+                            }, Object.create(null)),
+                        ),
+                    );
+                    break;
                 case 'mode_change':
                     d.dispatch(Action.changeMode(args[0] as string));
                     break;
