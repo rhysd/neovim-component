@@ -140,7 +140,12 @@ export default class NeovimInput {
             case 'Insert':       return 'Insert';
             case 'Delete':       return 'Del';
             case 'Help':         return 'Help';
-            case 'Unidentified': return null;
+            case 'Unidentified': {
+                if (ctrl && key_code === 32) {
+                    return 'Space';
+                }
+                return null;
+            };
             default:             return null;
         }
     }
