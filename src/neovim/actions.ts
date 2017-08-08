@@ -115,10 +115,10 @@ export function cursor(line: number, col: number) {
     };
 }
 
-export function highlight(highlight: HighlightSet) {
+export function highlight(hl: HighlightSet) {
     return {
         type: Kind.Highlight,
-        highlight,
+        highlight: hl,
     };
 }
 
@@ -162,10 +162,10 @@ export function updateSpecialColor(color: number) {
     };
 }
 
-export function modeInfo(modeInfo: ModeInfoSet) {
+export function modeInfo(info: ModeInfoSet) {
     return {
         type: Kind.ModeInfo,
-        modeInfo,
+        modeInfo: info,
     };
 }
 

@@ -86,7 +86,7 @@ Polymer({
         const width = this.width || canvas.parentElement.offsetWidth;
         const height = this.height || canvas.parentElement.offsetHeight;
         this.editor.attachCanvas(width, height, canvas);
-        this.resize_listener = window.addEventListener('resize', () => {
+        this.resize_listener = () => {
             if (this.resizeHandler !== null) {
                 clearTimeout(this.resizeHandler);
             }
@@ -97,7 +97,8 @@ Polymer({
                     },
                     100,
                 );
-        });
+        };
+        window.addEventListener('resize', this.resize_listener);
     },
 
     detached: function() {
