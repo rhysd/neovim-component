@@ -36,8 +36,6 @@
     "promised-neovim-client": "^2.0.2"
   },
   "devDependencies": {
-    "@types/electron": "^1.4.37",
-    "@types/es6-promise": "0.0.32",
     "@types/fbemitter": "^2.0.32",
     "@types/flux": "^3.1.0",
     "@types/loglevel": "^1.4.29",
@@ -49,12 +47,12 @@
     "browserify": "^14.3.0",
     "canvas": "^1.6.5",
     "chai": "^3.5.0",
-    "electron": "~1.4",
+    "electron": "~1.7.5",
     "jsdom": "^10.1.0",
     "mocha": "^3.3.0",
     "mocha-generators": "^2.0.0",
     "nightmare": "https://github.com/rhysd/nightmare.git#custom-electron-path",
     "tslint": "^5.2.0",
-    "typescript": "^2.3.2"
+    "typescript": "^2.4.2"
   }
 }

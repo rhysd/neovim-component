@@ -4,12 +4,3 @@ declare namespace NodeJS {
     }
 }
 
-interface ObjectConstructor {
-    assign(x: Object, ...xs: Object[]): Object;
-}
-
-interface String {
-    repeat(n: number): string;
-    endsWith(s: string): boolean;
-}
-

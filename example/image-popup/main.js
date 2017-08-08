@@ -11,7 +11,7 @@ app.on('ready', function() {
         height: 600,
         useContentSize: true,
         webPreferences: {
-            blinkFeatures: 'KeyboardEventKey'
+            blinkFeatures: 'KeyboardEventKey,Accelerated2dCanvas,Canvas2dFixedRenderingMode'
         }
     });
 
