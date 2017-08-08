@@ -2,5 +2,8 @@
 /typings
 /src/out
 /bower_components
+/test
 node_modules
 npm-debug.log
+Guardfile
+tslint.json
