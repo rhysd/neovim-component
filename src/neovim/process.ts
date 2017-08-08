@@ -56,7 +56,9 @@ export default class NeovimProcess {
                 nvim.on('request', this.onRequested.bind(this));
                 nvim.on('notification', this.onNotified.bind(this));
                 nvim.on('disconnect', this.onDisconnected.bind(this));
-                nvim.uiAttach(columns, lines, true, true /*notify*/).catch(log.error);
+                /* tslint:disable:no-floating-promises */
+                nvim.uiAttach(columns, lines, true, true /*notify*/);
+                /* tslint:enable:no-floating-promises */
                 this.started = true;
                 log.info(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
                 this.store.on('input', (i: string) => nvim.input(i));
@@ -64,7 +66,9 @@ export default class NeovimProcess {
 
                 // Note:
                 // Neovim frontend has responsiblity to emit 'GUIEnter' on initialization.
-                this.client.command('doautocmd <nomodeline> GUIEnter').catch(log.error);
+                /* tslint:disable:no-floating-promises */
+                this.client.command('doautocmd <nomodeline> GUIEnter', true);
+                /* tslint:enable:no-floating-promises */
             });
     }
 
