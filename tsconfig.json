@@ -3,7 +3,6 @@
     "module": "commonjs",
     "removeComments": true,
     "preserveConstEnums": true,
-    "outDir": "./out",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -12,18 +11,7 @@
     "target": "es2015",
     "sourceMap": true
   },
-  "files": [
-    "neovim/screen-wheel.ts",
-    "neovim/screen-drag.ts",
-    "neovim/input.ts",
-    "neovim/cursor.ts",
-    "neovim/actions.ts",
-    "neovim/store.ts",
-    "neovim/screen.ts",
-    "neovim/process.ts",
-    "neovim.ts",
-    "log.ts",
-    "index.ts",
-    "lib.d.ts"
+  "includes": [
+    "src/**/*.ts"
   ]
 }

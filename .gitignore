@@ -1,6 +1,6 @@
 /bower_components
 node_modules
-/typings
-/src/out
+/src/**/*.js
+/src/**/*.js.map
 /build
 npm-debug.log
