@@ -224,6 +224,9 @@ export default class NeovimInput {
 
         this.element = document.querySelector('.neovim-input') as HTMLInputElement;
         this.element.addEventListener('compositionstart', this.startComposition.bind(this));
+        this.element.addEventListener('compositionupdate', (e: any) => {
+            console.log(e);
+        });
         this.element.addEventListener('compositionend', this.endComposition.bind(this));
         this.element.addEventListener('keydown', this.onInputNonText.bind(this));
         this.element.addEventListener('input', this.onInputText.bind(this));
