@@ -2,8 +2,8 @@ global.require = require;
 const assert = require('chai').assert;
 const jsdom = require('jsdom');
 const document = new jsdom.JSDOM().window.document;
-const ScreenDrag = require('../../src/out/neovim/screen-drag').default;
-const NeovimStore = require('../../src/out/neovim/store').default;
+const ScreenDrag = require('../../src/neovim/screen-drag').default;
+const NeovimStore = require('../../src/neovim/store').default;
 
 function eventFactory(kind) {
     return function (opts) {
