@@ -11,23 +11,21 @@ node_js:
 install:
     - sudo add-apt-repository --yes ppa:neovim-ppa/unstable
     - sudo apt-get -qq update
-    - sudo apt-get -qq install neovim xvfb libcairo2-dev libgif-dev
-    - npm install -g bower
-    - npm run dep
+    - sudo apt-get install -y neovim libcairo2-dev libgif-dev software-properties-common python-software-properties
     - export DISPLAY=':99.0'
-    - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-    - mkdir -p ./build
+    - sh -e /etc/init.d/xvfb start
+    - npm run dep
+    - uname -a
     - ./node_modules/.bin/tsc --version
     - ./node_modules/.bin/browserify --version
     - ./node_modules/.bin/mocha --version
     - nvim --version
+    - electron --version
 script:
     - npm run build
     - npm run test
-# addons:
-#     apt:
-#         sources:
-#             - neovim-ppa/unstable
-#         packages:
-#             - xvfb
-#             - neovim
+    # - npm run e2e
+notifications:
+    email:
+        on_success: never
+        on_failure: change

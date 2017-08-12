@@ -18,7 +18,8 @@
     "example": "electron .",
     "lint": "tslint --type-check --project src/",
     "watch": "guard --watchdir src test",
-    "test": "mocha test/unit/"
+    "test": "mocha test/unit/",
+    "e2e": "mocha test/e2e/"
   },
   "keywords": [
     "neovim",
