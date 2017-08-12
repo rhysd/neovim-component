@@ -23,9 +23,3 @@ script:
     - npm run build
     - npm run test
     - npm run e2e
-addons:
-    apt:
-        sources:
-            - neovim-ppa/unstable
-        packages:
-            - neovim
