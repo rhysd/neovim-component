@@ -12,11 +12,9 @@ install:
     - sudo add-apt-repository --yes ppa:neovim-ppa/unstable
     - sudo apt-get -qq update
     - sudo apt-get -qq install neovim xvfb libcairo2-dev libgif-dev
-    - npm install -g bower
+    - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     - npm run dep
     - export DISPLAY=':99.0'
-    - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-    - mkdir -p ./build
     - ./node_modules/.bin/tsc --version
     - ./node_modules/.bin/browserify --version
     - ./node_modules/.bin/mocha --version
@@ -24,10 +22,10 @@ install:
 script:
     - npm run build
     - npm run test
-# addons:
-#     apt:
-#         sources:
-#             - neovim-ppa/unstable
-#         packages:
-#             - xvfb
-#             - neovim
+    - npm run e2e
+addons:
+    apt:
+        sources:
+            - neovim-ppa/unstable
+        packages:
+            - neovim
