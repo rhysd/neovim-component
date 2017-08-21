@@ -10,7 +10,6 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     export DISPLAY=':99.0'
     sh -e /etc/init.d/xvfb start
 elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-    brew update
     brew install neovim pkg-config cairo pango libpng jpeg giflib
 else
     echo "Unknown platform: ${TRAVIS_OS_NAME}"

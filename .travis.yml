@@ -4,6 +4,9 @@ os:
     - linux
     - osx
 
+# Use macOS 10.12: https://docs.travis-ci.com/user/languages/objective-c/
+osx_image: xcode9
+
 # https://docs.travis-ci.com/user/trusty-ci-environment/
 dist: trusty
 
