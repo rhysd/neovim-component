@@ -6,7 +6,7 @@ echo Installing dependencies
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     sudo add-apt-repository --yes ppa:neovim-ppa/unstable
     sudo apt-get -qq update
-    sudo apt-get install -y neovim libcairo2-dev libgif-dev software-properties-common python-software-properties
+    sudo apt-get install -y neovim libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
     export DISPLAY=':99.0'
     sh -e /etc/init.d/xvfb start
 elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
