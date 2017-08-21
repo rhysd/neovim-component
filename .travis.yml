@@ -13,8 +13,11 @@ sudo: required
 node_js:
     - "stable"
 
+install:
+    - ./scripts/travis-ci-install.sh
+
 script:
-    - ./scripts/travis-ci.sh
+    - ./scripts/travis-ci-run.sh
 
 notifications:
     email:
