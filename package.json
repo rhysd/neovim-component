@@ -16,7 +16,7 @@
     "debug": "ELECTRON_ENABLE_STACK_DUMPING=true NODE_ENV=debug electron .",
     "dep": "npm install && bower install && mkdir -p build",
     "example": "electron .",
-    "lint": "tslint --type-check --project src/",
+    "lint": "tslint --type-check --project .",
     "watch": "guard --watchdir src test",
     "test": "mocha test/unit/",
     "e2e": "mocha test/e2e/"

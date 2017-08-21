@@ -39,7 +39,7 @@ describe('neovim element', function () {
                 const rgba = returned.value.data;
                 assert.equal(rgba.length, 4);
                 // White means nothing may not be rendered
-                assert.isFalse(rgba[0] === 255 && rgba[1] === 255 && rgba[2] === 255)
+                assert.isFalse(rgba[0] === 255 && rgba[1] === 255 && rgba[2] === 255);
             })
             .then(() => this.app.client.getRenderProcessLogs()).then((logs: any[]) => {
                 for (const log of logs) {
