@@ -1,6 +1,7 @@
 /Guardfile
 /bower_components
 /test
+/scripts
 node_modules
 npm-debug.log
 Guardfile
