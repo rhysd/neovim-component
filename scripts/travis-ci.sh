@@ -12,6 +12,9 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 elif [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     brew update
     brew install neovim pkg-config cairo pango libpng jpeg giflib
+else
+    echo "Unknown platform: ${TRAVIS_OS_NAME}"
+    exit 1
 fi
 
 npm run dep
