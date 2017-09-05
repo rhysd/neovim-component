@@ -2,9 +2,9 @@ global.require = require;
 global.window = global;
 const assert = require('chai').assert;
 const jsdom = require('jsdom');
-const A = require('../../src/neovim/actions');
-const NeovimStore = require('../../src/neovim/store').default;
-const ScreenWheel = require('../../src/neovim/screen-wheel').default;
+const A = require('../../build/src/neovim/actions');
+const NeovimStore = require('../../build/src/neovim/store').default;
+const ScreenWheel = require('../../build/src/neovim/screen-wheel').default;
 const document = new jsdom.JSDOM().window.document;
 
 describe('NeovimStore', () => {

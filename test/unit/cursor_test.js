@@ -1,9 +1,9 @@
 global.require = require;
 const assert = require('chai').assert;
 const jsdom = require('jsdom');
-const NeovimStore = require('../../src/neovim/store').default;
-const Cursor = require('../../src/neovim/cursor').default;
-const A = require('../../src/neovim/actions');
+const NeovimStore = require('../../build/src/neovim/store').default;
+const Cursor = require('../../build/src/neovim/cursor').default;
+const A = require('../../build/src/neovim/actions');
 
 describe('Cursor', () => {
     beforeEach(() => {
