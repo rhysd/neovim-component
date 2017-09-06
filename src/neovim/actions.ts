@@ -39,6 +39,8 @@ export enum Kind {
     ChangeCursorDrawDelay,
     ClearAll,
     ClearEOL,
+    CompositionStart,
+    CompositionEnd,
     Cursor,
     DisableMouse,
     DisableAltKey,
@@ -131,6 +133,18 @@ export function clearAll() {
 export function clearEndOfLine() {
     return {
         type: Kind.ClearEOL,
+    };
+}
+
+export function compositionStart() {
+    return {
+        type: Kind.CompositionStart,
+    };
+}
+
+export function compositionEnd() {
+    return {
+        type: Kind.CompositionEnd,
     };
 }
 

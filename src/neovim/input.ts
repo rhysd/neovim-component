@@ -1,5 +1,10 @@
 import NeovimStore from './store';
-import {inputToNeovim, notifyFocusChanged} from './actions';
+import {
+    compositionStart,
+    compositionEnd,
+    inputToNeovim,
+    notifyFocusChanged,
+} from './actions';
 import log from '../log';
 
 const OnDarwin = global.process.platform === 'darwin';
@@ -253,6 +258,10 @@ export default class NeovimInput {
         this.element.style.color = this.store.fg_color;
         this.element.style.backgroundColor = this.store.bg_color;
         this.element.style.width = 'auto';
+
+        // hide cursor
+        this.store.dispatcher.dispatch(compositionStart());
+
         this.ime_running = true;
     }
 
@@ -264,6 +273,10 @@ export default class NeovimInput {
         this.element.style.color = 'transparent';
         this.element.style.backgroundColor = 'transparent';
         this.element.style.width = '1px';
+
+        // show cursor
+        this.store.dispatcher.dispatch(compositionEnd());
+
         this.ime_running = false;
     }
 
