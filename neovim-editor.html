@@ -29,12 +29,16 @@
         top: 0px;
         left: 0px;
       }
+      .neovim-fake {
+        display: none;
+      }
     </style>
     <div class="neovim-wrapper">
       <canvas class="neovim-canvas" width$="[[width]]" height$="[[height]]"></canvas>
       <canvas class="neovim-cursor">
       </canvas>
       <input class="neovim-input" autocomplete="off" autofocus />
+      <span class="neovim-fake"></span>
     </div>
   </template>
 </dom-module>

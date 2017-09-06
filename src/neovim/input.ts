@@ -7,6 +7,8 @@ const IsAlpha = /^[a-zA-Z]$/;
 
 export default class NeovimInput {
     element: HTMLInputElement;
+    // fake span element to measure text width of preedit input
+    fake_element: HTMLSpanElement;
     ime_running: boolean;      // XXX: Local state!
 
     static shouldIgnoreOnKeydown(event: KeyboardEvent) {
@@ -230,18 +232,38 @@ export default class NeovimInput {
         this.element.addEventListener('blur', this.onBlur.bind(this));
         this.element.addEventListener('focus', this.onFocus.bind(this));
         this.store.on('cursor', this.updateElementPos.bind(this));
+        this.store.on('font-size-changed', this.updateFontSize.bind(this));
+
+        this.fake_element =
+            document.querySelector('.neovim-fake') as HTMLSpanElement;
+
+        const {face} = this.store.font_attr;
+        this.element.style.fontFamily = face;
+        this.fake_element.style.fontFamily = face;
+
+        this.updateFontSize();
 
         this.focus();
     }
 
     startComposition(_: Event) {
         log.debug('start composition');
+
+        // show HTMLInputElement to show  preedit
+        this.element.style.color = this.store.fg_color;
+        this.element.style.backgroundColor = this.store.bg_color;
+        this.element.style.width = 'auto';
         this.ime_running = true;
     }
 
     endComposition(event: CompositionEvent) {
         log.debug('end composition');
         this.inputToNeovim(event.data, event);
+
+        // hide HTMLInputElement
+        this.element.style.color = 'transparent';
+        this.element.style.backgroundColor = 'transparent';
+        this.element.style.width = '1px';
         this.ime_running = false;
     }
 
@@ -367,6 +389,14 @@ export default class NeovimInput {
 
         if (this.ime_running) {
             log.debug('IME is running.  Input canceled.');
+
+            // update width of the input element
+            this.fake_element.innerText = this.element.value;
+            // to get width of the fake element, show it just a moment
+            this.fake_element.style.display = 'inline';
+            const width = this.fake_element.getBoundingClientRect().width;
+            this.fake_element.style.display = 'none';
+            this.element.style.width = width + 'px';
             return;
         }
 
@@ -389,5 +419,13 @@ export default class NeovimInput {
 
         this.element.style.left = x + 'px';
         this.element.style.top = y + 'px';
+    }
+
+    updateFontSize() {
+        const {specified_px} = this.store.font_attr;
+
+        const font_size = specified_px * (window.devicePixelRatio || 1);
+        this.element.style.fontSize = font_size + 'px';
+        this.fake_element.style.fontSize = font_size + 'px';
     }
 }
