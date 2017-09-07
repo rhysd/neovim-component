@@ -397,8 +397,10 @@ export default class NeovimInput {
         if (enable) {
             this.element.type = 'text';
         } else {
-            // any of number, tel, email, url can be used
-            this.element.type = 'email';
+            // any of 'number', 'tel', 'email', 'url' works for Windows 10 but
+            // don't works for Linux
+            // 'password' (little hackey) works for Linux
+            this.element.type = 'password';
         }
     }
 }
