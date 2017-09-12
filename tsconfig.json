@@ -8,6 +8,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmitOnError": true,
+    "outDir": "build",
     "target": "es2015",
     "sourceMap": true
   },

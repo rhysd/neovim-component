@@ -2,8 +2,8 @@ global.require = require;
 const assert = require('chai').assert;
 const jsdom = require('jsdom');
 const document = new jsdom.JSDOM().window.document;
-const ScreenWheel = require('../../src/neovim/screen-wheel').default;
-const NeovimStore = require('../../src/neovim/store').default;
+const ScreenWheel = require('../../build/src/neovim/screen-wheel').default;
+const NeovimStore = require('../../build/src/neovim/store').default;
 
 
 function wheelEvent(x, y, opts) {

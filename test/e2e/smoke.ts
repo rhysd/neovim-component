@@ -10,7 +10,7 @@ describe('neovim element', function () {
     before(function () {
         this.app = new Application({
             path: electron,
-            args: [path.join(__dirname, '..', '..')],
+            args: [path.join(__dirname, '..', '..', '..')],
             env: {
                 NODE_ENV: 'production',
             },
