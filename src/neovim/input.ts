@@ -230,6 +230,8 @@ export default class NeovimInput {
         this.element.addEventListener('blur', this.onBlur.bind(this));
         this.element.addEventListener('focus', this.onFocus.bind(this));
         this.store.on('cursor', this.updateElementPos.bind(this));
+        this.store.on('mode', () => this.toggleIme(
+            ['insert', 'replace', 'cmdline'].some(mode => mode === this.store.mode)));
 
         this.focus();
     }
@@ -389,5 +391,16 @@ export default class NeovimInput {
 
         this.element.style.left = x + 'px';
         this.element.style.top = y + 'px';
+    }
+
+    toggleIme(enable: boolean) {
+        if (enable) {
+            this.element.type = 'text';
+        } else {
+            // any of 'number', 'tel', 'email', 'url' works for Windows 10 but
+            // don't works for Linux
+            // 'password' (little hackey) works both for Windows 10 and Linux
+            this.element.type = 'password';
+        }
     }
 }
