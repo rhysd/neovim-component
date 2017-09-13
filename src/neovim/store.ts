@@ -389,6 +389,14 @@ export default class NeovimStore extends EventEmitter {
                 }
                 break;
             }
+            case Kind.CompositionStart: {
+                this.emit('composition-started');
+                break;
+            }
+            case Kind.CompositionEnd: {
+                this.emit('composition-ended');
+                break;
+            }
             default: {
                 log.warn('Unhandled action: ', action);
                 break;

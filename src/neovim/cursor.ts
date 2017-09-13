@@ -66,6 +66,8 @@ export default class NeovimCursor {
     private ctx: CanvasRenderingContext2D;
     private delay_timer: number;
     private blink_timer: CursorBlinkTimer;
+    // flag to hide cursor when preedit is shown
+    private preedit_is_shown: boolean;
 
     constructor(private store: NeovimStore, private screen_ctx: CanvasRenderingContext2D) {
         this.delay_timer = null;
@@ -115,6 +117,8 @@ export default class NeovimCursor {
         });
         this.store.on('focus-changed', () => this.updateCursorBlinking(this.store.focused));
         this.store.on('mode', () => this.updateCursorBlinking(this.store.mode !== 'insert'));
+        this.store.on('composition-started', () => this.compositionChanged(true));
+        this.store.on('composition-ended', () => this.compositionChanged(false));
     }
 
     onFontSizeUpdated() {
@@ -131,6 +135,12 @@ export default class NeovimCursor {
     }
 
     redraw() {
+        if (this.preedit_is_shown) {
+            clearTimeout(this.delay_timer);
+            this.ctx.clearRect(0, 0, this.element.width, this.element.height);
+            return;
+        }
+
         if (this.store.cursor_draw_delay <= 0) {
             this.redrawImpl();
             return;
@@ -212,5 +222,10 @@ export default class NeovimCursor {
                 this.redraw();
             }
         }
+    }
+
+    private compositionChanged(preedit_is_shown: boolean) {
+        this.preedit_is_shown = preedit_is_shown;
+        this.redraw();
     }
 }
