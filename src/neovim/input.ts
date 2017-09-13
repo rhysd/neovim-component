@@ -435,9 +435,9 @@ export default class NeovimInput {
     }
 
     updateFontSize() {
-        const {specified_px} = this.store.font_attr;
+        // don't need to consider device pixel ratio for DOM elements
+        const {specified_px: font_size} = this.store.font_attr;
 
-        const font_size = specified_px * (window.devicePixelRatio || 1);
         this.element.style.fontSize = font_size + 'px';
         this.fake_element.style.fontSize = font_size + 'px';
     }
