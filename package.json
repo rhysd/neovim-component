@@ -33,7 +33,7 @@
   "license": "MIT",
   "dependencies": {
     "flux": "^3.1.3",
-    "loglevel": "^1.4.1",
+    "loglevel": "^1.5.0",
     "promised-neovim-client": "^2.0.2"
   },
   "devDependencies": {
@@ -41,21 +41,21 @@
     "@types/fbemitter": "^2.0.32",
     "@types/flux": "^3.1.3",
     "@types/loglevel": "^1.4.30",
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^8.0.25",
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^8.0.28",
     "@types/polymer": "^1.2.1",
     "@types/react": "^16.0.5",
     "@types/webcomponents.js": "^0.6.32",
     "@types/webdriverio": "^4.8.4",
-    "bower": "^1.8.0",
+    "bower": "^1.8.2",
     "browserify": "^14.4.0",
-    "canvas": "^1.6.6",
-    "chai": "^4.1.1",
-    "electron": "~1.7.5",
+    "canvas": "^1.6.7",
+    "chai": "^4.1.2",
+    "electron": "~1.7.6",
     "jsdom": "^11.2.0",
-    "mocha": "^3.5.0",
+    "mocha": "^3.5.3",
     "spectron": "^3.7.2",
     "tslint": "^5.7.0",
-    "typescript": "^2.4.2"
+    "typescript": "^2.5.2"
   }
 }
