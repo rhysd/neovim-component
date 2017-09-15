@@ -254,7 +254,7 @@ export default class NeovimInput {
     startComposition(_: Event) {
         log.debug('start composition');
 
-        // show HTMLInputElement to show  preedit
+        // make <input> visible to show preedit
         this.element.style.color = this.store.fg_color;
         this.element.style.backgroundColor = this.store.bg_color;
         this.element.style.width = 'auto';
@@ -405,7 +405,7 @@ export default class NeovimInput {
 
             // update width of the input element
             this.fake_element.innerText = this.element.value;
-            // to get width of the fake element, show it just a moment
+            // to get the width of peedit area, show it just a moment
             this.fake_element.style.display = 'inline';
             const width = this.fake_element.getBoundingClientRect().width;
             this.fake_element.style.display = 'none';
