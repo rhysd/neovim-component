@@ -55,7 +55,7 @@ describe('NeovimInput', () => {
         global.document = new jsdom.JSDOM(`
             <body>
                 <input class="neovim-input"/>
-                <span class="neovim-fake"></span>
+                <span class="neovim-fake-preedit"></span>
             </body>`).window.document;
         global.input_element = document.querySelector('.neovim-input');
         input_element.value = '';

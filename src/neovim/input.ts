@@ -240,7 +240,7 @@ export default class NeovimInput {
         this.store.on('font-size-changed', this.updateFontSize.bind(this));
 
         this.fake_element =
-            document.querySelector('.neovim-fake') as HTMLSpanElement;
+            document.querySelector('.neovim-fake-preedit') as HTMLSpanElement;
 
         const {face} = this.store.font_attr;
         this.element.style.fontFamily = face;
