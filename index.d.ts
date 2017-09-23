@@ -32,36 +32,38 @@ export declare enum Kind {
     ChangeCursorDrawDelay = 3,
     ClearAll = 4,
     ClearEOL = 5,
-    Cursor = 6,
-    DisableMouse = 7,
-    DisableAltKey = 8,
-    DisableMetaKey = 9,
-    DragEnd = 10,
-    DragStart = 11,
-    DragUpdate = 12,
-    EnableMouse = 13,
-    Highlight = 14,
-    Input = 15,
-    Mode = 16,
-    PutText = 17,
-    Resize = 18,
-    ScrollScreen = 19,
-    SetIcon = 20,
-    SetScrollRegion = 21,
-    SetTitle = 22,
-    StartBlinkCursor = 23,
-    StopBlinkCursor = 24,
-    UpdateBG = 25,
-    UpdateFG = 26,
-    UpdateSP = 27,
-    UpdateFontFace = 28,
-    updateLineHeight = 29,
-    UpdateFontPx = 30,
-    UpdateFontSize = 31,
-    UpdateScreenBounds = 32,
-    UpdateScreenSize = 33,
-    WheelScroll = 34,
-    FocusChanged = 35,
+    CompositionStart = 6,
+    CompositionEnd = 7,
+    Cursor = 8,
+    DisableMouse = 9,
+    DisableAltKey = 10,
+    DisableMetaKey = 11,
+    DragEnd = 12,
+    DragStart = 13,
+    DragUpdate = 14,
+    EnableMouse = 15,
+    Highlight = 16,
+    Input = 17,
+    Mode = 18,
+    PutText = 19,
+    Resize = 20,
+    ScrollScreen = 21,
+    SetIcon = 22,
+    SetScrollRegion = 23,
+    SetTitle = 24,
+    StartBlinkCursor = 25,
+    StopBlinkCursor = 26,
+    UpdateBG = 27,
+    UpdateFG = 28,
+    UpdateSP = 29,
+    UpdateFontFace = 30,
+    updateLineHeight = 31,
+    UpdateFontPx = 32,
+    UpdateFontSize = 33,
+    UpdateScreenBounds = 34,
+    UpdateScreenSize = 35,
+    WheelScroll = 36,
+    FocusChanged = 37,
 }
 export interface ActionType {
     type: Kind;
@@ -106,6 +108,12 @@ export declare function clearAll(): {
     type: Kind;
 };
 export declare function clearEndOfLine(): {
+    type: Kind;
+};
+export declare function compositionStart(): {
+    type: Kind;
+};
+export declare function compositionEnd(): {
     type: Kind;
 };
 export declare function resize(lines: number, cols: number): {
