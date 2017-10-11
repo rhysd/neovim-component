@@ -13,6 +13,7 @@ import {
     startBlinkCursor,
     setTitle,
 } from './neovim/actions';
+import log from './log';
 import {Nvim} from 'promised-neovim-client';
 
 export default class Neovim extends EventEmitter {
