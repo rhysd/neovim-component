@@ -2,3 +2,10 @@
 node_modules
 /build
 npm-debug.log
+/src/**/*.js
+/src/**/*.js.map
+/test/e2e/**/*.js
+/test/e2e/**/*.js.map
+
+# for now
+/package-lock.json
