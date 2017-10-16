@@ -18,8 +18,8 @@
     "example": "NODE_ENV=production electron .",
     "lint": "tslint --type-check --project .",
     "watch": "guard --watchdir src test",
-    "test": "mocha test/unit/",
-    "e2e": "mocha build/test/e2e/ --opts test/e2e/mocha.opts"
+    "test": "mocha test/unit/ --exit",
+    "e2e": "mocha build/test/e2e/ --opts test/e2e/mocha.opts --exit"
   },
   "keywords": [
     "neovim",
@@ -53,7 +53,7 @@
     "chai": "^4.1.2",
     "electron": "~1.7.9",
     "jsdom": "^11.3.0",
-    "mocha": "^3.5.3",
+    "mocha": "^4.0.1",
     "spectron": "^3.7.2",
     "tslint": "^5.7.0",
     "typescript": "^2.5.3"
