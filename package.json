@@ -16,7 +16,7 @@
     "debug": "ELECTRON_ENABLE_STACK_DUMPING=true NODE_ENV=debug electron .",
     "dep": "npm install && bower install && mkdir -p build",
     "example": "NODE_ENV=production electron .",
-    "lint": "tslint --type-check --project .",
+    "lint": "tslint --project .",
     "watch": "guard --watchdir src test",
     "test": "mocha test/unit/ --exit",
     "e2e": "mocha build/test/e2e/ --opts test/e2e/mocha.opts --exit"
@@ -39,23 +39,23 @@
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/fbemitter": "^2.0.32",
-    "@types/flux": "^3.1.3",
-    "@types/loglevel": "^1.5.1",
-    "@types/mocha": "^2.2.43",
-    "@types/node": "^8.0.34",
+    "@types/flux": "^3.1.4",
+    "@types/loglevel": "^1.5.3",
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.47",
     "@types/polymer": "^1.2.1",
-    "@types/react": "^16.0.10",
+    "@types/react": "^16.0.19",
     "@types/webcomponents.js": "^0.6.32",
     "@types/webdriverio": "^4.8.6",
     "bower": "^1.8.2",
-    "browserify": "^14.4.0",
+    "browserify": "^14.5.0",
     "canvas": "^1.6.7",
     "chai": "^4.1.2",
     "electron": "~1.7.9",
     "jsdom": "^11.3.0",
     "mocha": "^4.0.1",
     "spectron": "^3.7.2",
-    "tslint": "^5.7.0",
-    "typescript": "^2.5.3"
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
   }
 }

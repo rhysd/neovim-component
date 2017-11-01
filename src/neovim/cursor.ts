@@ -72,7 +72,7 @@ export default class NeovimCursor {
     constructor(private store: NeovimStore, private screen_ctx: CanvasRenderingContext2D) {
         this.delay_timer = null;
         this.blink_timer = new CursorBlinkTimer(this.store.cursor_blink_interval);
-        this.element = document.querySelector('.neovim-cursor') as HTMLCanvasElement;
+        this.element = document.querySelector('.neovim-cursor');
         this.element.style.top = '0px';
         this.element.style.left = '0px';
         this.ctx = this.element.getContext('2d', {alpha: false});
@@ -93,7 +93,7 @@ export default class NeovimCursor {
         });
         this.element.addEventListener('click', (e: MouseEvent) => {
             e.preventDefault();
-            const i = document.querySelector('.neovim-input') as HTMLInputElement;
+            const i: HTMLInputElement = document.querySelector('.neovim-input');
             if (i) {
                 i.focus();
             }
@@ -136,7 +136,9 @@ export default class NeovimCursor {
 
     redraw() {
         if (this.preedit_is_shown) {
-            clearTimeout(this.delay_timer);
+            if (this.delay_timer !== null) {
+                clearTimeout(this.delay_timer);
+            }
             this.ctx.clearRect(0, 0, this.element.width, this.element.height);
             return;
         }
@@ -173,7 +175,7 @@ export default class NeovimCursor {
             return;
         }
         const {cursor_shape, cell_percentage} = info;
-        if (!cursor_shape) {
+        if (cursor_shape === undefined || cell_percentage === undefined) {
             return;
         }
         const {width, height} = this.store.font_attr;

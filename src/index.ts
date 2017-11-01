@@ -82,7 +82,7 @@ Polymer({
     },
 
     attached: function() {
-        const canvas = document.querySelector('.neovim-canvas') as HTMLCanvasElement;
+        const canvas: HTMLCanvasElement = document.querySelector('.neovim-canvas');
         const width = this.width || canvas.parentElement.offsetWidth;
         const height = this.height || canvas.parentElement.offsetHeight;
         this.editor.attachCanvas(width, height, canvas);
