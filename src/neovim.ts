@@ -66,7 +66,7 @@ export default class Neovim extends EventEmitter {
     }
 
     quit() {
-        this.process.finalize().catch(log.error);
+        this.process.finalize().catch(err => log.error(err));
     }
 
     getClient(): Nvim {

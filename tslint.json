@@ -128,6 +128,21 @@
     "use-default-type-parameter": true,
     "deprecation": true,
     "no-unnecessary-qualifier": true,
+    "no-return-await": true,
+    "no-duplicate-switch-case": true,
+    "no-implicit-dependencies": [true, "dev"],
+    "ban-comma-operator": true,
+    "no-parameter-reassignment": false,
+    "no-duplicate-imports": true,
+    "no-this-assignment": true,
+    "use-default-type-parameter": true,
+    "no-unbound-method": [true, "ignore-static"],
+    "prefer-object-spread": true,
+    "encoding": true,
+    "prefer-switch": true,
+    "number-literal-format": false,
+    "interface-over-type-literal": true,
+    "callable-types": true,
     "return-undefined": true
   }
 }

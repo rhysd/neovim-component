@@ -11,7 +11,10 @@ export interface HighlightSet {
     underline?: boolean;
 }
 
-export type ModeInfoSet = { [key: string]: ModeInfo };
+export interface ModeInfoSet {
+    [key: string]: ModeInfo;
+}
+
 export interface ModeInfo {
     blinkoff?: number;
     blinkon?: number;
