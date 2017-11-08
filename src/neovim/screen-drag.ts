@@ -6,6 +6,8 @@ const MouseButtonKind = [ 'Left', 'Middle', 'Right' ];
 export default class ScreenDrag {
     line: number;
     col: number;
+    parentX: number;
+    parentY: number;
 
     static buildInputOf(e: MouseEvent, type: string, line: number, col: number) {
         let seq = '<';
@@ -26,10 +28,18 @@ export default class ScreenDrag {
     constructor(private store: NeovimStore) {
         this.line = 0;
         this.col = 0;
+        this.parentX = 0;
+        this.parentY = 0;
     }
 
     start(down_event: MouseEvent) {
         down_event.preventDefault();
+        const wrapper = this.findScreenElement(down_event.target as HTMLElement);
+        if (wrapper !== null) {
+            const rect = (down_event.target as HTMLCanvasElement).getBoundingClientRect();
+            this.parentY = rect.top;
+            this.parentX = rect.left;
+        }
         [this.line, this.col] = this.getPos(down_event);
         log.info('Drag start', down_event, this.line, this.col);
         const input = ScreenDrag.buildInputOf(down_event, 'Mouse', this.line, this.col);
@@ -62,10 +72,28 @@ export default class ScreenDrag {
         return input;
     }
 
+    private findScreenElement(elem: HTMLElement) {
+        while (elem.parentElement) {
+            elem = elem.parentElement;
+            if (elem.classList.contains('neovim-wrapper')) {
+                return elem;
+            }
+        }
+        return null;
+    }
+
     private getPos(e: MouseEvent) {
+        // Note:
+        // e.offsetX and e.offsetY is not available. On mouseup event, the cursor is under the mouse
+        // pointer becase mousedown event moves the cursor under mouse pointer. In the case, e.target
+        // is a cursor <canvas> element. And offset is calculated based on the cursor element.
+        // So we need to have a screen element's position (parentX and parentY) and calculate offsets
+        // based on it.
+        const offsetY = e.clientY - this.parentY;
+        const offsetX = e.clientX - this.parentX;
         return [
-            Math.floor(e.clientY / this.store.font_attr.height),
-            Math.floor(e.clientX / this.store.font_attr.width),
+            Math.floor(offsetY / this.store.font_attr.height),
+            Math.floor(offsetX / this.store.font_attr.width),
         ];
     }
 }
