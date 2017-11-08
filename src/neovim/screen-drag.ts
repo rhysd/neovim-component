@@ -72,8 +72,9 @@ export default class ScreenDrag {
         return input;
     }
 
-    private findScreenElement(elem: HTMLElement) {
-        while (elem.parentElement) {
+    private findScreenElement(elem: HTMLElement | null) {
+        while (elem) {
+            // Note: Sure that passed 'elem' is not a screen element.
             elem = elem.parentElement;
             if (elem.classList.contains('neovim-wrapper')) {
                 return elem;
