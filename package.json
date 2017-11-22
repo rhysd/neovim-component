@@ -16,7 +16,9 @@
     "debug": "ELECTRON_ENABLE_STACK_DUMPING=true NODE_ENV=debug electron .",
     "dep": "npm install && bower install && mkdir -p build",
     "example": "NODE_ENV=production electron .",
-    "lint": "tslint --project .",
+    "tslint": "tslint --project .",
+    "nsp": "nsp check",
+    "lint": "npm-run-all -p tslint nsp",
     "watch": "guard --watchdir src test",
     "test": "mocha test/unit/ --exit",
     "e2e": "mocha build/test/e2e/ --opts test/e2e/mocha.opts --exit"
@@ -54,6 +56,8 @@
     "electron": "~1.7.9",
     "jsdom": "^11.3.0",
     "mocha": "^4.0.1",
+    "npm-run-all": "^4.1.2",
+    "nsp": "^3.1.0",
     "spectron": "^3.7.2",
     "tslint": "^5.8.0",
     "typescript": "^2.6.1"
