@@ -1,59 +1,81 @@
 import Neovim from './neovim';
 
-Polymer({
-    is: 'neovim-editor',
+class NeovimEditor extends Polymer.Element {
+    static get is() {
+        return 'neovim-editor';
+    }
 
-    properties: {
-        width: Number,
-        height: Number,
-        fontSize: {
-            type: Number,
-            value: 12,
-        },
-        font: {
-            type: String,
-            value: 'monospace',
-        },
-        lineHeight: {
-            type: Number,
-            value: 1.3,
-        },
-        nvimCmd: {
-            type: String,
-            value: 'nvim',
-        },
-        argv: {
-            type: Array,
-            value: () => [] as string[],
-        },
-        disableAltKey: {
-            type: Boolean,
-            value: false,
-        },
-        disableMetaKey: {
-            type: Boolean,
-            value: false,
-        },
-        cursorDrawDelay: {
-            type: Number,
-            value: 10,
-        },
-        noBlinkCursor: {
-            type: Boolean,
-            value: false,
-        },
-        windowTitle: {
-            type: String,
-            value: 'Neovim',
-        },
-        editor: Object,
-        onProcessAttached: Object,
-        onQuit: Object,
-        onError: Object,
-        resizeHandler: Object,
-    },
+    static get properties() {
+        return {
+            width: Number,
+            height: Number,
+            fontSize: {
+                type: Number,
+                value: 12,
+            },
+            font: {
+                type: String,
+                value: 'monospace',
+            },
+            lineHeight: {
+                type: Number,
+                value: 1.3,
+            },
+            nvimCmd: {
+                type: String,
+                value: 'nvim',
+            },
+            argv: {
+                type: Array,
+                value: () => [] as string[],
+            },
+            disableAltKey: {
+                type: Boolean,
+                value: false,
+            },
+            disableMetaKey: {
+                type: Boolean,
+                value: false,
+            },
+            cursorDrawDelay: {
+                type: Number,
+                value: 10,
+            },
+            noBlinkCursor: {
+                type: Boolean,
+                value: false,
+            },
+            windowTitle: {
+                type: String,
+                value: 'Neovim',
+            },
+            onProcessAttached: Object,
+            onQuit: Object,
+            onError: Object,
+        };
+    }
 
-    ready: function() {
+    width: number;
+    height: number;
+    fontSize: number;
+    font: string;
+    lineHeight: number;
+    nvimCmd: string;
+    argv: string[];
+    disableAltKey: boolean;
+    disableMetaKey: boolean;
+    cursorDrawDelay: number;
+    noBlinkCursor: boolean;
+    windowTitle: string;
+    editor: Neovim;
+    onProcessAttached: () => void;
+    onQuit: () => void;
+    onError: (err: Error) => void;
+    resizeHandler: NodeJS.Timer;
+    resizeListener: () => void;
+
+    ready() {
+        super.ready();
         this.editor = new Neovim(
                 this.$,
                 this.nvimCmd,
@@ -80,17 +102,19 @@ Polymer({
         if (this.onProcessAttached) {
             this.editor.on('process-attached', this.onProcessAttached);
         }
-    },
+    }
 
-    attached: function() {
-        (Polymer.RenderStatus as any).beforeNextRender(this, function() {
-            // measure something
+    connectedCallback() {
+        super.connectedCallback();
+        Polymer.RenderStatus.afterNextRender(this, function () {
+            // measure size of element
             const parent: HTMLCanvasElement = this.$.container;
             const canvas: HTMLCanvasElement = this.$.screen;
             const width = this.width || parent.offsetWidth;
             const height = this.height || parent.offsetHeight;
+            console.log('connectedCallback:', width, height, parent, parent.offsetWidth, parent.offsetHeight);
             this.editor.attachCanvas(width, height, canvas);
-            this.resize_listener = () => {
+            this.resizeListener = () => {
                 if (this.resizeHandler !== null) {
                     clearTimeout(this.resizeHandler);
                 }
@@ -102,21 +126,25 @@ Polymer({
                         100,
                     );
             };
-            window.addEventListener('resize', this.resize_listener);
+            this.$.container.addEventListener('resize', this.resizeListener);
         });
-    },
+    }
 
-    detached: function() {
+    disconnectedCallback() {
+        super.disconnectedCallback();
         this.editor.emit('detach');
-        if (this.resize_listener) {
-            window.removeEventListener('resize', this.resize_listener);
+        if (this.resizeListener) {
+            this.$.container.removeEventListener('resize', this.resizeListener);
         }
-    },
+    }
 
-    attributeChanged: function(name: string, type: polymer.PropConstructorType) {
+    attributeChangedCallback(name: string, oldVal: any, newVal: any, ns: string) {
+        super.attributeChangedCallback(name, oldVal, newVal, ns);
         if (this.editor === undefined) {
             return;
         }
-        this.editor.emit('change-attribute', name, type);
-    },
-});
+        this.editor.emit('change-attribute', name, oldVal, newVal, ns);
+    }
+}
+
+customElements.define(NeovimEditor.is, NeovimEditor);

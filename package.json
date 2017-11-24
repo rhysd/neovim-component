@@ -45,7 +45,6 @@
     "@types/loglevel": "^1.5.3",
     "@types/mocha": "^2.2.44",
     "@types/node": "^8.0.47",
-    "@types/polymer": "^1.2.1",
     "@types/react": "^16.0.19",
     "@types/webcomponents.js": "^0.6.32",
     "@types/webdriverio": "^4.8.6",
