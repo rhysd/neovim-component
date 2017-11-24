@@ -6,11 +6,12 @@ const A = require('../../build/src/neovim/actions');
 const NeovimStore = require('../../build/src/neovim/store').default;
 const ScreenWheel = require('../../build/src/neovim/screen-wheel').default;
 const document = new jsdom.JSDOM().window.document;
+const {dom} = require('./dom_faker');
 
 describe('NeovimStore', () => {
     context('initialization', () => {
         it('creates default state', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             assert.deepEqual(s.size, {
                 lines: 0,
                 cols: 0,
@@ -61,7 +62,7 @@ describe('NeovimStore', () => {
 
     context('on action received', () => {
         it('accepts input to neovim', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             s.on('input', i => {
                 assert.equal(i, 'madaikeru');
             });
@@ -69,7 +70,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles put event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             s.on('put', text => {
                 assert.equal(text, 'moudame');
             });
@@ -86,7 +87,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles cursor event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var c = false;
             s.on('cursor', () => {
                 c = true;
@@ -100,7 +101,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles highlight_set event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             const hl1 = {
                 background: 0xffffff,
                 bg: 'white',
@@ -140,7 +141,7 @@ describe('NeovimStore', () => {
         });
 
         it('accespts notify-focus-changed action', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('focus-changed', () => {
                 flag = true;
@@ -154,7 +155,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles clear-eol event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('clear-eol', () => {
                 flag = true;
@@ -164,7 +165,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles clear event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('clear-all', () => {
                 flag = true;
@@ -186,7 +187,7 @@ describe('NeovimStore', () => {
         });
 
         it('accespts scroll screen action', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var cols = 0;
             s.on('screen-scrolled', c => {
                 cols = c;
@@ -196,7 +197,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles sroll_region event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             const r = {
                 top: 1,
                 left: 2,
@@ -213,7 +214,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles resize event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('resize', () => {
                 flag = true;
@@ -235,7 +236,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles update-fg event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('update-fg', () => {
                 flag = true;
@@ -246,7 +247,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles update-bg event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('update-bg', () => {
                 flag = true;
@@ -257,7 +258,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles update-sp event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('update-sp-color', () => {
                 flag = true;
@@ -268,7 +269,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles mode event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('mode', () => {
                 flag = true;
@@ -281,7 +282,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles busy_start event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('busy', () => {
                 flag = true;
@@ -292,7 +293,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles busy_end event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('busy', () => {
                 flag = true;
@@ -303,7 +304,7 @@ describe('NeovimStore', () => {
         });
 
         it('accespts action to update font size', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('font-size-changed', () => {
                 flag = true;
@@ -318,7 +319,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts action to specify font pixel', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('font-px-specified', () => {
                 flag = true;
@@ -329,7 +330,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts action to font face', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('font-face-specified', () => {
                 flag = true;
@@ -340,7 +341,7 @@ describe('NeovimStore', () => {
         });
 
         it('accespts action to update screen size', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('update-screen-size', () => {
                 flag = true;
@@ -356,7 +357,7 @@ describe('NeovimStore', () => {
         });
 
         it('accespts action to update screen bounds', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('update-screen-bounds', () => {
                 flag = true;
@@ -378,7 +379,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles mouse_on event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             s.mouse_enabled = false;
             var flag = false;
             s.on('mouse-enabled', () => {
@@ -393,7 +394,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles mouse_off event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             s.mouse_enabled = true;
             var flag = false;
             s.on('mouse-disabled', () => {
@@ -408,7 +409,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts drag start action', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('drag-started', () => {
                 flag = true;
@@ -426,7 +427,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts drag update action', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             const down = document.createEvent('MouseEvent');
             down.initEvent('mousedown', true, false);
             down.buttons = 1;
@@ -469,7 +470,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts drag end action', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             const down = document.createEvent('MouseEvent');
             down.initEvent('mousedown', true, false);
             down.buttons = 1;
@@ -512,7 +513,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles beep event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
 
             var flag = false;
             s.on('beep', () => {
@@ -530,7 +531,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles title-changed event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
 
             var flag = false;
             s.on('title-changed', () => {
@@ -542,7 +543,7 @@ describe('NeovimStore', () => {
         });
 
         it('handles set_icon event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
 
             var flag = false;
             s.on('icon-changed', () => {
@@ -555,7 +556,7 @@ describe('NeovimStore', () => {
 
         // Skip because creating WheelEvent is not supported by jsdom
         it.skip('accepts wheel scrolling action', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
 
             var wheeled = false;
             s.on('wheel-scrolled', () => {
@@ -581,7 +582,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts line_height changing event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
 
             var flag = false;
             s.on('line-height-changed', () => {
@@ -598,7 +599,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts disabling alt key event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('alt-key-disabled', () => {
                 flag = true;
@@ -609,7 +610,7 @@ describe('NeovimStore', () => {
         });
 
         it('switches to disable/enable meta key', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('meta-key-disabled', () => {
                 flag = true;
@@ -622,7 +623,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts cursor draw delay change event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
             s.on('cursor-draw-delay-changed', () => {
                 flag = true;
@@ -633,7 +634,7 @@ describe('NeovimStore', () => {
         });
 
         it('accepts cursor blinking event', () => {
-            const s = new NeovimStore();
+            const s = new NeovimStore(dom);
             var flag = false;
 
             s.on('blink-cursor-stopped', () => {
