@@ -33,8 +33,7 @@ export default class ScreenDrag {
     }
 
     start(down_event: MouseEvent) {
-        down_event.preventDefault();
-        const wrapper = this.findScreenElement(down_event.target as HTMLElement);
+        const wrapper: HTMLElement = this.store.dom.container;
         if (wrapper !== null) {
             const rect = (down_event.target as HTMLCanvasElement).getBoundingClientRect();
             this.parentY = rect.top;
@@ -70,17 +69,6 @@ export default class ScreenDrag {
         const input = ScreenDrag.buildInputOf(up_event, 'Release', this.line, this.col);
         log.info('Mouse input: ' + input);
         return input;
-    }
-
-    private findScreenElement(elem: HTMLElement | null) {
-        while (elem) {
-            // Note: Sure that passed 'elem' is not a screen element.
-            elem = elem.parentElement;
-            if (elem.classList.contains('neovim-wrapper')) {
-                return elem;
-            }
-        }
-        return null;
     }
 
     private getPos(e: MouseEvent) {

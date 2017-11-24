@@ -55,6 +55,7 @@ Polymer({
 
     ready: function() {
         this.editor = new Neovim(
+                this.$,
                 this.nvimCmd,
                 this.argv,
                 this.font,
@@ -82,23 +83,27 @@ Polymer({
     },
 
     attached: function() {
-        const canvas: HTMLCanvasElement = document.querySelector('.neovim-canvas');
-        const width = this.width || canvas.parentElement.offsetWidth;
-        const height = this.height || canvas.parentElement.offsetHeight;
-        this.editor.attachCanvas(width, height, canvas);
-        this.resize_listener = () => {
-            if (this.resizeHandler !== null) {
-                clearTimeout(this.resizeHandler);
-            }
-            this.resizeHandler = setTimeout(
-                    () => {
-                        this.editor.screen.checkShouldResize();
-                        this.resizeHandler = null;
-                    },
-                    100,
-                );
-        };
-        window.addEventListener('resize', this.resize_listener);
+        (Polymer.RenderStatus as any).beforeNextRender(this, function() {
+            // measure something
+            const parent: HTMLCanvasElement = this.$.container;
+            const canvas: HTMLCanvasElement = this.$.screen;
+            const width = this.width || parent.offsetWidth;
+            const height = this.height || parent.offsetHeight;
+            this.editor.attachCanvas(width, height, canvas);
+            this.resize_listener = () => {
+                if (this.resizeHandler !== null) {
+                    clearTimeout(this.resizeHandler);
+                }
+                this.resizeHandler = setTimeout(
+                        () => {
+                            this.editor.screen.checkShouldResize();
+                            this.resizeHandler = null;
+                        },
+                        100,
+                    );
+            };
+            window.addEventListener('resize', this.resize_listener);
+        });
     },
 
     detached: function() {
@@ -109,6 +114,9 @@ Polymer({
     },
 
     attributeChanged: function(name: string, type: polymer.PropConstructorType) {
+        if (this.editor === undefined) {
+            return;
+        }
         this.editor.emit('change-attribute', name, type);
     },
 });

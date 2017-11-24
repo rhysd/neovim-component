@@ -229,7 +229,7 @@ export default class NeovimInput {
     constructor(private store: NeovimStore) {
         this.ime_running = false;
 
-        this.element = document.querySelector('.neovim-input');
+        this.element = this.store.dom.input;
         this.element.addEventListener('compositionstart', this.startComposition.bind(this));
         this.element.addEventListener('compositionend', this.endComposition.bind(this));
         this.element.addEventListener('keydown', this.onInputNonText.bind(this));
@@ -239,7 +239,7 @@ export default class NeovimInput {
         this.store.on('cursor', this.updateElementPos.bind(this));
         this.store.on('font-size-changed', this.updateFontSize.bind(this));
 
-        this.fake_element = document.querySelector('.neovim-fake-preedit');
+        this.fake_element = this.store.dom.preedit;
 
         const {face} = this.store.font_attr;
         this.element.style.fontFamily = face;

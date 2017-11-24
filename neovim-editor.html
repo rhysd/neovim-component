@@ -6,18 +6,18 @@
         min-width: 0px;
         min-height: 0px;
       }
-      .neovim-wrapper {
+      #container {
         padding: 0px;
         margin: 0px;
         width: 100%;
         height: 100%;
       }
-      .neovim-cursor {
+      #cursor {
         padding: 0px;
         margin: 0px;
         position: absolute;
       }
-      .neovim-input {
+      #input {
         width: 1px;
         color: transparent;
         background-color: transparent;
@@ -29,18 +29,17 @@
         top: 0px;
         left: 0px;
       }
-      .neovim-fake-preedit {
+      #preedit {
         display: none;
         visibility: hidden;
         position: fixed;
       }
     </style>
-    <div class="neovim-wrapper">
-      <canvas class="neovim-canvas" width$="[[width]]" height$="[[height]]"></canvas>
-      <canvas class="neovim-cursor">
-      </canvas>
-      <input class="neovim-input" autocomplete="off" autofocus />
-      <span class="neovim-fake-preedit"></span>
+    <div id="container">
+      <canvas id="screen" width$="[[width]]" height$="[[height]]"></canvas>
+      <canvas id="cursor"></canvas>
+      <input id="input" autocomplete="off" autofocus />
+      <span id="preedit"></span>
     </div>
   </template>
 </dom-module>
