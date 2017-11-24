@@ -14,7 +14,7 @@
     "start": "npm run dep && npm run build && npm run example",
     "build": "tsc --pretty --project . && browserify -o build/index.js build/src/index.js",
     "debug": "ELECTRON_ENABLE_STACK_DUMPING=true NODE_ENV=debug electron .",
-    "dep": "npm install && bower install && mkdir -p build",
+    "dep": "npm install && mkdir -p build",
     "example": "NODE_ENV=production electron .",
     "tslint": "tslint --project .",
     "nsp": "nsp check",
@@ -39,6 +39,7 @@
     "promised-neovim-client": "^2.0.2"
   },
   "devDependencies": {
+    "@polymer/polymer": "^2.2.0",
     "@types/chai": "^4.0.4",
     "@types/fbemitter": "^2.0.32",
     "@types/flux": "^3.1.4",
@@ -48,7 +49,6 @@
     "@types/react": "^16.0.19",
     "@types/webcomponents.js": "^0.6.32",
     "@types/webdriverio": "^4.8.6",
-    "bower": "^1.8.2",
     "browserify": "^14.5.0",
     "canvas": "^1.6.7",
     "chai": "^4.1.2",
@@ -59,6 +59,7 @@
     "nsp": "^3.1.0",
     "spectron": "^3.7.2",
     "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "webcomponentsjs": "^1.0.2"
   }
 }

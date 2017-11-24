@@ -1,4 +1,4 @@
-ignore /^node_modules/, /^build/, /^bower_components/
+ignore /^node_modules/, /^build/
 
 def npm_run(sub, file)
   puts "\033[93m#{Time.now}: #{File.basename file}\033[0m"
