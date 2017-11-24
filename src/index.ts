@@ -112,7 +112,6 @@ class NeovimEditor extends Polymer.Element {
             const canvas: HTMLCanvasElement = this.$.screen;
             const width = this.width || parent.offsetWidth;
             const height = this.height || parent.offsetHeight;
-            console.log('connectedCallback:', width, height, parent, parent.offsetWidth, parent.offsetHeight);
             this.editor.attachCanvas(width, height, canvas);
             this.resizeListener = () => {
                 if (this.resizeHandler !== null) {
