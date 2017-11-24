@@ -1,16 +1,15 @@
 global.require = require;
 const assert = require('chai').assert;
-const jsdom = require('jsdom');
-const document = new jsdom.JSDOM().window.document;
 const ScreenDrag = require('../../build/src/neovim/screen-drag').default;
 const NeovimStore = require('../../build/src/neovim/store').default;
+const {dom, document} = require('./dom_faker');
 
 function eventFactory(kind) {
     return function (opts) {
-        var e = document.createEvent('UIEvents');
+        const e = document.createEvent('UIEvents');
         e.initEvent('mouse' + kind, true, false);
         if (opts) {
-            for (var k in opts) {
+            for (let k in opts) {
                 e[k] = opts[k];
             }
         }
@@ -24,7 +23,7 @@ describe('ScreenDrag', () => {
     const mouseup = eventFactory('up');
 
     describe('#start()', () => {
-        const store = new NeovimStore();
+        const store = new NeovimStore(dom);
         store.font_attr.height = 14;
         store.font_attr.width = 7;
 
@@ -69,7 +68,7 @@ describe('ScreenDrag', () => {
     });
 
     describe('#drag()', () => {
-        const store = new NeovimStore();
+        const store = new NeovimStore(dom);
         store.font_attr.height = 14;
         store.font_attr.width = 7;
         const down = mousedown();
@@ -133,7 +132,7 @@ describe('ScreenDrag', () => {
     });
 
     describe('#end()', () => {
-        const store = new NeovimStore();
+        const store = new NeovimStore(dom);
         store.font_attr.height = 14;
         store.font_attr.width = 7;
         const down = mousedown();

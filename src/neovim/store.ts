@@ -3,6 +3,7 @@ import {Kind, ActionType, Region, ModeInfoSet} from './actions';
 import log from '../log';
 import ScreenDrag from './screen-drag';
 import ScreenWheel from './screen-wheel';
+import {DOM} from '../neovim';
 import {Dispatcher} from 'flux';
 
 // TODO:
@@ -79,7 +80,7 @@ export default class NeovimStore extends EventEmitter {
     blink_cursor: boolean;
     cursor_blink_interval: number;
 
-    constructor() {
+    constructor(public dom: DOM) {
         super();
         this.dispatcher = new Dispatcher<ActionType>();
         this.size = {

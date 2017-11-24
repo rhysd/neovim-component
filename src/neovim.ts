@@ -16,12 +16,21 @@ import {
 import log from './log';
 import {Nvim} from 'promised-neovim-client';
 
+export interface DOM {
+    container: HTMLDivElement;
+    screen: HTMLCanvasElement;
+    cursor: HTMLCanvasElement;
+    input: HTMLInputElement;
+    preedit: HTMLSpanElement;
+}
+
 export default class Neovim extends EventEmitter {
     process: Process;
     screen: Screen;
     store: NeovimStore;
 
     constructor(
+            dom: DOM,
             command: string,
             argv: string[],
             font: string,
@@ -35,7 +44,7 @@ export default class Neovim extends EventEmitter {
     ) {
         super();
 
-        this.store = new NeovimStore();
+        this.store = new NeovimStore(dom);
         this.store.dispatcher.dispatch(updateLineHeight(line_height));
         this.store.dispatcher.dispatch(updateFontFace(font));
         this.store.dispatcher.dispatch(updateFontPx(font_size));

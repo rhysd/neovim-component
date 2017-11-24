@@ -4,19 +4,11 @@ const jsdom = require('jsdom');
 const NeovimStore = require('../../build/src/neovim/store').default;
 const Cursor = require('../../build/src/neovim/cursor').default;
 const A = require('../../build/src/neovim/actions');
+const {dom, document} = require('./dom_faker');
 
 describe('Cursor', () => {
     beforeEach(() => {
-        /* global document */
-        global.document = new jsdom.JSDOM(`
-            <body>
-                <canvas class="neovim-screen"></canvas>
-                <canvas class="neovim-cursor"></canvas>
-                <input class="neovim-input"/>
-            </body>
-        `).window.document;
-        /* global store */
-        global.store = new NeovimStore();
+        global.store = new NeovimStore(dom);
         store.font_attr.width = 7;
         store.font_attr.height = 14;
         store.font_attr.draw_width = 7;
@@ -24,11 +16,10 @@ describe('Cursor', () => {
         store.cursor_draw_delay = 0;
         store.cursor_blink_interval = 100;
         /* global cursor */
-        global.cursor = new Cursor(store, document.querySelector('.neovim-screen').getContext('2d'));
+        global.cursor = new Cursor(store, dom.screen.getContext('2d'));
     });
 
     afterEach(() => {
-        delete global.document;
         delete global.store;
         delete global.cursor;
     });

@@ -1,11 +1,12 @@
 global.require = require;
 const assert = require('chai').assert;
-const jsdom = require('jsdom');
+const {JSDOM} = require('jsdom');
 const NeovimStore = require('../../build/src/neovim/store').default;
 const NeovimInput = require('../../build/src/neovim/input').default;
+const {dom, document} = require('./dom_faker');
 
 (function(){
-var window;
+let window;
 
 function keydownEvent(opts) {
     const o = opts || {};
@@ -52,15 +53,10 @@ function catchInputOnInputEvent(i) {
 describe('NeovimInput', () => {
     before(() => {
         /* global document input_element window input last_input */
-        global.document = new jsdom.JSDOM(`
-            <body>
-                <input class="neovim-input"/>
-                <span class="neovim-fake-preedit"></span>
-            </body>`).window.document;
-        global.input_element = document.querySelector('.neovim-input');
+        global.input_element = dom.input;
         input_element.value = '';
         window = document.defaultView;
-        const s = new NeovimStore();
+        const s = new NeovimStore(dom);
         /* eslint no-unused-vars:0 */
         global.input = new NeovimInput(s);
         global.last_input = '';
@@ -75,13 +71,12 @@ describe('NeovimInput', () => {
     });
 
     after(() => {
-        delete global.document;
         delete global.input;
         delete global.input_element;
     });
 
     it('focuses on an input element on initialization', () => {
-        assert.equal(document.activeElement.className, 'neovim-input');
+        assert.equal(document.activeElement.id, 'input');
     });
 
     context("on 'keydown' event", () => {
