@@ -3,11 +3,11 @@
 [![Build Status](https://travis-ci.org/rhysd/neovim-component.svg?branch=master)](https://travis-ci.org/rhysd/neovim-component)
 
 
-This component provides `<neovim-editor>`, an HTML custom element built on [Polymer](https://github.com/Polymer/polymer) and [flux](https://github.com/facebook/flux).
+This component provides `<neovim-editor>`, an HTML custom element built on [Polymer v2](https://github.com/Polymer/polymer) and [flux](https://github.com/facebook/flux).
 It provides a frontend for the [Neovim editor](https://github.com/neovim/neovim) using Neovim's MessagePack API. It allows you to easily embed a Neovim-backed editor
 into your application.
 
-**This component assumes you have Node.js installed.**
+**This component assumes to be used in Node.js environment. (i.e. Electron)**
 
 You can use this component for modern desktop application frameworks such as [Electron](https://github.com/atom/electron) or [NW.js](https://github.com/nwjs/nw.js).  
 You can even use it in Electron-based editors such as [Atom](http://atom.io/) or [VS Code](https://github.com/Microsoft/vscode).
