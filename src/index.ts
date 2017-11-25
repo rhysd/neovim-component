@@ -125,7 +125,7 @@ class NeovimEditor extends Polymer.Element {
                         100,
                     );
             };
-            this.$.container.addEventListener('resize', this.resizeListener);
+            window.addEventListener('resize', this.resizeListener);
         });
     }
 
@@ -133,7 +133,7 @@ class NeovimEditor extends Polymer.Element {
         super.disconnectedCallback();
         this.editor.emit('detach');
         if (this.resizeListener) {
-            this.$.container.removeEventListener('resize', this.resizeListener);
+            window.removeEventListener('resize', this.resizeListener);
         }
     }
 
