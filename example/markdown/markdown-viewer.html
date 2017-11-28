@@ -26,6 +26,7 @@
 
 <script>
   marked.setOptions({
+    sanitize: true,
     highlight: function(code, lang) {
       if (lang === undefined) {
         return code;
