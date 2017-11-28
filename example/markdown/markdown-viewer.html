@@ -53,8 +53,7 @@
     },
 
     _contentsChanged: function(markdown_text) {
-      console.log('updated!: ', markdown_text);
-      var v = document.getElementById('markdown-contents');
+      const v = this.$['markdown-contents'];
       v.innerHTML = marked(markdown_text);
     }
   });
