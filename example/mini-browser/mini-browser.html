@@ -1,8 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 <dom-module id="mini-browser">
   <template>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <style>
       #body {
         display: none;
@@ -64,7 +64,7 @@
 
 <script>
 (function() {
-  var browser, body, title;
+  let browser, body, title;
   Polymer({
     is: 'mini-browser',
 
@@ -83,16 +83,16 @@
 
     ready: function() {
       var self = this;
-      body = document.getElementById('body');
-      browser = document.getElementById('inner-browser');
-      title = document.getElementById('title');
-      document.getElementById('back-btn').onclick = function() {
+      body = this.$.body;
+      browser = this.$['inner-browser'];
+      title = this.$.title;
+      this.$['back-btn'].onclick = function() {
         browser.goBack();
       };
-      document.getElementById('forward-btn').onclick = function() {
+      this.$['forward-btn'].onclick = function() {
         browser.goForward();
       };
-      document.getElementById('close-btn').onclick = function() {
+      this.$['close-btn'].onclick = function() {
         browser.src = '';
         self.close();
       };
