@@ -34,7 +34,7 @@
 </dom-module>
 
 <script>
-  var popup, proj;
+  let popup, proj;
 
   Polymer({
     is: 'popup-tooltip',
@@ -62,8 +62,8 @@
     },
 
     ready: function() {
-      popup = document.getElementById('popup');
-      proj = document.getElementById('proj');
+      popup = this.$.popup;
+      proj = this.$.proj;
 
       if (this.color) {
         popup.style.backgroundColor = this.color;
@@ -75,7 +75,7 @@
     },
 
     setContent(elem) {
-      var len = popup.childNodes.length;
+      const len = popup.childNodes.length;
       if (len > 1) {
         popup.replaceChild(elem, popup.lastChild);
       } else {

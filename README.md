@@ -35,7 +35,7 @@ Each example only takes 100~300 lines.
 <html>
   <head>
     <meta charset="utf-8" />
-    <script src="/path/to/webcomponents-lite.min.js"></script>
+    <script src="/path/to/webcomponents-lite.js"></script>
     <link rel="import" href="/path/to/polymer.html" />
     <link rel="import" href="/path/to/neovim-editor.html" />
   </head>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes" />
     <title>Image Tooltip Example</title>
 
-    <script src="../../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../../bower_components/polymer/polymer.html" />
     <link rel="import" href="../../neovim-editor.html" />
     <link rel="import" href="./popup-tooltip.html" />
@@ -31,18 +31,18 @@
   </body>
 
   <script>
-    var editor = document.getElementById('neovim').editor;
-    var remote = require('electron').remote;
-    var tooltip = document.getElementById('tooltip');
+    const editor = document.getElementById('neovim').editor;
+    const remote = require('electron').remote;
+    const tooltip = document.getElementById('tooltip');
 
-    editor.on('error', function(err){ alert(err.message); });
+    editor.on('error', (err) => alert(err.message));
 
     // Note: Callback on Neovim process attached
     editor.on('process-attached', function() {
       if (remote.process.argv.length > 2) {
         editor.setArgv(remote.process.argv.slice(2)); // It is better to use 'argv' property.
       }
-      var c = editor.getClient();
+      const c = editor.getClient();
 
       // Note:
       // Define mapping 'gi' from JavaScript.
@@ -59,8 +59,8 @@
               tooltip.dismiss();
             } else {
               // Note: col('.') is 1-based
-              var loc = editor.screen.convertPositionToLocation(args[1], args[2] - 1);
-              var img = document.createElement('img');
+              const loc = editor.screen.convertPositionToLocation(args[1], args[2] - 1);
+              const img = document.createElement('img');
               img.src = args[0];
               tooltip.setContent(img);
               tooltip.show(loc.x, loc.y);
