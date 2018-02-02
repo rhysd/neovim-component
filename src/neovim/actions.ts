@@ -116,7 +116,8 @@ export function putText(text: string[][]) {
 export function cursor(line: number, col: number) {
     return {
         type: Kind.Cursor,
-        line, col,
+        line,
+        col,
     };
 }
 
@@ -154,7 +155,8 @@ export function compositionEnd() {
 export function resize(lines: number, cols: number) {
     return {
         type: Kind.Resize,
-        lines, cols,
+        lines,
+        cols,
     };
 }
 
@@ -208,8 +210,10 @@ export function stopBusy() {
 export function updateFontSize(draw_width: number, draw_height: number, width: number, height: number) {
     return {
         type: Kind.UpdateFontSize,
-        draw_width, draw_height,
-        width, height,
+        draw_width,
+        draw_height,
+        width,
+        height,
     };
 }
 
@@ -237,7 +241,8 @@ export function updateFontFace(font_face: string) {
 export function updateScreenSize(width: number, height: number) {
     return {
         type: Kind.UpdateScreenSize,
-        width, height,
+        width,
+        height,
     };
 }
 
@@ -248,7 +253,8 @@ export function updateScreenSize(width: number, height: number) {
 export function updateScreenBounds(lines: number, cols: number) {
     return {
         type: Kind.UpdateScreenBounds,
-        lines, cols,
+        lines,
+        cols,
     };
 }
 

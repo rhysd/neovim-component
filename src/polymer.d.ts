@@ -9,20 +9,19 @@
  */
 
 interface Constructor<T> {
-    new(...args: any[]): T;
+    new (...args: any[]): T;
 }
 
 /**
  * An interface to match all Objects, but not primitives.
  */
-interface Base { }
+interface Base {}
 
 /**
  * A subclass-factory style mixin that extends `superclass` with a new subclass
  * that implements the interface `M`.
  */
-type Mixin<M> =
-    <C extends Base>(superclass: Constructor<C>) => Constructor<M & C>;
+type Mixin<M> = <C extends Base>(superclass: Constructor<C>) => Constructor<M & C>;
 
 /**
  * The Polymer function and namespace.
@@ -33,7 +32,6 @@ declare var Polymer: Polymer;
  * The Polymer Interface
  */
 declare interface Polymer {
-
     /**
      * The "Polymer function" for backwards compatibility with Polymer 1.x.
      */
@@ -71,12 +69,10 @@ declare interface Polymer {
     mixinBehaviors: <T>(mixixs: Array<any>, elem: T) => T;
 
     dom: (elem: HTMLElement) => any;
-
-
 }
 
 declare interface PolymerElementConstructor {
-    new(): PolymerElement;
+    new (): PolymerElement;
 }
 
 declare class PolymerElement extends PolymerMetaEffects {
@@ -96,7 +92,6 @@ declare class PolymerElement extends PolymerMetaEffects {
     resolveUrl(url: string, baseURI?: string): string;
     resolveCss(cssText: string, baseURI: string): string;
     pathFromUrl(url: string): string;
-
 }
 
 declare class PolymerPropertyEffects extends HTMLElement {

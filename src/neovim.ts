@@ -1,4 +1,4 @@
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
 import Process from './neovim/process';
 import Screen from './neovim/screen';
 import NeovimStore from './neovim/store';
@@ -14,7 +14,7 @@ import {
     setTitle,
 } from './neovim/actions';
 import log from './log';
-import {Nvim} from 'promised-neovim-client';
+import { Nvim } from 'promised-neovim-client';
 
 export interface DOM {
     container: HTMLDivElement;
@@ -30,17 +30,17 @@ export default class Neovim extends EventEmitter {
     store: NeovimStore;
 
     constructor(
-            dom: DOM,
-            command: string,
-            argv: string[],
-            font: string,
-            font_size: number,
-            line_height: number,
-            disable_alt_key: boolean,
-            disable_meta_key: boolean,
-            draw_delay: number,
-            blink_cursor: boolean,
-            window_title: string,
+        dom: DOM,
+        command: string,
+        argv: string[],
+        font: string,
+        font_size: number,
+        line_height: number,
+        disable_alt_key: boolean,
+        disable_meta_key: boolean,
+        draw_delay: number,
+        blink_cursor: boolean,
+        window_title: string,
     ) {
         super();
 
@@ -65,13 +65,14 @@ export default class Neovim extends EventEmitter {
     attachCanvas(width: number, height: number, canvas: HTMLCanvasElement) {
         this.store.dispatcher.dispatch(updateScreenSize(width, height));
         this.screen = new Screen(this.store, canvas);
-        const {lines, cols} = this.store.size;
+        const { lines, cols } = this.store.size;
         this.process
             .attach(lines, cols)
             .then(() => {
                 this.process.client.on('disconnect', () => this.emit('quit'));
                 this.emit('process-attached');
-            }).catch(err => this.emit('error', err));
+            })
+            .catch(err => this.emit('error', err));
     }
 
     quit() {
@@ -90,7 +91,9 @@ export default class Neovim extends EventEmitter {
     // It is better to use 'argv' property of <neovim-client> for apps using Polymer.
     setArgv(argv: string[]) {
         if (!this.process.started) {
-            throw new Error("Process is not attached yet.  Use 'process-attached' event to ensure to specify arguments.");
+            throw new Error(
+                "Process is not attached yet.  Use 'process-attached' event to ensure to specify arguments.",
+            );
         }
         return this.process.client.command('args ' + argv.join(' '));
     }

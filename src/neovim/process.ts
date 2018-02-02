@@ -11,25 +11,21 @@ import log from '../log';
 // Note:
 // TypeScript doesn't allow recursive definition
 export type RPCValue =
-        NvimClient.Buffer |
-        NvimClient.Window |
-        NvimClient.Tabpage |
-        number |
-        boolean |
-        string |
-        any[] |
-        {[key: string]: any};
+    | NvimClient.Buffer
+    | NvimClient.Window
+    | NvimClient.Tabpage
+    | number
+    | boolean
+    | string
+    | any[]
+    | { [key: string]: any };
 
 export default class NeovimProcess {
     neovim_process: cp.ChildProcess;
     client: NvimClient.Nvim;
     started: boolean;
 
-    constructor(
-        private readonly store: NeovimStore,
-        public command: string,
-        public argv: string[],
-    ) {
+    constructor(private readonly store: NeovimStore, public command: string, public argv: string[]) {
         this.started = false;
         this.argv.unshift('--embed');
     }
@@ -38,38 +34,34 @@ export default class NeovimProcess {
         let err: Error = null;
         this.client = null;
 
-        this.neovim_process
-            = child_process.spawn(
-                this.command,
-                this.argv,
-                {stdio: ['pipe', 'pipe', process.stderr]},
-            );
-        this.neovim_process.on('error', (e: Error) => { err = e; });
+        this.neovim_process = child_process.spawn(this.command, this.argv, { stdio: ['pipe', 'pipe', process.stderr] });
+        this.neovim_process.on('error', (e: Error) => {
+            err = e;
+        });
 
         if (err || this.neovim_process.pid === undefined) {
             return Promise.reject(err || new Error('Failed to spawn process: ' + this.command));
         }
 
-        return attach(this.neovim_process.stdin, this.neovim_process.stdout)
-            .then(nvim => {
-                this.client = nvim;
-                nvim.on('request', this.onRequested.bind(this));
-                nvim.on('notification', this.onNotified.bind(this));
-                nvim.on('disconnect', this.onDisconnected.bind(this));
-                /* tslint:disable:no-floating-promises */
-                nvim.uiAttach(columns, lines, true, true /*notify*/);
-                /* tslint:enable:no-floating-promises */
-                this.started = true;
-                log.info(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
-                this.store.on('input', (i: string) => nvim.input(i));
-                this.store.on('update-screen-bounds', () => nvim.uiTryResize(this.store.size.cols, this.store.size.lines));
+        return attach(this.neovim_process.stdin, this.neovim_process.stdout).then(nvim => {
+            this.client = nvim;
+            nvim.on('request', this.onRequested.bind(this));
+            nvim.on('notification', this.onNotified.bind(this));
+            nvim.on('disconnect', this.onDisconnected.bind(this));
+            /* tslint:disable:no-floating-promises */
+            nvim.uiAttach(columns, lines, true, true /*notify*/);
+            /* tslint:enable:no-floating-promises */
+            this.started = true;
+            log.info(`nvim attached: ${this.neovim_process.pid} ${lines}x${columns} ${JSON.stringify(this.argv)}`);
+            this.store.on('input', (i: string) => nvim.input(i));
+            this.store.on('update-screen-bounds', () => nvim.uiTryResize(this.store.size.cols, this.store.size.lines));
 
-                // Note:
-                // Neovim frontend has responsiblity to emit 'GUIEnter' on initialization.
-                /* tslint:disable:no-floating-promises */
-                this.client.command('doautocmd <nomodeline> GUIEnter', true);
-                /* tslint:enable:no-floating-promises */
-            });
+            // Note:
+            // Neovim frontend has responsiblity to emit 'GUIEnter' on initialization.
+            /* tslint:disable:no-floating-promises */
+            this.client.command('doautocmd <nomodeline> GUIEnter', true);
+            /* tslint:enable:no-floating-promises */
+        });
     }
 
     onRequested(method: string, args: RPCValue[], response: RPCValue) {
@@ -142,12 +134,14 @@ export default class NeovimProcess {
                     d.dispatch(Action.scrollScreen(args[0] as number));
                     break;
                 case 'set_scroll_region':
-                    d.dispatch(Action.setScrollRegion({
-                        top: args[0] as number,
-                        bottom: args[1] as number,
-                        left: args[2] as number,
-                        right: args[3] as number,
-                    }));
+                    d.dispatch(
+                        Action.setScrollRegion({
+                            top: args[0] as number,
+                            bottom: args[1] as number,
+                            left: args[2] as number,
+                            right: args[3] as number,
+                        }),
+                    );
                     break;
                 case 'resize':
                     d.dispatch(Action.resize(args[1] as number, args[0] as number));
@@ -210,4 +204,3 @@ export default class NeovimProcess {
         }
     }
 }
-

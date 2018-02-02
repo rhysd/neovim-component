@@ -3,4 +3,3 @@ declare namespace NodeJS {
         require(mod: string): any;
     }
 }
-

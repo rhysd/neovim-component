@@ -10,7 +10,7 @@ export default class NeovimScreen {
     input: Input;
 
     constructor(private readonly store: NeovimStore, public canvas: HTMLCanvasElement) {
-        this.ctx = this.canvas.getContext('2d', {alpha: false});
+        this.ctx = this.canvas.getContext('2d', { alpha: false });
 
         this.store.on('put', this.drawText.bind(this));
         this.store.on('clear-all', this.clearAll.bind(this));
@@ -18,10 +18,7 @@ export default class NeovimScreen {
         // Note: 'update-bg' clears all texts in screen.
         this.store.on('update-bg', this.clearAll.bind(this));
         this.store.on('screen-scrolled', this.scroll.bind(this));
-        this.store.on(
-            'line-height-changed',
-            () => this.changeFontSize(this.store.font_attr.specified_px),
-        );
+        this.store.on('line-height-changed', () => this.changeFontSize(this.store.font_attr.specified_px));
 
         this.changeFontSize(this.store.font_attr.specified_px);
 
@@ -57,20 +54,15 @@ export default class NeovimScreen {
         const h = height_px * (window.devicePixelRatio || 1);
         const w = width_px * (window.devicePixelRatio || 1);
         this.resizeImpl(
-                Math.floor(h / this.store.font_attr.draw_height),
-                Math.floor(w / this.store.font_attr.draw_width),
-                w,
-                h,
-            );
+            Math.floor(h / this.store.font_attr.draw_height),
+            Math.floor(w / this.store.font_attr.draw_width),
+            w,
+            h,
+        );
     }
 
     resize(lines: number, cols: number) {
-        this.resizeImpl(
-                lines,
-                cols,
-                this.store.font_attr.draw_width * cols,
-                this.store.font_attr.draw_height * lines,
-            );
+        this.resizeImpl(lines, cols, this.store.font_attr.draw_width * cols, this.store.font_attr.draw_height * lines);
     }
 
     changeFontSize(specified_px: number) {
@@ -91,9 +83,7 @@ export default class NeovimScreen {
         // we can use Math.ceil(font_height) at this point and it resolves
         // some rendering issues (see #12).
         const font_height = Math.ceil(
-            this.store.line_height === 1.2 ?
-                font_width * 2 :
-                drawn_px * this.store.line_height,
+            this.store.line_height === 1.2 ? font_width * 2 : drawn_px * this.store.line_height,
         );
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
         this.store.dispatcher.dispatch(
@@ -101,10 +91,10 @@ export default class NeovimScreen {
                 font_width,
                 font_height,
                 font_width / (window.devicePixelRatio || 1),
-                font_height / (window.devicePixelRatio),
+                font_height / window.devicePixelRatio,
             ),
         );
-        const {width, height} = this.store.size;
+        const { width, height } = this.store.size;
         this.resizeWithPixels(width, height);
     }
 
@@ -133,7 +123,7 @@ export default class NeovimScreen {
     }
 
     clearEol() {
-        const {line, col} = this.store.cursor;
+        const { line, col } = this.store.cursor;
         const font_width = this.store.font_attr.draw_width;
         const clear_length = this.store.size.cols * font_width - col * font_width;
         log.debug(`Clear until EOL: ${line}:${col} length=${clear_length}`);
@@ -151,14 +141,14 @@ export default class NeovimScreen {
     //      y
     //
     convertPositionToLocation(line: number, col: number) {
-        const {width, height} = this.store.font_attr;
+        const { width, height } = this.store.font_attr;
         return {
             x: col * width,
             y: line * height,
         };
     }
     convertLocationToPosition(x: number, y: number) {
-        const {width, height} = this.store.font_attr;
+        const { width, height } = this.store.font_attr;
         return {
             line: Math.floor(y * height),
             col: Math.floor(x * width),
@@ -171,8 +161,7 @@ export default class NeovimScreen {
         const ch = p.clientHeight;
         const w = this.canvas.width;
         const h = this.canvas.height;
-        if (cw * (window.devicePixelRatio || 1) !== w ||
-            ch * (window.devicePixelRatio || 1) !== h) {
+        if (cw * (window.devicePixelRatio || 1) !== w || ch * (window.devicePixelRatio || 1) !== h) {
             this.resizeWithPixels(cw, ch);
         }
     }
@@ -194,7 +183,7 @@ export default class NeovimScreen {
         if (includes_half_only) {
             // Note:
             // If the text includes only half characters, we can render it at once.
-            const text = chars.map(c => (c[0] || '')).join('');
+            const text = chars.map(c => c[0] || '').join('');
             this.ctx.fillText(text, x, y);
             return;
         }
@@ -210,9 +199,11 @@ export default class NeovimScreen {
     }
 
     private drawText(chars: string[][]) {
-        const {line, col} = this.store.cursor;
+        const { line, col } = this.store.cursor;
         const {
-            fg, bg, sp,
+            fg,
+            bg,
+            sp,
             draw_width,
             draw_height,
             face,
@@ -270,81 +261,55 @@ export default class NeovimScreen {
     }
 
     private drawBlock(line: number, col: number, height: number, width: number, color: string) {
-        const {draw_width, draw_height} = this.store.font_attr;
+        const { draw_width, draw_height } = this.store.font_attr;
         this.ctx.fillStyle = color;
         // Note:
         // Height doesn't need to be truncated (floor, ceil) but width needs.
         // The reason is desribed in Note2 of changeFontSize().
         this.ctx.fillRect(
-                Math.floor(col * draw_width),
-                line * draw_height,
-                Math.ceil(width * draw_width),
-                height * draw_height,
-            );
+            Math.floor(col * draw_width),
+            line * draw_height,
+            Math.ceil(width * draw_width),
+            height * draw_height,
+        );
     }
 
     private slideVertical(top: number, height: number, dst_top: number) {
-        const {left, right} = this.store.scroll_region;
-        const {draw_width, draw_height} = this.store.font_attr;
-        const captured
-            = this.ctx.getImageData(
-                left * draw_width,
-                top * draw_height,
-                (right - left + 1) * draw_width,
-                height * draw_height,
-            );
-        this.ctx.putImageData(
-            captured,
+        const { left, right } = this.store.scroll_region;
+        const { draw_width, draw_height } = this.store.font_attr;
+        const captured = this.ctx.getImageData(
             left * draw_width,
-            dst_top * draw_height,
+            top * draw_height,
+            (right - left + 1) * draw_width,
+            height * draw_height,
         );
+        this.ctx.putImageData(captured, left * draw_width, dst_top * draw_height);
     }
 
     private scrollUp(cols_up: number) {
-        const {top, bottom, left, right} = this.store.scroll_region;
-        this.slideVertical(
-            top + cols_up,
-            bottom - (top + cols_up) + 1,
-            top,
-        );
-        this.drawBlock(
-            bottom - cols_up + 1,
-            left,
-            cols_up,
-            right - left + 1,
-            this.store.bg_color,
-        );
+        const { top, bottom, left, right } = this.store.scroll_region;
+        this.slideVertical(top + cols_up, bottom - (top + cols_up) + 1, top);
+        this.drawBlock(bottom - cols_up + 1, left, cols_up, right - left + 1, this.store.bg_color);
         log.debug('Scroll up: ' + cols_up, this.store.scroll_region);
     }
 
     private scrollDown(cols_down: number) {
-        const {top, bottom, left, right} = this.store.scroll_region;
-        this.slideVertical(
-            top,
-            bottom - (top + cols_down) + 1,
-            top + cols_down,
-        );
-        this.drawBlock(
-            top,
-            left,
-            cols_down,
-            right - left + 1,
-            this.store.bg_color,
-        );
+        const { top, bottom, left, right } = this.store.scroll_region;
+        this.slideVertical(top, bottom - (top + cols_down) + 1, top + cols_down);
+        this.drawBlock(top, left, cols_down, right - left + 1, this.store.bg_color);
         log.debug('Scroll down: ' + cols_down, this.store.scroll_region);
     }
 
     private resizeImpl(lines: number, cols: number, width: number, height: number) {
         if (width !== this.canvas.width) {
             this.canvas.width = width;
-            this.canvas.style.width = (width / (window.devicePixelRatio || 1)) + 'px';
+            this.canvas.style.width = width / (window.devicePixelRatio || 1) + 'px';
         }
         if (height !== this.canvas.height) {
             this.canvas.height = height;
-            this.canvas.style.height = (height / (window.devicePixelRatio || 1)) + 'px';
+            this.canvas.style.height = height / (window.devicePixelRatio || 1) + 'px';
         }
         this.store.dispatcher.dispatch(A.updateScreenSize(width, height));
         this.store.dispatcher.dispatch(A.updateScreenBounds(lines, cols));
     }
 }
-

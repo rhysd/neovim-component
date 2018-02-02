@@ -77,18 +77,18 @@ class NeovimEditor extends Polymer.Element {
     ready() {
         super.ready();
         this.editor = new Neovim(
-                this.$,
-                this.nvimCmd,
-                this.argv,
-                this.font,
-                this.fontSize,
-                this.lineHeight,
-                this.disableAltKey,
-                this.disableMetaKey,
-                this.cursorDrawDelay,
-                !this.noBlinkCursor,
-                this.windowTitle,
-            );
+            this.$,
+            this.nvimCmd,
+            this.argv,
+            this.font,
+            this.fontSize,
+            this.lineHeight,
+            this.disableAltKey,
+            this.disableMetaKey,
+            this.cursorDrawDelay,
+            !this.noBlinkCursor,
+            this.windowTitle,
+        );
         this.resizeHandler = null;
 
         if (this.onError) {
@@ -106,7 +106,7 @@ class NeovimEditor extends Polymer.Element {
 
     connectedCallback() {
         super.connectedCallback();
-        Polymer.RenderStatus.afterNextRender(this, function () {
+        Polymer.RenderStatus.afterNextRender(this, function() {
             // measure size of element
             const parent: HTMLCanvasElement = this.$.container;
             const canvas: HTMLCanvasElement = this.$.screen;
@@ -117,13 +117,10 @@ class NeovimEditor extends Polymer.Element {
                 if (this.resizeHandler !== null) {
                     clearTimeout(this.resizeHandler);
                 }
-                this.resizeHandler = setTimeout(
-                        () => {
-                            this.editor.screen.checkShouldResize();
-                            this.resizeHandler = null;
-                        },
-                        100,
-                    );
+                this.resizeHandler = setTimeout(() => {
+                    this.editor.screen.checkShouldResize();
+                    this.resizeHandler = null;
+                }, 100);
             };
             window.addEventListener('resize', this.resizeListener);
         });
