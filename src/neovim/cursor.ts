@@ -1,14 +1,14 @@
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
 import NeovimStore from './store';
 import log from '../log';
-import {dragEnd} from './actions';
+import { dragEnd } from './actions';
 
 function invertColor(image: ImageData) {
     const d = image.data;
-    for (let i = 0; i < d.length; i+=4) {
-        d[i] = 255 - d[i];     // Red
-        d[i+1] = 255 - d[i+1]; // Green
-        d[i+2] = 255 - d[i+2]; // Blue
+    for (let i = 0; i < d.length; i += 4) {
+        d[i] = 255 - d[i]; // Red
+        d[i + 1] = 255 - d[i + 1]; // Green
+        d[i + 2] = 255 - d[i + 2]; // Blue
     }
     return image;
 }
@@ -17,7 +17,7 @@ class CursorBlinkTimer extends EventEmitter {
     enabled: boolean;
     shown: boolean;
     private token: number;
-    private callback: () => void;
+    private readonly callback: () => void;
 
     constructor(public interval: number) {
         super();
@@ -62,20 +62,19 @@ class CursorBlinkTimer extends EventEmitter {
 }
 
 export default class NeovimCursor {
-    private element: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
+    private readonly element: HTMLCanvasElement;
+    private readonly ctx: CanvasRenderingContext2D;
     private delay_timer: number;
-    private blink_timer: CursorBlinkTimer;
-    // flag to hide cursor when preedit is shown
-    private preedit_is_shown: boolean;
+    private readonly blink_timer: CursorBlinkTimer;
+    private preedit_is_shown: boolean; // flag to hide cursor when preedit is shown
 
-    constructor(private store: NeovimStore, private screen_ctx: CanvasRenderingContext2D) {
+    constructor(private readonly store: NeovimStore, private readonly screen_ctx: CanvasRenderingContext2D) {
         this.delay_timer = null;
         this.blink_timer = new CursorBlinkTimer(this.store.cursor_blink_interval);
         this.element = this.store.dom.cursor;
         this.element.style.top = '0px';
         this.element.style.left = '0px';
-        this.ctx = this.element.getContext('2d', {alpha: false});
+        this.ctx = this.element.getContext('2d', { alpha: false });
         this.onFontSizeUpdated();
         this.blink_timer.on('tick', (shown: boolean) => {
             if (shown) {
@@ -156,8 +155,8 @@ export default class NeovimCursor {
     }
 
     updateCursorPos() {
-        const {line, col} = this.store.cursor;
-        const {width, height} = this.store.font_attr;
+        const { line, col } = this.store.cursor;
+        const { width, height } = this.store.font_attr;
 
         const x = col * width;
         const y = line * height;
@@ -174,11 +173,11 @@ export default class NeovimCursor {
         if (!info) {
             return;
         }
-        const {cursor_shape, cell_percentage} = info;
+        const { cursor_shape, cell_percentage } = info;
         if (cursor_shape === undefined || cell_percentage === undefined) {
             return;
         }
-        const {width, height} = this.store.font_attr;
+        const { width, height } = this.store.font_attr;
         switch (cursor_shape) {
             case 'horizontal': {
                 const top = height * (1 - cell_percentage / 100);
@@ -205,7 +204,7 @@ export default class NeovimCursor {
 
     private redrawImpl() {
         this.delay_timer = null;
-        const {draw_width, draw_height} = this.store.font_attr;
+        const { draw_width, draw_height } = this.store.font_attr;
         const x = this.store.cursor.col * draw_width;
         const y = this.store.cursor.line * draw_height;
         const captured = this.screen_ctx.getImageData(x, y, draw_width, draw_height);

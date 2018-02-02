@@ -143,6 +143,7 @@
     "number-literal-format": false,
     "interface-over-type-literal": true,
     "callable-types": true,
-    "return-undefined": true
+    "return-undefined": true,
+    "prefer-readonly": true
   }
 }

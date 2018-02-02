@@ -445,7 +445,14 @@ describe('NeovimStore', () => {
 
             var move = document.createEvent('MouseEvent');
             move.initEvent('mousemove', true, false);
-            move.buttons = 1;
+            Object.defineProperty(move, 'buttons', {value: 1});
+
+            // To simulate dragging mouse, change the position of event from previous drag start event
+            Object.defineProperty(move, 'clientX', {value: 100});
+            Object.defineProperty(move, 'parentX', {value: 50});
+            Object.defineProperty(move, 'clientY', {value: 100});
+            Object.defineProperty(move, 'parentY', {value: 50});
+
             s.dispatcher.dispatch(A.dragUpdate(move));
             assert.isTrue(updated, 'drag-updated event was not fired');
             assert.isTrue(input, 'input event was not fired');

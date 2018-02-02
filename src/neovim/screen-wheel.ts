@@ -20,13 +20,15 @@ export default class ScreenWheel {
     shift: boolean;
     ctrl: boolean;
 
-    constructor(private store: NeovimStore) {
+    constructor(private readonly store: NeovimStore) {
         this.reset();
     }
 
     handleEvent(e: WheelEvent) {
-        if ((this.shift === undefined && this.ctrl === undefined) ||
-            (this.shift !== e.shiftKey || this.ctrl !== e.ctrlKey)) {
+        if (
+            (this.shift === undefined && this.ctrl === undefined) ||
+            (this.shift !== e.shiftKey || this.ctrl !== e.ctrlKey)
+        ) {
             // Note:
             // Initialize at first or reset on modifier change
             this.reset(e.shiftKey, e.ctrlKey);
@@ -43,7 +45,7 @@ export default class ScreenWheel {
             return '';
         }
 
-        const col  = Math.floor(e.offsetX / this.store.font_attr.width);
+        const col = Math.floor(e.offsetX / this.store.font_attr.width);
         const line = Math.floor(e.offsetY / this.store.font_attr.height);
 
         const input = this.getInput(scroll_x, scroll_y, line, col);

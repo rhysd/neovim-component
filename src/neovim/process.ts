@@ -26,7 +26,7 @@ export default class NeovimProcess {
     started: boolean;
 
     constructor(
-        private store: NeovimStore,
+        private readonly store: NeovimStore,
         public command: string,
         public argv: string[],
     ) {

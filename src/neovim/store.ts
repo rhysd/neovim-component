@@ -1,10 +1,10 @@
-import {EventEmitter} from 'events';
-import {Kind, ActionType, Region, ModeInfoSet} from './actions';
+import { EventEmitter } from 'events';
+import { Kind, ActionType, Region, ModeInfoSet } from './actions';
 import log from '../log';
 import ScreenDrag from './screen-drag';
 import ScreenWheel from './screen-wheel';
-import {DOM} from '../neovim';
-import {Dispatcher} from 'flux';
+import { DOM } from '../neovim';
+import { Dispatcher } from 'flux';
 
 // TODO:
 // Debug log should be implemented as the subscriber of store
@@ -46,11 +46,16 @@ function colorString(new_color: number, fallback: string) {
         return fallback;
     }
 
-    return '#' + [16, 8, 0].map(shift => {
-        const mask = 0xff << shift;
-        const hex = ((new_color & mask) >> shift).toString(16);
-        return hex.length < 2 ? ('0' + hex) : hex;
-    }).join('');
+    return (
+        '#' +
+        [16, 8, 0]
+            .map(shift => {
+                const mask = 0xff << shift;
+                const hex = ((new_color & mask) >> shift).toString(16);
+                return hex.length < 2 ? '0' + hex : hex;
+            })
+            .join('')
+    );
 }
 
 export default class NeovimStore extends EventEmitter {
@@ -262,8 +267,7 @@ export default class NeovimStore extends EventEmitter {
                 break;
             }
             case Kind.UpdateScreenSize: {
-                if (this.size.width === action.width
-                    && this.size.height === action.height) {
+                if (this.size.width === action.width && this.size.height === action.height) {
                     break;
                 }
                 this.size.width = action.width;
@@ -406,8 +410,7 @@ export default class NeovimStore extends EventEmitter {
     }
 
     private resize(lines: number, cols: number) {
-        if (this.size.lines === lines
-            && this.size.cols === cols) {
+        if (this.size.lines === lines && this.size.cols === cols) {
             return false;
         }
         this.size.lines = lines;
@@ -422,4 +425,3 @@ export default class NeovimStore extends EventEmitter {
         return true;
     }
 }
-

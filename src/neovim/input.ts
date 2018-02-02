@@ -1,10 +1,5 @@
 import NeovimStore from './store';
-import {
-    compositionStart,
-    compositionEnd,
-    inputToNeovim,
-    notifyFocusChanged,
-} from './actions';
+import { compositionStart, compositionEnd, inputToNeovim, notifyFocusChanged } from './actions';
 import log from '../log';
 
 const OnDarwin = global.process.platform === 'darwin';
@@ -14,56 +9,93 @@ export default class NeovimInput {
     element: HTMLInputElement;
     // fake span element to measure text width of preedit input
     fake_element: HTMLSpanElement;
-    ime_running: boolean;      // XXX: Local state!
+    ime_running: boolean; // XXX: Local state!
 
     static shouldIgnoreOnKeydown(event: KeyboardEvent) {
-        const {ctrlKey, shiftKey, altKey, keyCode, metaKey} = event;
-        return !ctrlKey && !altKey && !metaKey ||
-               shiftKey && keyCode === 16 ||
-               ctrlKey && keyCode === 17 ||
-               altKey && keyCode === 18 ||
-               metaKey && keyCode === 91;
+        const { ctrlKey, shiftKey, altKey, keyCode, metaKey } = event;
+        return (
+            (!ctrlKey && !altKey && !metaKey) ||
+            (shiftKey && keyCode === 16) ||
+            (ctrlKey && keyCode === 17) ||
+            (altKey && keyCode === 18) ||
+            (metaKey && keyCode === 91)
+        );
     }
 
     // Note:
     // Workaround when KeyboardEvent.key is not available.
     static getVimSpecialCharFromKeyCode(key_code: number, shift: boolean) {
         switch (key_code) {
-            case 0:   return 'Nul';
-            case 8:   return 'BS';
-            case 9:   return 'Tab';
-            case 10:  return 'NL';
-            case 13:  return 'CR';
-            case 33:  return 'PageUp';
-            case 34:  return 'PageDown';
-            case 27:  return 'Esc';
-            case 32:  return 'Space';
-            case 35:  return 'End';
-            case 36:  return 'Home';
-            case 37:  return 'Left';
-            case 38:  return 'Up';
-            case 39:  return 'Right';
-            case 40:  return 'Down';
-            case 45:  return 'Insert';
-            case 46:  return 'Del';
-            case 47:  return 'Help';
-            case 92:  return 'Bslash';
-            case 112: return 'F1';
-            case 113: return 'F2';
-            case 114: return 'F3';
-            case 115: return 'F4';
-            case 116: return 'F5';
-            case 117: return 'F6';
-            case 118: return 'F7';
-            case 119: return 'F8';
-            case 120: return 'F9';
-            case 121: return 'F10';
-            case 122: return 'F11';
-            case 123: return 'F12';
-            case 124: return 'Bar'; // XXX
-            case 127: return 'Del'; // XXX
-            case 188: return shift ? 'LT' : null;
-            default:  return null;
+            case 0:
+                return 'Nul';
+            case 8:
+                return 'BS';
+            case 9:
+                return 'Tab';
+            case 10:
+                return 'NL';
+            case 13:
+                return 'CR';
+            case 33:
+                return 'PageUp';
+            case 34:
+                return 'PageDown';
+            case 27:
+                return 'Esc';
+            case 32:
+                return 'Space';
+            case 35:
+                return 'End';
+            case 36:
+                return 'Home';
+            case 37:
+                return 'Left';
+            case 38:
+                return 'Up';
+            case 39:
+                return 'Right';
+            case 40:
+                return 'Down';
+            case 45:
+                return 'Insert';
+            case 46:
+                return 'Del';
+            case 47:
+                return 'Help';
+            case 92:
+                return 'Bslash';
+            case 112:
+                return 'F1';
+            case 113:
+                return 'F2';
+            case 114:
+                return 'F3';
+            case 115:
+                return 'F4';
+            case 116:
+                return 'F5';
+            case 117:
+                return 'F6';
+            case 118:
+                return 'F7';
+            case 119:
+                return 'F8';
+            case 120:
+                return 'F9';
+            case 121:
+                return 'F10';
+            case 122:
+                return 'F11';
+            case 123:
+                return 'F12';
+            case 124:
+                return 'Bar'; // XXX
+            case 127:
+                return 'Del'; // XXX
+            case 188:
+                return shift ? 'LT' : null;
+            default:
+                return null;
         }
     }
 
@@ -75,10 +107,14 @@ export default class NeovimInput {
 
         if (key.length === 1) {
             switch (key) {
-                case '<':  return event.ctrlKey || event.altKey ? 'LT' : null;
-                case ' ':  return 'Space';
-                case '\0': return 'Nul';
-                default:   return null;
+                case '<':
+                    return event.ctrlKey || event.altKey ? 'LT' : null;
+                case ' ':
+                    return 'Space';
+                case '\0':
+                    return 'Nul';
+                default:
+                    return null;
             }
         }
 
@@ -121,7 +157,8 @@ export default class NeovimInput {
                     return 'Tab';
                 }
             }
-            case 'Enter': {  // Note: Should consider <NL>?
+            case 'Enter': {
+                // Note: Should consider <NL>?
                 if (ctrl && key_code === 77) {
                     // Note:
                     // When <C-m> is input (77 is key code of 'm')
@@ -136,29 +173,40 @@ export default class NeovimInput {
                     return 'CR';
                 }
             }
-            case 'PageUp':       return 'PageUp';
-            case 'PageDown':     return 'PageDown';
-            case 'End':          return 'End';
-            case 'Home':         return 'Home';
-            case 'ArrowLeft':    return 'Left';
-            case 'ArrowUp':      return 'Up';
-            case 'ArrowRight':   return 'Right';
-            case 'ArrowDown':    return 'Down';
-            case 'Insert':       return 'Insert';
-            case 'Delete':       return 'Del';
-            case 'Help':         return 'Help';
-            case 'Unidentified': return null;
-            default:             return null;
+            case 'PageUp':
+                return 'PageUp';
+            case 'PageDown':
+                return 'PageDown';
+            case 'End':
+                return 'End';
+            case 'Home':
+                return 'Home';
+            case 'ArrowLeft':
+                return 'Left';
+            case 'ArrowUp':
+                return 'Up';
+            case 'ArrowRight':
+                return 'Right';
+            case 'ArrowDown':
+                return 'Down';
+            case 'Insert':
+                return 'Insert';
+            case 'Delete':
+                return 'Del';
+            case 'Help':
+                return 'Help';
+            case 'Unidentified':
+                return null;
+            default:
+                return null;
         }
     }
 
     static getVimSpecialCharInput(event: KeyboardEvent) {
-        const should_fallback =
-            (event.key === undefined) ||
-            (event.key === '\0' && event.keyCode !== 0);
-        const special_char = should_fallback ?
-                        NeovimInput.getVimSpecialCharFromKeyCode(event.keyCode, event.shiftKey) :
-                        NeovimInput.getVimSpecialCharFromKey(event);
+        const should_fallback = event.key === undefined || (event.key === '\0' && event.keyCode !== 0);
+        const special_char = should_fallback
+            ? NeovimInput.getVimSpecialCharFromKeyCode(event.keyCode, event.shiftKey)
+            : NeovimInput.getVimSpecialCharFromKey(event);
         if (!special_char) {
             return null;
         }
@@ -192,10 +240,14 @@ export default class NeovimInput {
         // Issue:
         //     https://github.com/rhysd/NyaoVim/issues/87
         switch (key) {
-            case '6': return '^';
-            case '-': return '_';
-            case '2': return '@';
-            default:  return key;
+            case '6':
+                return '^';
+            case '-':
+                return '_';
+            case '2':
+                return '@';
+            default:
+                return key;
         }
     }
 
@@ -214,19 +266,18 @@ export default class NeovimInput {
         if (event.shiftKey) {
             modifiers += 'S-';
         }
-        let vim_input =
-            NeovimInput.replaceKeyToAvoidCtrlShiftSpecial(
-                event.ctrlKey,
-                event.shiftKey,
-                String.fromCharCode(event.keyCode).toLowerCase(),
-            );
+        let vim_input = NeovimInput.replaceKeyToAvoidCtrlShiftSpecial(
+            event.ctrlKey,
+            event.shiftKey,
+            String.fromCharCode(event.keyCode).toLowerCase(),
+        );
         if (modifiers !== '') {
             vim_input = `<${modifiers}${vim_input}>`;
         }
         return vim_input;
     }
 
-    constructor(private store: NeovimStore) {
+    constructor(private readonly store: NeovimStore) {
         this.ime_running = false;
 
         this.element = this.store.dom.input;
@@ -241,7 +292,7 @@ export default class NeovimInput {
 
         this.fake_element = this.store.dom.preedit;
 
-        const {face} = this.store.font_attr;
+        const { face } = this.store.font_attr;
         this.element.style.fontFamily = face;
         this.fake_element.style.fontFamily = face;
 
@@ -326,7 +377,7 @@ export default class NeovimInput {
         const should_osx_workaround = OnDarwin && event.altKey && !event.ctrlKey && this.store.mode === 'normal';
         if (this.store.alt_key_disabled && event.altKey) {
             // Note: Overwrite 'altKey' to false to disable alt key input.
-            Object.defineProperty(event, 'altKey', {value: false});
+            Object.defineProperty(event, 'altKey', { value: false });
         }
         if (this.store.meta_key_disabled && event.metaKey) {
             // Note:
@@ -423,8 +474,8 @@ export default class NeovimInput {
     }
 
     updateElementPos() {
-        const {line, col} = this.store.cursor;
-        const {width, height} = this.store.font_attr;
+        const { line, col } = this.store.cursor;
+        const { width, height } = this.store.font_attr;
 
         const x = col * width;
         const y = line * height;
@@ -435,7 +486,7 @@ export default class NeovimInput {
 
     updateFontSize() {
         // don't need to consider device pixel ratio for DOM elements
-        const {specified_px: font_size} = this.store.font_attr;
+        const { specified_px: font_size } = this.store.font_attr;
 
         this.element.style.fontSize = font_size + 'px';
         this.fake_element.style.fontSize = font_size + 'px';

@@ -1,7 +1,7 @@
 import NeovimStore from './store';
 import log from '../log';
 
-const MouseButtonKind = [ 'Left', 'Middle', 'Right' ];
+const MouseButtonKind = ['Left', 'Middle', 'Right'];
 
 export default class ScreenDrag {
     line: number;
@@ -25,7 +25,7 @@ export default class ScreenDrag {
         return seq;
     }
 
-    constructor(private store: NeovimStore) {
+    constructor(private readonly store: NeovimStore) {
         this.line = 0;
         this.col = 0;
         this.parentX = 0;
@@ -49,6 +49,7 @@ export default class ScreenDrag {
     drag(move_event: MouseEvent) {
         const [line, col] = this.getPos(move_event);
         if (line === this.line && col === this.col) {
+            log.debug('ignored MouseMove event');
             return null;
         }
         move_event.preventDefault();
@@ -80,9 +81,6 @@ export default class ScreenDrag {
         // based on it.
         const offsetY = e.clientY - this.parentY;
         const offsetX = e.clientX - this.parentX;
-        return [
-            Math.floor(offsetY / this.store.font_attr.height),
-            Math.floor(offsetX / this.store.font_attr.width),
-        ];
+        return [Math.floor(offsetY / this.store.font_attr.height), Math.floor(offsetX / this.store.font_attr.width)];
     }
 }

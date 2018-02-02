@@ -9,7 +9,7 @@ export default class NeovimScreen {
     cursor: Cursor;
     input: Input;
 
-    constructor(private store: NeovimStore, public canvas: HTMLCanvasElement) {
+    constructor(private readonly store: NeovimStore, public canvas: HTMLCanvasElement) {
         this.ctx = this.canvas.getContext('2d', {alpha: false});
 
         this.store.on('put', this.drawText.bind(this));
