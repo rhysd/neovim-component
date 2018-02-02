@@ -17,11 +17,7 @@ import log from './log';
 import { Nvim } from 'promised-neovim-client';
 
 export interface DOM {
-    container: HTMLDivElement;
-    screen: HTMLCanvasElement;
-    cursor: HTMLCanvasElement;
-    input: HTMLInputElement;
-    preedit: HTMLSpanElement;
+    [key: string]: Element;
 }
 
 export default class Neovim extends EventEmitter {

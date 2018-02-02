@@ -33,7 +33,7 @@ export default class ScreenDrag {
     }
 
     start(down_event: MouseEvent) {
-        const wrapper: HTMLElement = this.store.dom.container;
+        const wrapper: HTMLElement = this.store.dom.container as HTMLDivElement;
         if (wrapper !== null && down_event.target !== null) {
             const rect = (down_event.target as HTMLCanvasElement).getBoundingClientRect();
             this.parentY = rect.top;

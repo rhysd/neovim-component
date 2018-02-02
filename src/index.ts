@@ -1,4 +1,4 @@
-import Neovim from './neovim';
+import Neovim, { DOM } from './neovim';
 
 class NeovimEditor extends Polymer.Element {
     static get is() {
@@ -77,7 +77,7 @@ class NeovimEditor extends Polymer.Element {
     ready() {
         super.ready();
         this.editor = new Neovim(
-            this.$,
+            this.$ as DOM,
             this.nvimCmd,
             this.argv,
             this.font,
@@ -134,12 +134,13 @@ class NeovimEditor extends Polymer.Element {
         }
     }
 
-    attributeChangedCallback(name: string, oldVal: any, newVal: any, ns: string) {
-        super.attributeChangedCallback(name, oldVal, newVal, ns);
+    attributeChangedCallback(name: string, oldVal: string | null, newVal: string | null) {
+        // @ts-ignore: https://github.com/Polymer/polymer/issues/5087
+        super.attributeChangedCallback(name, oldVal, newVal);
         if (this.editor === undefined) {
             return;
         }
-        this.editor.emit('change-attribute', name, oldVal, newVal, ns);
+        this.editor.emit('change-attribute', name, oldVal, newVal);
     }
 }
 
