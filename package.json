@@ -14,7 +14,7 @@
     "start": "npm run dep && npm run build && npm run example",
     "browserify": "browserify -o build/index.js build/src/index.js",
     "tsc": "tsc --pretty --project .",
-    "build": "npm-run-all -p tsc browserify",
+    "build": "npm-run-all tsc browserify",
     "debug": "cross-env ELECTRON_ENABLE_STACK_DUMPING=true NODE_ENV=debug electron .",
     "dep": "npm install && bower install && mkdir -p build",
     "example": "cross-env NODE_ENV=production electron .",
