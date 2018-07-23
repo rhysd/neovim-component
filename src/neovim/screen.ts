@@ -281,13 +281,12 @@ export default class NeovimScreen {
     private slideVertical(top: number, height: number, dst_top: number) {
         const { left, right } = this.store.scroll_region;
         const { draw_width, draw_height } = this.store.font_attr;
-        const captured = this.ctx.getImageData(
-            left * draw_width,
-            top * draw_height,
-            (right - left + 1) * draw_width,
-            height * draw_height,
-        );
-        this.ctx.putImageData(captured, left * draw_width, dst_top * draw_height);
+        const x = left * draw_width;
+        const sy = top * draw_height;
+        const w = (right - left + 1) * draw_width;
+        const h = height * draw_height;
+        const dy = dst_top * draw_height;
+        this.ctx.drawImage(this.canvas, x, sy, w, h, x, dy, w, h);
     }
 
     private scrollUp(cols_up: number) {
