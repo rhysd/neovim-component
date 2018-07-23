@@ -46,7 +46,11 @@ describe('neovim element', function () {
                     assert.notEqual(log.level, 'error', log.message);
                 }
             }).then(() => this.app.client.getMainProcessLogs()).then((logs: string[]) => {
-                assert.equal(logs.filter(m => m.indexOf('net::ERR_FILE_NOT_FOUND') === -1).length, 0, logs.toString());
+                assert.equal(logs.filter(
+                    m => !['net::ERR_FILE_NOT_FOUND', 'Electron Security Warning'].some(w => m.includes(w))).length,
+                    0,
+                    logs.toString(),
+                );
             });
     });
 });

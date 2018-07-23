@@ -11,8 +11,8 @@ app.on('ready', function() {
         height: 600,
         useContentSize: true,
         webPreferences: {
-            blinkFeatures: 'KeyboardEventKey,Accelerated2dCanvas,Canvas2dFixedRenderingMode'
-        }
+            blinkFeatures: 'KeyboardEventKey,Accelerated2dCanvas,Canvas2dFixedRenderingMode',
+        },
     });
 
     win.on('closed', function() {
@@ -22,6 +22,6 @@ app.on('ready', function() {
 
     win.loadURL(index_html);
     if (process.env['NODE_ENV'] !== 'production') {
-        win.webContents.openDevTools({detach: true});
+        win.webContents.openDevTools({ mode: 'detach' });
     }
 });
