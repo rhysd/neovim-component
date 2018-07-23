@@ -7,4 +7,3 @@ if (!process.env['NODE_ENV']) {
     process.env['NODE_ENV'] = 'production';
 }
 require('child_process').spawn(require('electron'), argv, { stdio: 'inherit' });
-

@@ -21,7 +21,7 @@
     "tslint": "tslint --project .",
     "nsp": "nsp check",
     "lint": "npm-run-all -p tslint nsp",
-    "format": "prettier --write 'src/**/*.ts'",
+    "format": "prettier --write 'src/**/*.ts' 'test/**/*.ts' 'example/*/*.js'",
     "watch": "guard --watchdir src test",
     "test": "mocha test/unit/ --exit",
     "e2e": "mocha build/test/e2e/ --opts test/e2e/mocha.opts --exit"
