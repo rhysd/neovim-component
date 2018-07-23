@@ -20,7 +20,7 @@
     "example": "cross-env NODE_ENV=production electron .",
     "tslint": "tslint --project .",
     "nsp": "nsp check",
-    "lint": "npm-run-all -p tslint nsp",
+    "lint": "npm-run-all -p tslint",
     "format": "prettier --write 'src/**/*.ts' 'test/**/*.ts' 'example/*/*.js'",
     "watch": "guard --watchdir src test",
     "test": "mocha test/unit/ --exit",
