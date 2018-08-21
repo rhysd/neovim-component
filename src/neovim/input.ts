@@ -1,3 +1,6 @@
+// keyCode is deprecated but necessary for fallback
+/* tslint:disable:deprecation */
+
 import NeovimStore from './store';
 import { compositionStart, compositionEnd, inputToNeovim, notifyFocusChanged } from './actions';
 import log from '../log';
