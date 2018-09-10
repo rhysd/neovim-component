@@ -55,16 +55,15 @@ describe('neovim element', function() {
             })
             .then(() => this.app.client.getMainProcessLogs())
             .then((logs: string[]) => {
-                assert.equal(
-                    logs.filter(
+                const unexpectedLogs = logs
+                    .filter(
                         m =>
                             !['net::ERR_FILE_NOT_FOUND', 'Electron Security Warning', 'Unhandled event:'].some(w =>
                                 m.includes(w),
                             ),
-                    ).length,
-                    0,
-                    logs.toString(),
-                );
+                    )
+                    .filter(m => m !== '');
+                assert.equal(unexpectedLogs.length, 0, `'${unexpectedLogs}'`);
             });
     });
 });
