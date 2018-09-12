@@ -162,7 +162,7 @@ client.command('vsplit');
 // Send input
 client.input('<C-w><C-l>');
 
-// Evaluate a Vimscript expression
+// Evaluate a Vim script expression
 client.eval('"aaa" . "bbb"').then(result => console.log(result));
 
 // Get the 'b:foo' variable

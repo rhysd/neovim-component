@@ -57,7 +57,7 @@ export default class NeovimProcess {
             this.store.on('update-screen-bounds', () => nvim.uiTryResize(this.store.size.cols, this.store.size.lines));
 
             // Note:
-            // Neovim frontend has responsiblity to emit 'GUIEnter' on initialization.
+            // Neovim frontend has responsibility to emit 'GUIEnter' on initialization.
             /* tslint:disable:no-floating-promises */
             this.client.command('doautocmd <nomodeline> GUIEnter', true);
             /* tslint:enable:no-floating-promises */

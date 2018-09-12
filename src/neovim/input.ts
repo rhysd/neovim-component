@@ -341,7 +341,7 @@ export default class NeovimInput {
         this.store.dispatcher.dispatch(notifyFocusChanged(true));
 
         // Note:
-        // Neovim frontend has responsiblity to emit 'FocusGained'.
+        // Neovim frontend has responsibility to emit 'FocusGained'.
         // :execute 'normal!' "\<FocusGained>" is available.
         // (it seems undocumented.)
         this.store.dispatcher.dispatch(inputToNeovim('<FocusGained>'));
@@ -352,7 +352,7 @@ export default class NeovimInput {
         this.store.dispatcher.dispatch(notifyFocusChanged(false));
 
         // Note:
-        // Neovim frontend has responsiblity to emit 'FocusLost'.
+        // Neovim frontend has responsibility to emit 'FocusLost'.
         // :execute 'normal!' "\<FocusLost>" is available.
         // (it seems undocumented.)
         this.store.dispatcher.dispatch(inputToNeovim('<FocusLost>'));
