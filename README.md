@@ -3,17 +3,19 @@
 [![Build Status](https://travis-ci.org/rhysd/neovim-component.svg?branch=master)](https://travis-ci.org/rhysd/neovim-component)
 
 
-This component provides `<neovim-editor>`, an HTML custom element built on [Polymer v2](https://github.com/Polymer/polymer) and [flux](https://github.com/facebook/flux).
-It provides a frontend for the [Neovim editor](https://github.com/neovim/neovim) using Neovim's MessagePack API. It allows you to easily embed a Neovim-backed editor
-into your application.
+This component provides `<neovim-editor>`, an HTML custom element built on [Polymer v2](https://github.com/Polymer/polymer)
+and [flux](https://github.com/facebook/flux).  It provides a frontend for the [Neovim editor](https://github.com/neovim/neovim)
+using Neovim's MessagePack API. It allows you to easily embed a Neovim-backed editor into your application.
 
 **This component assumes to be used in Node.js environment. (i.e. Electron)**
 
-You can use this component for modern desktop application frameworks such as [Electron](https://github.com/atom/electron) or [NW.js](https://github.com/nwjs/nw.js).  
-You can even use it in Electron-based editors such as [Atom](http://atom.io/) or [VS Code](https://github.com/Microsoft/vscode).
+You can use this component for modern desktop application frameworks such as [Electron](https://github.com/atom/electron)
+or [NW.js](https://github.com/nwjs/nw.js).  You can even use it in Electron-based editors such as [Atom](http://atom.io/)
+or [VS Code](https://github.com/Microsoft/vscode).
 
 This component is designed around the [Flux architecture](https://facebook.github.io/flux/docs/overview.html).
-You can access the UI event notifications and can call Neovim APIs directly via `<neovim-editor>`'s APIs.
+You can access the UI event notifications and can call Neovim APIs directly via `<neovim-editor>`'s
+APIs.
 
 You can install this component as an [npm package](https://www.npmjs.com/package/neovim-component).
 
@@ -45,7 +47,8 @@ Each example only takes 100~300 lines.
 </html>
 ```
 
-Minimal [Electron](https://github.com/atom/electron) app can be found in the [example directory](/example/minimal).  This is a good start point to use this package and it shows how the component works.
+Minimal [Electron](https://github.com/atom/electron) app can be found in the [example directory](/example/minimal).
+This is a good start point to use this package and it shows how the component works.
 
 ![main screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/main.gif)
 
@@ -59,26 +62,34 @@ $ npm start
 
 ### [Markdown Editor Example](/example/markdown)
 
-For a more complicated and realistic example, see the [markdown editor example](/example/markdown).  The markdown previewer is integrated with the Neovim GUI using the `<neovim-editor>` component.
+For a more complicated and realistic example, see the [markdown editor example](/example/markdown).
+The markdown previewer is integrated with the Neovim GUI using the `<neovim-editor>` component.
 
 ![markdown example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/markdown-example.gif)
 
 ### [Image Popup Example](/example/image-popup)
 
-This is an image popup widget example [here](/example/image-popup).  The `gi` mapping is defined to show an image under the cursor in a tooltip.
+This is an image popup widget example [here](/example/image-popup).  The `gi` mapping is defined
+to show an image under the cursor in a tooltip.
 
 ![image popup example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/popup-image-example.gif)
 
 ### [Mini Browser Example](/example/mini-browser)
 
-This example shows how to include a mini web-browser using the [`<webview>` tag from Electron](https://github.com/atom/electron/blob/master/docs/api/web-view-tag.md).
+This example shows how to include a mini web-browser using the
+[`<webview>` tag from Electron](https://github.com/atom/electron/blob/master/docs/api/web-view-tag.md).
 
 ![mini browser example screenshot](https://raw.githubusercontent.com/rhysd/ss/master/neovim-component/mini-browser.gif)
 
 
 ## Why Did You Create This?
 
-Vim has very powerful editing features, but Vim is an editor (see `:help design-not`) and unfortunately lacks support for many graphical tools that writers and programmers like.  NyaoVim adds support for graphical features without losing Vim's powerful text editing abilities.  [Neovim's msgpack APIs](https://neovim.io/doc/user/msgpack_rpc.html) provide a perfect way to add a GUI layer using HTML and CSS.  [NyaoVim](https://github.com/rhysd/NyaoVim) is a GUI frontend as a proof of concept.
+Vim has very powerful editing features, but Vim is an editor (see `:help design-not`) and unfortunately
+lacks support for many graphical tools that writers and programmers like.  NyaoVim adds support for
+graphical features without losing Vim's powerful text editing abilities.
+[Neovim's msgpack APIs](https://neovim.io/doc/user/msgpack_rpc.html) provide a perfect way to add
+a GUI layer using HTML and CSS.  [NyaoVim](https://github.com/rhysd/NyaoVim) is a GUI frontend as
+a proof of concept.
 
 
 ## Architecture
@@ -87,9 +98,12 @@ Vim has very powerful editing features, but Vim is an editor (see `:help design-
 
 `<neovim-editor>` has an `editor` property to access the internal APIs of the component.
 
-- `editor.screen` is a view of the component (using canvas).  It receives user input and dispatches input actions to the data store.
-- `editor.process` is a process handler to interact with the backing Neovim process via msgpack-rpc APIs.  You can call Neovim's APIs via the Neovim client (`editor.getClient()` helper).
-- `editor.store` is the state of this component.  You can access the current state of the editor through this object.
+- `editor.screen` is a view of the component (using canvas).  It receives user input and dispatches
+  input actions to the data store.
+- `editor.process` is a process handler to interact with the backing Neovim process via msgpack-rpc
+  APIs.  You can call Neovim's APIs via the Neovim client (`editor.getClient()` helper).
+- `editor.store` is the state of this component.  You can access the current state of the editor through
+  this object.
 
 
 ## `<neovim-editor>` Properties
@@ -100,7 +114,7 @@ You can customize `<neovim-editor>` with the following properties:
 | ------------------- | -------------------------------------------| ------------- |
 | `width`             | Width of the editor in pixels.             | `null`        |
 | `height`            | Height of the editor in pixels.            | `null`        |
-| `font`              | Name of the editor's font.                 | `"monospace"` |
+| `font`              | Name of the editor's monospace font.       | `"monospace"` |
 | `font-size`         | Font-size in pixels.                       | `12`          |
 | `line-height`       | Line height rate relative to font size.    | `1.3`         |
 | `nvim-cmd`          | Command used to start Neovim.              | `"nvim"`      |
@@ -146,11 +160,15 @@ const cursor_pos = [ Store.cursor.line, Store.cursor.col ];
 ### Call Neovim APIs
 
 You can call [Neovim APIs](https://neovim.io/doc/user/msgpack_rpc.html#msgpack-rpc-api) via the **client**.
-When you call APIs via the client, it sends the call to the underlying Neovim process via MessagePack RPC and will return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) which resolves to the returned value.
+When you call APIs via the client, it sends the call to the underlying Neovim process via MessagePack
+RPC and will return a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+which resolves to the returned value.
 
 
 `<neovim-component>` uses [promised-neovim-client](https://github.com/rhysd/promised-neovim-client) package.
-You can see the all API definitions [here](https://github.com/rhysd/promised-neovim-client/blob/promisified/index.d.ts).  If you know further about Neovim APIs, [python client implementation](https://github.com/neovim/python-client) may be helpful.
+You can see the all API definitions [here](https://github.com/rhysd/promised-neovim-client/blob/promisified/index.d.ts).
+If you know further about Neovim APIs, [python client implementation](https://github.com/neovim/python-client)
+may be helpful.
 
 ```javascript
 const neovim_element = document.getElementById('neovim');
@@ -234,8 +252,11 @@ const.log(pos.col, pos.line);  // line/col of location (400px, 300px)
 
 - Notify of screen-size changes:
 
-When some process has changed the screen-size **you must notify the `screen`**. The internal `<canvas>` element has a fixed size and must update itself if there are size changes.  Call `screen.checkShouldResize()` if the screen size may have changed
-Note that you need not care about `resize` event of `<body>` element.  `<neovim-editor>` component automatically detects this particular resize event and updates automatically. `screen.checkShouldResize()` will simply be ignored if nothing has actually changed.
+When some process has changed the screen-size **you must notify the `screen`**. The internal `<canvas>`
+element has a fixed size and must update itself if there are size changes.  Call `screen.checkShouldResize()`
+if the screen size may have changed.  Note that you don't need to care about `resize` event of `<body>`
+element.  `<neovim-editor>` component automatically detects this particular resize event and updates
+automatically. `screen.checkShouldResize()` will simply be ignored if nothing has actually changed.
 
 ```javascript
 const editor = document.getElementById('neovim').editor;
@@ -284,7 +305,8 @@ editor.focus();
 
 ### Log Levels
 
-`<neovim-component>` prints logs in the browser console.  The log level is controlled by the `NODE_ENV` environment variable:
+`<neovim-component>` prints logs in the browser console.  The log level is controlled by the `NODE_ENV`
+environment variable:
 
 - `NODE_ENV=debug` will log everything.
 - `NODE_ENV=production` ignores all logs except for warnings and errors.
@@ -293,5 +315,6 @@ editor.focus();
 
 ## TODOs
 
-- [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/)). [#2](https://github.com/rhysd/neovim-component/issues/2)
+- [ ] WebGL rendering (using [pixi.js](http://www.pixijs.com/) or [CreateJS](http://www.createjs.com/)).
+  [#2](https://github.com/rhysd/neovim-component/issues/2)
 - [ ] Follow dynamic device pixel ratio change. [#18](https://github.com/rhysd/neovim-component/issues/18)
