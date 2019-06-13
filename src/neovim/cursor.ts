@@ -151,7 +151,7 @@ export default class NeovimCursor {
         } else {
             this.ctx.clearRect(0, 0, this.element.width, this.element.height);
         }
-        this.delay_timer = setTimeout(this.redrawImpl.bind(this), this.store.cursor_draw_delay);
+        this.delay_timer = window.setTimeout(this.redrawImpl.bind(this), this.store.cursor_draw_delay);
     }
 
     updateCursorPos() {
