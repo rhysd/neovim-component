@@ -4,16 +4,12 @@ os:
     - linux
     - osx
 
-# Use macOS 10.12: https://docs.travis-ci.com/user/languages/objective-c/
-osx_image: xcode9
+osx_image: xcode10.2
 
 dist: xenial
 
-# https://github.com/travis-ci/apt-source-whitelist/pull/208
-sudo: required
-
 node_js:
-    - "stable"
+    - stable
 
 install:
     - ./scripts/travis-ci-install.sh
