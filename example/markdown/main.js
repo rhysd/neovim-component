@@ -12,6 +12,7 @@ app.on('ready', function() {
         useContentSize: true,
         webPreferences: {
             blinkFeatures: 'KeyboardEventKey,Accelerated2dCanvas,Canvas2dFixedRenderingMode',
+            nodeIntegration: true,
         },
     });
 
