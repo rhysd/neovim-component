@@ -71,22 +71,7 @@ export default class NeovimScreen {
         const drawn_px = specified_px * res;
         this.ctx.font = drawn_px + 'px ' + this.store.font_attr.face;
         const font_width = this.ctx.measureText('m').width;
-        // Note1:
-        // Line height of <canvas> is fixed to 1.2 (normal).
-        // If the specified line height is not 1.2, we should calculate
-        // the line height manually.
-        //
-        // Note2:
-        // font_width is not passed to Math.ceil() because the line-height
-        // of <canvas> is fixed to 1.2.  Math.ceil(font_width) makes region
-        // wider but width of actual rendered text is not changed.  Then it
-        // causes rendering issues.
-        // On the other hand, line-height is managed by us completely.  So
-        // we can use Math.ceil(font_height) at this point and it resolves
-        // some rendering issues (see #12).
-        const font_height = Math.ceil(
-            this.store.line_height === 1.2 ? font_width * 2 : drawn_px * this.store.line_height,
-        );
+        const font_height = Math.ceil(drawn_px * this.store.line_height);
         this.store.dispatcher.dispatch(A.updateFontPx(specified_px));
         this.store.dispatcher.dispatch(A.updateFontSize(font_width, font_height, font_width / res, font_height / res));
         const { width, height } = this.store.size;
@@ -225,20 +210,16 @@ export default class NeovimScreen {
         this.ctx.font = attrs + font_size + 'px ' + face;
         this.ctx.textBaseline = 'top';
         this.ctx.fillStyle = fg;
-        // Note:
-        // Line height of <canvas> is fixed to 1.2 (normal).
-        // If the specified line height is not 1.2, we should calculate
-        // the difference of margin-bottom of text.
-        const margin = (font_size * (this.store.line_height - 1.2)) / 2;
-        const y = Math.floor(line * draw_height + margin);
+        const margin = Math.ceil((font_size * (this.store.line_height - 1.0)) / 2);
+        const y = Math.floor(line * draw_height);
         const x = col * draw_width;
-        this.drawChars(x, y, chars, draw_width);
+        this.drawChars(x, y + margin, chars, draw_width);
         if (undercurl) {
             this.ctx.strokeStyle = sp || this.store.sp_color || fg; // Note: Fallback for Neovim 0.1.4 or earlier.
             this.ctx.lineWidth = 1 * res;
             this.ctx.setLineDash([draw_width / 3, draw_width / 3]);
             this.ctx.beginPath();
-            const curl_y = y + draw_height - 3 * res;
+            const curl_y = y + draw_height - margin;
             this.ctx.moveTo(x, curl_y);
             this.ctx.lineTo(x + draw_width * chars.length, curl_y);
             this.ctx.stroke();
@@ -247,9 +228,7 @@ export default class NeovimScreen {
             this.ctx.lineWidth = 1 * res;
             this.ctx.setLineDash([]);
             this.ctx.beginPath();
-            // Note:
-            // 3 is set with considering the width of line.
-            const underline_y = y + draw_height - 3 * res;
+            const underline_y = y + draw_height - margin;
             this.ctx.moveTo(x, underline_y);
             this.ctx.lineTo(x + draw_width * chars.length, underline_y);
             this.ctx.stroke();
