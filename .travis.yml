@@ -26,3 +26,15 @@ notifications:
     email:
         on_success: never
         on_failure: change
+
+addons:
+    homebrew:
+        packages:
+            - neovim
+            - pkg-config
+            - cairo
+            - pango
+            - libpng
+            - giflib
+            - jpeg
+        update: true
