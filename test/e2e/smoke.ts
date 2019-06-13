@@ -58,9 +58,12 @@ describe('neovim element', function() {
                 const unexpectedLogs = logs
                     .filter(
                         m =>
-                            !['net::ERR_FILE_NOT_FOUND', 'Electron Security Warning', 'Unhandled event:'].some(w =>
-                                m.includes(w),
-                            ),
+                            ![
+                                'net::ERR_FILE_NOT_FOUND',
+                                'Electron Security Warning',
+                                'Unhandled event:',
+                                'DevTools listening on',
+                            ].some(w => m.includes(w)),
                     )
                     .filter(m => m !== '');
                 assert.equal(unexpectedLogs.length, 0, `'${unexpectedLogs}'`);
