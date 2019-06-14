@@ -55,17 +55,15 @@ describe('neovim element', function() {
             })
             .then(() => this.app.client.getMainProcessLogs())
             .then((logs: string[]) => {
-                const unexpectedLogs = logs
-                    .filter(
-                        m =>
-                            ![
-                                'net::ERR_FILE_NOT_FOUND',
-                                'Electron Security Warning',
-                                'Unhandled event:',
-                                'DevTools listening on',
-                            ].some(w => m.includes(w)),
-                    )
-                    .filter(m => m !== '');
+                const allowedErrors = [
+                    'net::ERR_FILE_NOT_FOUND',
+                    'Electron Security Warning',
+                    'Unhandled event:',
+                    'DevTools listening on',
+                    'HTML Imports is deprecated and will be removed in M73',
+                    "'electron.screen' is deprecated",
+                ];
+                const unexpectedLogs = logs.filter(m => !allowedErrors.some(w => m.includes(w))).filter(m => m !== '');
                 assert.equal(unexpectedLogs.length, 0, `'${unexpectedLogs}'`);
             });
     });
